@@ -2,6 +2,7 @@ extern "C" {
 	fn rand() -> u32;
 }
 
+/// Obtain a random 64-bit number using libc's `rand` function.
 pub fn entropy_from_system() -> u64 {
 	let a = unsafe { rand() };
 	let b = unsafe { rand() };

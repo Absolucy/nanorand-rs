@@ -4,7 +4,9 @@
 	forbid(unsafe_code)
 )]
 
+/// Sources for obtaining entropy.
 pub mod entropy;
+/// RNG algorithms.
 pub mod rand;
 
 use core::sync::atomic::{AtomicU64, Ordering};
@@ -13,6 +15,7 @@ pub use rand::wyrand::rand_global as rand;
 
 static RNG_STATE_GLOBAL: AtomicU64 = AtomicU64::new(42);
 
+/// Seed the global RNG state with a 64-bit number.
 pub fn seed_global(seed: u64) {
 	RNG_STATE_GLOBAL.store(seed, Ordering::Relaxed);
 }

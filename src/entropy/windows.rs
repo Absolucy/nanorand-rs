@@ -12,6 +12,7 @@ extern "system" {
 	) -> u32;
 }
 
+/// Obtain a random 64-bit number using WinAPI's `BCryptGenRandom` function.
 pub fn entropy_from_system() -> u64 {
 	let mut entropy: [u8; 8] = Default::default();
 	unsafe {

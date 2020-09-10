@@ -2,6 +2,11 @@ use std::fs::File;
 use std::io::Read;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+/// Obtain a random 64-bit number.  
+/// Sources (in order of priority):  
+///  1. `/dev/urandom`  
+///  2. `/dev/random`  
+///  3. The current system time, in nanoseconds since the Unix Epoch.
 pub fn entropy_from_system() -> u64 {
 	match File::open("/dev/urandom") {
 		Ok(mut fd) => {
