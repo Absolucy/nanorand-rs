@@ -1,0 +1,23 @@
+[package]
+name = "nanorand"
+description = "A tiny, fast, zero-dep library for random number generation."
+repository = "https://github.com/aspenluxxxy/nanorand"
+keywords = ["rand", "random", "no-std", "entropy"]
+categories = ["algorithms", "no-std"]
+readme = "README.md"
+version = "0.1.0"
+authors = ["aspen <luxx4x@protonmail.com>"]
+edition = "2018"
+license = "Zlib"
+
+[features]
+default = ["ctor"]
+no_std = []
+ctor = []
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "randbench"
+harness = false
