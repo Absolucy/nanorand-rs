@@ -1,17 +1,15 @@
-#![cfg_attr(any(feature = "no_std", target_family = "windows"), deny(unsafe_code))]
-#![cfg_attr(
-	not(any(feature = "no_std", target_family = "windows")),
-	forbid(unsafe_code)
-)]
+#![cfg_attr(windows, deny(unsafe_code))]
+#![cfg_attr(not(windows), forbid(unsafe_code))]
 
 /// Sources for obtaining entropy.
+#[cfg(feature = "std")]
 pub mod entropy;
 /// RNG algorithms.
 pub mod rand;
 
-use core::sync::atomic::{AtomicU64, Ordering};
+pub use rand::*;
 
-pub use rand::wyrand::rand_global as rand;
+use core::sync::atomic::{AtomicU64, Ordering};
 
 static RNG_STATE_GLOBAL: AtomicU64 = AtomicU64::new(42);
 

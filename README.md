@@ -1,37 +1,40 @@
-## nanorand
+# nanorand
 
 `nanorand` is a Rust crate, meant for fast, high-level, zero-dependency random number generation.
 
-### Example
+## Examples
 
+### Independent State
 ```rs
-use nanorand::rand;
-
-fn gen_in_range(lower: u64, upper: u64) -> u64 {
-    let random_number = rand();
-    (random_number % (upper - lower + 1)) + lower
-}
+use nanorand::{RNG, WyRand};
 
 fn main() {
-    println!("Random 64-bit number: {}", rand());
-    println!("Random number in 0-100 range: {}", gen_in_range(0, 100));
+    let mut rng = WyRand::new();
+    println!("Random 64-bit number: {}", rng.rand());
+    println!("Random number in 0-100 range: {}", rng.rand_range(0, 100));
 }
 ```
 
-### RNG Implementations
+### Global State
+```rs
+use nanorand::{RNG, WyRand};
+
+fn main() {
+    println!("Random 64-bit number: {}", WyRand::rand_global());
+    println!("Random number in 0-100 range: {}", WyRand::rand_global_range(0, 100));
+}
+```
+
+## RNG Implementations
 
 * [wyrand](src/rand/wyrand.rs) (Based off of [lemire's C++ implementation](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h), which in turn is based off of [wangyi-fudan's implementation](https://github.com/wangyi-fudan/wyhash/blob/master/wyhash.h))
 
-Current default (`nanohash::rand`) is **wyrand**.
+## Entropy Sources
 
-### Entropy Sources
-
-* Unix-like (Linux, Android, macOS, iOS, FreeBSD, OpenBSD)
-    * with `no_std` - libc `rand` (`#[deny(unsafe_code)]`)
-    * without `no_std` - first `/dev/urandom`, else `/dev/random`, else system time. (`#[forbid(unsafe_code)]`)
+* Unix-like (Linux, Android, macOS, iOS, FreeBSD, OpenBSD) - first `/dev/urandom`, else `/dev/random`, else system time. (`#[forbid(unsafe_code)]`)
 * Windows - `BCryptGenRandom` with system-preferred RNG. (`#[deny(unsafe_code)]`)
 
-### Manually Seeding
+## Manually Seeding
 
 `nanorand` by default has the `ctor` feature enabled, which will seed the global state using the default entropy source.  
 If needed, you can seed it yourself:
@@ -42,7 +45,7 @@ fn main() {
 }
 ```
 
-### License
+## License
 
 The zlib/libpng License
 

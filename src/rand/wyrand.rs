@@ -1,19 +1,52 @@
 // Based off lemire's wyrand C++ code at https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 
-use crate::RNG_STATE_GLOBAL;
-use core::sync::atomic::Ordering;
+use super::RNG;
 
-/// Generate a random number with wyrand using a custom seed.
-pub fn rand(state: u64) -> u64 {
-	let state = state.wrapping_add(0xa0761d6478bd642f);
-	let t: u128 = (state as u128).wrapping_mul((state ^ 0xe7037ed1a0b428db) as u128);
-	((t >> 64) ^ t) as u64
+/// An instance of the wyrand random number generator.  
+/// Seeded from the system entropy generator when available.
+pub struct WyRand {
+	seed: u64,
 }
 
-/// Generate a random number with wyrand using nanorand's global state.
-pub fn rand_global() -> u64 {
-	let state = RNG_STATE_GLOBAL.load(Ordering::Relaxed);
-	let result = rand(state);
-	RNG_STATE_GLOBAL.store(result, Ordering::Relaxed);
-	result
+#[cfg(feature = "std")]
+impl WyRand {
+	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
+	pub fn new() -> Self {
+		Self {
+			seed: crate::entropy::entropy_from_system(),
+		}
+	}
+}
+
+#[cfg(feature = "std")]
+impl Default for WyRand {
+	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
+	fn default() -> Self {
+		Self {
+			seed: crate::entropy::entropy_from_system(),
+		}
+	}
+}
+
+impl RNG for WyRand {
+	fn rand(&mut self) -> u64 {
+		let ret = Self::rand_with_seed(self.seed);
+		self.seed = ret;
+		ret
+	}
+
+	fn rand_with_seed(seed: u64) -> u64 {
+		let seed = seed.wrapping_add(0xa0761d6478bd642f);
+		let t: u128 = (seed as u128).wrapping_mul((seed ^ 0xe7037ed1a0b428db) as u128);
+		let ret = ((t >> 64) ^ t) as u64;
+		ret
+	}
+
+	fn reseed(&mut self, new_seed: u64) {
+		self.seed = new_seed;
+	}
+
+	fn clone(&mut self) -> Self {
+		Self { seed: self.rand() }
+	}
 }
