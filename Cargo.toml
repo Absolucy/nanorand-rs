@@ -11,9 +11,10 @@ edition = "2018"
 license = "Zlib"
 
 [features]
-default = ["std", "ctor", "wyrand"]
+default = ["std", "ctor", "wyrand", "pcg64"]
 std = []
 wyrand = []
+pcg64 = []
 ctor = ["std"]
 
 [dev-dependencies]
@@ -22,3 +23,8 @@ criterion = "0.3"
 [[bench]]
 name = "randbench"
 harness = false
+
+[profile.bench]
+lto = 'thin'
+opt-level = 3
+codegen-units = 1

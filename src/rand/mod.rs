@@ -5,20 +5,23 @@ pub mod wyrand;
 #[cfg(feature = "wyrand")]
 pub use wyrand::WyRand;
 
+#[cfg(feature = "pcg64")]
+pub mod pcg64;
+#[cfg(feature = "pcg64")]
+pub use pcg64::Pcg64;
+
 use crate::RNG_STATE_GLOBAL;
 use core::sync::atomic::Ordering;
 
 /// A trait that represents a random number generator.
 /// It is expected that
-pub trait RNG {
+pub trait RNG: Clone {
 	/// Generates a random 64-bit integer, seeding from the internal state.
 	fn rand(&mut self) -> u64;
 	/// Generates a random 64-bit integer, with a custom seed.
 	fn rand_with_seed(seed: u64) -> u64;
 	/// Reseeds the RNG using a custom seed.
 	fn reseed(&mut self, new_seed: u64);
-	/// Creates a new RNG instance, seeding it from ourselves.
-	fn clone(&mut self) -> Self;
 	/// Generates a random 64-bit integer in a custom range, seeding from the internal state.
 	fn rand_range(&mut self, lower: u64, upper: u64) -> u64 {
 		let random_number = self.rand();

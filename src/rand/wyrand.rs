@@ -3,7 +3,8 @@
 use super::RNG;
 
 /// An instance of the wyrand random number generator.  
-/// Seeded from the system entropy generator when available.
+/// Seeded from the system entropy generator when available.  
+/// **This generator is _NOT_ cryptographically secure.**
 pub struct WyRand {
 	seed: u64,
 }
@@ -45,8 +46,10 @@ impl RNG for WyRand {
 	fn reseed(&mut self, new_seed: u64) {
 		self.seed = new_seed;
 	}
+}
 
-	fn clone(&mut self) -> Self {
-		Self { seed: self.rand() }
+impl Clone for WyRand {
+	fn clone(&self) -> Self {
+		Self { seed: self.seed }
 	}
 }

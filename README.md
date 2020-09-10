@@ -1,5 +1,5 @@
 
-# This is currently not cryptographically-secure. CSPRNGs are planned to be added in the future, but do not use this in it's current state for cryptographically-secure random number generation.***
+# This is currently not cryptographically-secure. CSPRNGs are planned to be added in the future, but do not use this in it's current state for cryptographically-secure random number generation.
 
 # nanorand
 
@@ -30,7 +30,11 @@ fn main() {
 
 ## RNG Implementations
 
-* [wyrand](src/rand/wyrand.rs) (Based off of [lemire's C++ implementation](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h), which in turn is based off of [wangyi-fudan's implementation](https://github.com/wangyi-fudan/wyhash/blob/master/wyhash.h))
+**RNG**|**nanorand type**|**Cryptographically Secure**|**Supports Global State**|**Speed (Internal State)**|**Speed (Global State)**|**Notes**|**Original Implementation**
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|🚫|✅|2.5 ns|12 ns||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
+Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|🚫|🚫|7 ns|N/A||https://github.com/rkern/pcg64
+
 
 ## Entropy Sources
 

@@ -1,5 +1,5 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use nanorand::rand::{WyRand, RNG};
+use nanorand::rand::{Pcg64, WyRand, RNG};
 
 fn criterion_benchmark(c: &mut Criterion) {
 	c.bench_function("get entropy from system", |b| {
@@ -12,6 +12,11 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 	c.bench_function("wyrand + internal state", |b| {
 		let mut rng = WyRand::new();
+		b.iter(|| rng.rand())
+	});
+
+	c.bench_function("Pcg64", |b| {
+		let mut rng = Pcg64::new();
 		b.iter(|| rng.rand())
 	});
 }
