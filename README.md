@@ -1,3 +1,6 @@
+
+# This is currently not cryptographically-secure. CSPRNGs are planned to be added in the future, but do not use this in it's current state for cryptographically-secure random number generation.***
+
 # nanorand
 
 `nanorand` is a Rust crate, meant for fast, high-level, zero-dependency random number generation.
