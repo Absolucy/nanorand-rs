@@ -11,12 +11,12 @@ pub trait RandomGen<R: RNG> {
 
 /// Boilerplate code for creating a RandomGen implementation for number types.
 macro_rules! randomgen_number {
-    ($($number:tt),*) => {
+    ($($number:ty),*) => {
         $(
             impl<R: RNG> RandomGen<R> for $number {
                 fn generate(r: &mut R) -> Self {
                     let generated = r.rand();
-                    let mut bytes = [0u8; std::mem::size_of::<$number>()];
+                    let mut bytes = [0u8; core::mem::size_of::<$number>()];
                     bytes.iter_mut().zip(generated.as_ref()).for_each(|(a, b)| *a = *b);
                     Self::from_ne_bytes(bytes)
                 }
