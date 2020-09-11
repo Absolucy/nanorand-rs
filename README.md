@@ -18,7 +18,8 @@ fn main() {
 }
 ```
 
-### Global State
+### Global State  
+(Requires the `atomics` feature, and a platform that supports atomics)
 ```rs
 use nanorand::{RNG, WyRand};
 
@@ -51,6 +52,14 @@ fn main() {
     nanorand::seed_global(42);
 }
 ```
+
+## Feature Flags
+
+* `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources.  
+* `atomics` (default) - Enables an atomic global state, used for things like `RNG::rand_global`.
+* `ctor` (default) - Initializes the atomic global state at program initialization.
+* `wyrand` (default) - Enable the "wyrand" RNG.
+* `pcg64` (default) - Enable the "Pcg64" RNG.
 
 ## License
 

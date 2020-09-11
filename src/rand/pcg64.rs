@@ -25,7 +25,7 @@ impl Pcg64 {
 		}
 	}
 
-	#[inline]
+	#[inline(always)]
 	fn step(&mut self) {
 		self.state = self
 			.state
@@ -33,7 +33,7 @@ impl Pcg64 {
 			.wrapping_add(self.inc);
 	}
 
-	#[inline]
+	#[inline(always)]
 	fn rand128(&mut self) -> u64 {
 		self.state = 0;
 		self.inc = self.seed.rotate_left(1) | 1;

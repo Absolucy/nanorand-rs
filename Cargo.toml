@@ -5,17 +5,18 @@ repository = "https://github.com/aspenluxxxy/nanorand-rs"
 keywords = ["rand", "random", "no-std", "entropy"]
 categories = ["algorithms", "no-std"]
 readme = "README.md"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["aspen <luxx4x@protonmail.com>"]
 edition = "2018"
 license = "Zlib"
 
 [features]
-default = ["std", "ctor", "wyrand", "pcg64"]
+default = ["std", "atomics", "ctor", "wyrand", "pcg64"]
 std = []
+atomics = []
 wyrand = []
 pcg64 = []
-ctor = ["std"]
+ctor = ["std", "atomics"]
 
 [dev-dependencies]
 criterion = "0.3"
