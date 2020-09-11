@@ -10,7 +10,9 @@ pub mod pcg64;
 #[cfg(feature = "pcg64")]
 pub use pcg64::Pcg64;
 
+#[cfg(feature = "atomics")]
 use crate::RNG_STATE_GLOBAL;
+#[cfg(feature = "atomics")]
 use core::sync::atomic::Ordering;
 
 /*
