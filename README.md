@@ -7,34 +7,22 @@
 
 ## Examples
 
-### Independent State
 ```rs
 use nanorand::{RNG, WyRand};
 
 fn main() {
     let mut rng = WyRand::new();
-    println!("Random 64-bit number: {}", rng.rand());
-    println!("Random number in 0-100 range: {}", rng.rand_range(0, 100));
+    println!("Random 64-bit number: {}", rng.generate::<u64>());
 }
 ```
 
-### Global State  
-(Requires the `atomics` feature, and a platform that supports atomics)
-```rs
-use nanorand::{RNG, WyRand};
-
-fn main() {
-    println!("Random 64-bit number: {}", WyRand::rand_global());
-    println!("Random number in 0-100 range: {}", WyRand::rand_global_range(0, 100));
-}
-```
 
 ## RNG Implementations
 
-**RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Supports Global State**|**Speed (Internal State)**|**Speed (Global State)**|**Notes**|**Original Implementation**
-:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
-wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|✅|2.5 ns|12 ns||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
-Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|🚫|7 ns|N/A||https://github.com/rkern/pcg64
+**RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Speed (Internal State)**|**Notes**|**Original Implementation**
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|1.4 ns||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
+Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|7 ns||https://github.com/rkern/pcg64
 
 
 ## Entropy Sources
@@ -56,8 +44,6 @@ fn main() {
 ## Feature Flags
 
 * `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources.  
-* `atomics` (default) - Enables an atomic global state, used for things like `RNG::rand_global`.
-* `ctor` (default) - Initializes the atomic global state at program initialization.
 * `wyrand` (default) - Enable the "wyrand" RNG.
 * `pcg64` (default) - Enable the "Pcg64" RNG.
 

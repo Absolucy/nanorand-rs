@@ -11,12 +11,10 @@ edition = "2018"
 license = "Zlib"
 
 [features]
-default = ["std", "atomics", "ctor", "wyrand", "pcg64"]
+default = ["std", "wyrand", "pcg64"]
 std = []
-atomics = []
 wyrand = []
 pcg64 = []
-ctor = ["std", "atomics"]
 
 [dev-dependencies]
 criterion = "0.3"

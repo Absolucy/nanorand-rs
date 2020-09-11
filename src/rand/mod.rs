@@ -10,29 +10,8 @@ pub mod pcg64;
 #[cfg(feature = "pcg64")]
 pub use pcg64::Pcg64;
 
-#[cfg(feature = "atomics")]
-use crate::RNG_STATE_GLOBAL;
-#[cfg(feature = "atomics")]
-use core::sync::atomic::Ordering;
-
 use crate::gen::RandomGen;
 
-/*
-	fn rand_range(&mut self, lower: u64, upper: u64) -> u64 {
-		let t = ((-(upper as i64)) % (upper as i64)) as u64;
-		let mut l: u64;
-		let mut m: u128;
-		let in_range = loop {
-			let x = self.rand();
-			m = (x as u128).wrapping_mul(upper as u128);
-			l = m as u64;
-			if l >= t {
-				break (m >> 64) as u64;
-			}
-		};
-		in_range.max(lower)
-	}
-*/
 
 /// A trait that represents a random number generator.
 pub trait RNG: Clone {
@@ -48,18 +27,4 @@ pub trait RNG: Clone {
 	}
 	/// Reseeds the RNG using a custom seed.
 	fn reseed(&mut self, new_seed: &[u8]);
-	/*
-	/// Generates a random sequence of bytes, seeding from the global state.
-	/// Note that _this is slower than an internal state_, due to use of atomics.
-	#[cfg(feature = "atomics")]
-	fn rand_global() -> &'static [u8] {
-		let mut seed_bytes = [0u8; 8];
-		let seed = RNG_STATE_GLOBAL.load(Ordering::Acquire);
-		seed_bytes.iter_mut().zip(&seed.to_ne_bytes()).for_each(|(a, b)| *a = *b);
-		let random = Self::rand_with_seed(&seed.to_ne_bytes());
-		seed_bytes.iter_mut().zip(&seed.to_ne_bytes()).for_each(|(a, b)| *a = *b);
-		RNG_STATE_GLOBAL.compare_and_swap(seed, random_number, Ordering::Release);
-		random_number
-	}
-	*/
 }
