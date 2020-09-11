@@ -4,9 +4,12 @@
 /// Sources for obtaining entropy.
 #[cfg(feature = "std")]
 pub mod entropy;
+/// Traits for generating types from an RNG.
+pub mod gen;
 /// RNG algorithms.
 pub mod rand;
 
+pub use gen::*;
 pub use rand::*;
 
 #[cfg(feature = "atomics")]

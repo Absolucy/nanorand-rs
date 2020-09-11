@@ -31,10 +31,10 @@ fn main() {
 
 ## RNG Implementations
 
-**RNG**|**nanorand type**|**Cryptographically Secure**|**Supports Global State**|**Speed (Internal State)**|**Speed (Global State)**|**Notes**|**Original Implementation**
-:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
-wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|🚫|✅|2.5 ns|12 ns||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
-Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|🚫|🚫|7 ns|N/A||https://github.com/rkern/pcg64
+**RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Supports Global State**|**Speed (Internal State)**|**Speed (Global State)**|**Notes**|**Original Implementation**
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|✅|2.5 ns|12 ns||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
+Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|🚫|7 ns|N/A||https://github.com/rkern/pcg64
 
 
 ## Entropy Sources

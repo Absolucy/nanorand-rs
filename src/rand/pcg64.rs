@@ -63,18 +63,22 @@ impl Default for Pcg64 {
 }
 
 impl RNG for Pcg64 {
-	fn rand(&mut self) -> u64 {
+	type Output = [u8; 8];
+
+	fn rand(&mut self) -> Self::Output {
 		let ret = self.rand128();
 		self.seed = self.state ^ (ret as u128).rotate_right(64);
-		ret
+		ret.to_ne_bytes()
 	}
 
-	fn rand_with_seed(_seed: u64) -> u64 {
+	fn rand_with_seed(_seed: &[u8]) -> Self::Output {
 		unimplemented!("Pcg64 requires a state!");
 	}
 
-	fn reseed(&mut self, new_seed: u64) {
-		self.seed = new_seed as u128;
+	fn reseed(&mut self, new_seed: &[u8]) {
+		let mut seed = [0u8; 16];
+		seed.iter_mut().zip(new_seed).for_each(|(a, b)| *a = *b);
+		self.seed = u128::from_ne_bytes(seed);
 	}
 }
 
