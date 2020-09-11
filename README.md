@@ -30,17 +30,6 @@ Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|7 ns||https://gi
 * Unix-like (Linux, Android, macOS, iOS, FreeBSD, OpenBSD) - first `/dev/urandom`, else `/dev/random`, else system time. (`#[forbid(unsafe_code)]`)
 * Windows - `BCryptGenRandom` with system-preferred RNG. (`#[deny(unsafe_code)]`)
 
-## Manually Seeding
-
-`nanorand` by default has the `ctor` feature enabled, which will seed the global state using the default entropy source.  
-If needed, you can seed it yourself:
-
-```rs
-fn main() {
-    nanorand::seed_global(42);
-}
-```
-
 ## Feature Flags
 
 * `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources.  
