@@ -24,9 +24,7 @@ impl WyRand {
 
 	/// Create a new [`WyRand`] instance, using a provided seed.
 	pub fn new_seed(seed: u64) -> Self {
-		Self {
-			seed
-		}
+		Self { seed }
 	}
 }
 
@@ -74,5 +72,12 @@ impl RNG for WyRand {
 impl Clone for WyRand {
 	fn clone(&self) -> Self {
 		Self { seed: self.seed }
+	}
+}
+
+#[cfg(feature = "std")]
+impl std::fmt::Display for WyRand {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "WyRand ({:p})", self)
 	}
 }

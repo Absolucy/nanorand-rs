@@ -1,5 +1,5 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion, Throughput};
-use nanorand::rand::{Pcg64, WyRand, RNG};
+use nanorand::rand::{ChaCha, Pcg64, WyRand, RNG};
 
 fn criterion_benchmark(c: &mut Criterion) {
 	let mut entropy_group = c.benchmark_group("entropy");
@@ -38,6 +38,28 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 	rng_group.bench_function("pcg64", |b| {
 		let mut rng = Pcg64::new();
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.generate());
+			}
+			black_box(n);
+		})
+	});
+
+	rng_group.bench_function("chacha8", |b| {
+		let mut rng = ChaCha::new(8);
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.generate());
+			}
+			black_box(n);
+		})
+	});
+
+	rng_group.bench_function("chacha20", |b| {
+		let mut rng = ChaCha::new(20);
 		b.iter(|| {
 			let mut n: u64 = u64::MIN;
 			for _ in 0..1024 {

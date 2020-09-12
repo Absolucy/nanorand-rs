@@ -10,8 +10,10 @@ pub mod pcg64;
 #[cfg(feature = "pcg64")]
 pub use pcg64::Pcg64;
 
-//#[cfg(feature = "chacha")]
+#[cfg(feature = "chacha")]
 pub mod chacha;
+#[cfg(feature = "chacha")]
+pub use chacha::ChaCha;
 
 use crate::gen::RandomGen;
 

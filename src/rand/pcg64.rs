@@ -106,3 +106,10 @@ impl Clone for Pcg64 {
 		}
 	}
 }
+
+#[cfg(feature = "std")]
+impl std::fmt::Display for Pcg64 {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "Pcg64 ({:p})", self)
+	}
+}

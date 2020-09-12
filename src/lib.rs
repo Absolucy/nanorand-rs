@@ -1,6 +1,8 @@
 #![cfg_attr(windows, deny(unsafe_code))]
 #![cfg_attr(not(windows), forbid(unsafe_code))]
 
+/// Implementation of cryptography, for CSPRNGs.
+pub mod crypto;
 /// Sources for obtaining entropy.
 #[cfg(feature = "std")]
 pub mod entropy;
@@ -8,8 +10,6 @@ pub mod entropy;
 pub mod gen;
 /// RNG algorithms.
 pub mod rand;
-/// Implementation of cryptography, for CSPRNGs.
-pub mod crypto;
 
 pub use gen::*;
 pub use rand::*;

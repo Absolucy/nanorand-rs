@@ -1,6 +1,4 @@
 
-# This is currently not cryptographically-secure. CSPRNGs are planned to be added in the future, but do not use this in it's current state for cryptographically-secure random number generation.
-
 # nanorand
 
 `nanorand` is a Rust crate, meant for fast, high-level, zero-dependency random number generation.
@@ -23,6 +21,7 @@ fn main() {
 :-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
 wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|1.4 ns||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|7 ns||https://github.com/rkern/pcg64
+ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|7 ns||https://cr.yp.to/chacha.html
 
 
 ## Entropy Sources

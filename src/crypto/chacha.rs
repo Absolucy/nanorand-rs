@@ -24,10 +24,10 @@ fn chacha_quarter_round(x: &mut [u32; 16], a: usize, b: usize, c: usize, d: usiz
 #[inline(always)]
 fn chacha_pack(x: &[u8], a: usize) -> u32 {
 	let mut res = 0_u32;
-	res |= (x[a] << 0 * 8) as u32;
-	res |= (x[a + 1] << 1 * 8) as u32;
-	res |= (x[a + 2] << 2 * 8) as u32;
-	res |= (x[a + 3] << 3 * 8) as u32;
+	res |= ((x[a] as u32) << 0 * 8) as u32;
+	res |= ((x[a + 1] as u32) << 1 * 8) as u32;
+	res |= ((x[a + 2] as u32) << 2 * 8) as u32;
+	res |= ((x[a + 3] as u32) << 3 * 8) as u32;
 	res
 }
 
@@ -48,10 +48,13 @@ pub fn chacha_block(rounds: u8, input: [u32; 16]) -> [u32; 16] {
 		chacha_quarter_round(&mut x, 2, 7, 8, 13);
 		chacha_quarter_round(&mut x, 3, 4, 9, 12);
 	}
+	x.iter_mut()
+		.enumerate()
+		.for_each(|(idx, x)| *x = x.wrapping_add(input[idx]));
 	x
 }
 
-pub fn chacha_init(rounds: u8, key: [u8; 32], nonce: [u8; 16]) -> [u32; 16] {
+pub fn chacha_init(key: [u8; 32], nonce: [u8; 16]) -> [u32; 16] {
 	let mut state = [0u32; 16];
 	state[0] = chacha_pack(CHACHA_TAU, 0);
 	state[1] = chacha_pack(CHACHA_TAU, 4);
