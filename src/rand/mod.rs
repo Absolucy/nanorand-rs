@@ -12,7 +12,6 @@ pub use pcg64::Pcg64;
 
 use crate::gen::RandomGen;
 
-
 /// A trait that represents a random number generator.
 pub trait RNG: Clone {
 	type Output: AsRef<[u8]>;
