@@ -8,6 +8,8 @@ pub mod entropy;
 pub mod gen;
 /// RNG algorithms.
 pub mod rand;
+/// Implementation of cryptography, for CSPRNGs.
+pub mod crypto;
 
 pub use gen::*;
 pub use rand::*;

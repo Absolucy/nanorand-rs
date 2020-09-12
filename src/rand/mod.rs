@@ -10,6 +10,9 @@ pub mod pcg64;
 #[cfg(feature = "pcg64")]
 pub use pcg64::Pcg64;
 
+//#[cfg(feature = "chacha")]
+pub mod chacha;
+
 use crate::gen::RandomGen;
 
 /// A trait that represents a random number generator.

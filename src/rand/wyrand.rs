@@ -9,9 +9,9 @@ pub struct WyRand {
 	seed: u64,
 }
 
-#[cfg(feature = "std")]
 impl WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
+	#[cfg(feature = "std")]
 	pub fn new() -> Self {
 		let mut entropy: [u8; std::mem::size_of::<u64>()] = Default::default();
 		entropy.copy_from_slice(&crate::entropy::entropy_from_system(
@@ -19,6 +19,13 @@ impl WyRand {
 		));
 		Self {
 			seed: u64::from_ne_bytes(entropy),
+		}
+	}
+
+	/// Create a new [`WyRand`] instance, using a provided seed.
+	pub fn new_seed(seed: u64) -> Self {
+		Self {
+			seed
 		}
 	}
 }

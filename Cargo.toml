@@ -11,10 +11,11 @@ edition = "2018"
 license = "Zlib"
 
 [features]
-default = ["std", "wyrand", "pcg64"]
+default = ["std", "wyrand", "pcg64", "chacha"]
 std = []
 wyrand = []
 pcg64 = []
+chacha = []
 
 [dev-dependencies]
 criterion = { version = "0.3", features = ["real_blackbox"] }
