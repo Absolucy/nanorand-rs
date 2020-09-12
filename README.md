@@ -21,7 +21,7 @@ fn main() {
 :-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
 wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|4 GB/s||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|1 GB/s||https://github.com/rkern/pcg64
-ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|70 MB/s (ChaCha8), 35 MB/s (ChaCha20)||https://cr.yp.to/chacha.html
+ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|90 MB/s (ChaCha8), 40 MB/s (ChaCha20)||https://cr.yp.to/chacha.html
 
 
 ## Entropy Sources

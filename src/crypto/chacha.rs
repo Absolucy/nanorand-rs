@@ -49,8 +49,8 @@ pub fn chacha_block(rounds: u8, input: [u32; 16]) -> [u32; 16] {
 		chacha_quarter_round(&mut x, 3, 4, 9, 12);
 	}
 	x.iter_mut()
-		.enumerate()
-		.for_each(|(idx, x)| *x = x.wrapping_add(input[idx]));
+		.zip(input.iter().copied())
+		.for_each(|(l, r)| *l = l.wrapping_add(r));
 	x
 }
 
