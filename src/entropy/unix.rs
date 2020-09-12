@@ -1,47 +1,36 @@
+use super::emergency_system_time_entropy;
 use std::fs::File;
-use std::io::Read;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::io::{BufReader, Read};
 
-/// Obtain a random 64-bit number.  
+/// Obtain a series of random bytes.  
 /// Sources (in order of priority):  
 ///  1. `/dev/urandom`  
 ///  2. `/dev/random`  
-///  3. The current system time, in nanoseconds since the Unix Epoch.
-pub fn entropy_from_system() -> u64 {
+///  3. The emergency time-based entropy source.
+pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 	match File::open("/dev/urandom") {
-		Ok(mut fd) => {
-			let mut entropy: [u8; 8] = Default::default();
-			match fd.read_exact(&mut entropy) {
-				Ok(_) => u64::from_ne_bytes(entropy),
-				Err(_) => (u64::from_ne_bytes(entropy)
-					^ ((SystemTime::now()
-						.duration_since(UNIX_EPOCH)
-						.unwrap()
-						.as_nanos() >> 64) as u64))
-					.wrapping_mul(42),
+		Ok(fd) => {
+			let mut entropy: Vec<u8> = vec![42; amt];
+			let mut reader = BufReader::new(fd);
+			match reader.read_exact(&mut entropy[..amt]) {
+				Ok(_) => entropy,
+				Err(_) => emergency_system_time_entropy(amt),
 			}
 		}
 		Err(_) => {
 			// Ugh, let's try for /dev/random
 			match File::open("/dev/random") {
-				Ok(mut fd) => {
-					let mut entropy: [u8; 8] = Default::default();
-					match fd.read_exact(&mut entropy) {
-						Ok(_) => u64::from_ne_bytes(entropy),
-						Err(_) => (u64::from_ne_bytes(entropy)
-							^ ((SystemTime::now()
-								.duration_since(UNIX_EPOCH)
-								.unwrap()
-								.as_nanos() >> 64) as u64))
-							.wrapping_mul(42),
+				Ok(fd) => {
+					let mut entropy: Vec<u8> = vec![42; amt];
+					let mut reader = BufReader::new(fd);
+					match reader.read_exact(&mut entropy[..amt]) {
+						Ok(_) => entropy,
+						Err(_) => emergency_system_time_entropy(amt),
 					}
 				}
 				Err(_) => {
 					// Fuck it, just use system time and hope for the best.
-					(SystemTime::now()
-						.duration_since(UNIX_EPOCH)
-						.unwrap()
-						.as_nanos() >> 64) as u64
+					emergency_system_time_entropy(amt)
 				}
 			}
 		}

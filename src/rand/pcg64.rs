@@ -17,9 +17,12 @@ pub struct Pcg64 {
 impl Pcg64 {
 	/// Create a new [`Pcg64`] instance, seeding from the system's default source of entropy.
 	pub fn new() -> Self {
+		let mut entropy: [u8; std::mem::size_of::<u128>()] = Default::default();
+		entropy.copy_from_slice(&crate::entropy::entropy_from_system(std::mem::size_of::<
+			u128,
+		>()));
 		Self {
-			seed: (crate::entropy::entropy_from_system() as u128).rotate_right(64)
-				| crate::entropy::entropy_from_system() as u128,
+			seed: u128::from_ne_bytes(entropy),
 			inc: 0,
 			state: 0,
 		}
@@ -53,9 +56,12 @@ impl Pcg64 {
 impl Default for Pcg64 {
 	/// Create a new [`Pcg64`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {
+		let mut entropy: [u8; std::mem::size_of::<u128>()] = Default::default();
+		entropy.copy_from_slice(&crate::entropy::entropy_from_system(std::mem::size_of::<
+			u128,
+		>()));
 		Self {
-			seed: (crate::entropy::entropy_from_system() as u128 >> 64)
-				| crate::entropy::entropy_from_system() as u128,
+			seed: u128::from_ne_bytes(entropy),
 			inc: 0,
 			state: 0,
 		}
