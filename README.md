@@ -17,11 +17,11 @@ fn main() {
 
 ## RNG Implementations
 
-**RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Speed (Internal State)**|**Notes**|**Original Implementation**
+**RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Speed**|**Notes**|**Original Implementation**
 :-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
-wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|1.4 ns||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
-Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|7 ns||https://github.com/rkern/pcg64
-ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|7 ns||https://cr.yp.to/chacha.html
+wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|4 GB/s||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
+Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|1 GB/s||https://github.com/rkern/pcg64
+ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|70 MB/s (ChaCha8), 35 MB/s (ChaCha20)||https://cr.yp.to/chacha.html
 
 
 ## Entropy Sources
@@ -34,6 +34,7 @@ ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|7 ns||h
 * `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources.  
 * `wyrand` (default) - Enable the "wyrand" RNG.
 * `pcg64` (default) - Enable the "Pcg64" RNG.
+* `chacha` (default) - Enable the "ChaCha" RNG.
 
 ## License
 
