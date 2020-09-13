@@ -1,3 +1,4 @@
+#![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(windows, deny(unsafe_code))]
 #![cfg_attr(not(windows), forbid(unsafe_code))]
 
