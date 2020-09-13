@@ -11,7 +11,7 @@ edition = "2018"
 license = "Zlib"
 
 [features]
-default = ["std", "wyrand", "pcg64", "chacha"]
+default = ["std", "wyrand", "pcg64"]
 std = []
 wyrand = []
 pcg64 = []
