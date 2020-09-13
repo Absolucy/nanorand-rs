@@ -18,7 +18,7 @@ pcg64 = []
 chacha = []
 
 [dev-dependencies]
-criterion = { version = "0.3", features = ["real_blackbox"] }
+criterion = "0.3"
 
 [[bench]]
 name = "randbench"
