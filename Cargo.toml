@@ -19,6 +19,11 @@ chacha = []
 
 [dev-dependencies]
 criterion = "0.3"
+randomize = "^3.0"
+oorandom = "^11.1"
+rand_core = "^0.5"
+rand_pcg = "^0.2"
+random-fast-rng = "^0.1"
 
 [[bench]]
 name = "randbench"
