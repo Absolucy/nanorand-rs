@@ -17,7 +17,7 @@ fn main() {
 ## Why should I use this over...
 
 * `rand` - The standard rand crate is a complex beast. It contains unsafe code in the core implementations, and while it has much more options than we do, that's kind of the point. We're straight to the point, while rand is everything and the kitchen sink.  
-* `oorandom`, `random-fast-rng`, or `randomize` - These are both minimal, zero-dep implementations of the PCG family of RNGs (Pcg32 and Pcg64). While these are decent, they are _much_ slower than wyrand (which beats these crates Pcg32 speed while providing 64 random bits), and do not provide CSPRNGs.  
+* `oorandom`, `random-fast-rng`, or `randomize` - These are all minimal, zero-dep implementations of the PCG family of RNGs (Pcg32 and Pcg64). While these are decent, they are _much_ slower than wyrand (which beats the speed of these Pcg32 implementations while providing 64 random bits), and do not provide CSPRNGs.  
 * `getrandom` - The getrandom crate just provides OS entropy sources. It is not meant for random number generation. In fact, it is useful for seeding nanorand's RNGs on platforms where we can't do that ourselves.
 
 Benchmark output (from the [benches/randbench.rs](benches/randbench.rs)) [can be seen in this text file](benchmark-run-9-14-2020.txt). It was ran on a `Standard_D4s_v3` Azure virtual machine.
@@ -28,7 +28,7 @@ Benchmark output (from the [benches/randbench.rs](benches/randbench.rs)) [can be
 :-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
 wyrand|[nanohash::WyRand](src/rand/wyrand.rs)|64 bits (`u64`)|🚫|4 GB/s||https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 Pcg64|[nanohash::Pcg64](src/rand/pcg64.rs)|64 bits (`u64`)|🚫|1 GB/s||https://github.com/rkern/pcg64
-ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|90 MB/s (ChaCha8), 40 MB/s (ChaCha20)|Currently only works in **Nightly** Rust, will work with Stable 1.47 (see [rust#74060](https://github.com/rust-lang/rust/pull/74060))|https://cr.yp.to/chacha.htmightlyl
+ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|90 MB/s (ChaCha8), 40 MB/s (ChaCha20)|Currently only works in **Nightly** Rust, will work with Stable 1.47 (see [rust#74060](https://github.com/rust-lang/rust/pull/74060))|https://cr.yp.to/chacha.html
 
 
 ## Entropy Sources
