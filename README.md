@@ -17,10 +17,10 @@ fn main() {
 ## Why should I use this over...
 
 * `rand` - The standard rand crate is a complex beast. It contains unsafe code in the core implementations, and while it has much more options than we do, that's kind of the point. We're straight to the point, while rand is everything and the kitchen sink.  
-* `oorandom`, `random-fast-rng`, or `randomize` - These are all minimal, zero-dep implementations of the PCG family of RNGs (Pcg32 and Pcg64). While these are decent, they are _much_ slower than wyrand (which beats the speed of these Pcg32 implementations while providing 64 random bits), and do not provide CSPRNGs.  
+* `fastrand`, `oorandom`, `random-fast-rng`, or `randomize` - These are all minimal, zero-dep implementations of the PCG family of RNGs (Pcg32 and Pcg64). While these are decent, they are _much_ slower than wyrand (which beats the speed of these Pcg32 implementations while providing 64 random bits), and do not provide CSPRNGs.  
 * `getrandom` - The getrandom crate just provides OS entropy sources. It is not meant for random number generation. In fact, it is useful for seeding nanorand's RNGs on platforms where we can't do that ourselves.
 
-Benchmark output (from the [benches/randbench.rs](benches/randbench.rs)) [can be seen in this text file](benchmark-run-9-14-2020.txt). It was ran on a `Standard_D4s_v3` Azure virtual machine.
+Benchmark output (from the [benches/randbench.rs](benches/randbench.rs)) [can be seen in this text file](benchmark-run-9-15-2020.txt). It was ran on a `Standard_D4s_v3` Azure virtual machine.
 
 ## RNG Implementations
 

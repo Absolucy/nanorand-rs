@@ -15,7 +15,7 @@ pub mod chacha;
 #[cfg(feature = "chacha")]
 pub use chacha::ChaCha;
 
-use crate::gen::RandomGen;
+use crate::gen::{RandomGen, RandomRange};
 
 /// A trait that represents a random number generator.
 pub trait RNG: Clone {
@@ -27,7 +27,11 @@ pub trait RNG: Clone {
 	fn rand_with_seed(seed: &[u8]) -> Self::Output;
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate<R: RandomGen<Self>>(&mut self) -> R {
-		R::generate(self)
+		R::random(self)
+	}
+	/// Generates a random of the specified type, seeding from the internal state.
+	fn generate_range<R: RandomRange<Self>>(&mut self, lower: R, upper: R) -> R {
+		R::random_range(self, lower, upper)
 	}
 	/// Reseeds the RNG using a custom seed.
 	fn reseed(&mut self, new_seed: &[u8]);

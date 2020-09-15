@@ -174,6 +174,28 @@ fn criterion_benchmark(c: &mut Criterion) {
 		})
 	});
 
+	other_rngs.bench_function("fastrand pcg32", |b| {
+		let rng = fastrand::Rng::with_seed(42);
+		b.iter(|| {
+			let mut n: u32 = u32::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.u32(u32::MIN..u32::MAX));
+			}
+			black_box(n);
+		})
+	});
+
+	other_rngs.bench_function("fastrand pcg64", |b| {
+		let rng = fastrand::Rng::with_seed(42);
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.u64(u64::MIN..u64::MAX));
+			}
+			black_box(n);
+		})
+	});
+
 	other_rngs.finish();
 }
 
