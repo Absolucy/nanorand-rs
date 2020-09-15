@@ -1,4 +1,4 @@
-use super::emergency_system_time_entropy;
+use super::backup_entropy;
 use core::ffi::c_void;
 use core::ptr;
 
@@ -27,6 +27,6 @@ pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 	if status == 0 {
 		entropy
 	} else {
-		emergency_system_time_entropy(amt)
+		backup_entropy(amt)
 	}
 }

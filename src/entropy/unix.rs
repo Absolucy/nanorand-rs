@@ -1,4 +1,4 @@
-use super::emergency_system_time_entropy;
+use super::backup_entropy;
 use std::fs::File;
 use std::io::{BufReader, Read};
 
@@ -6,7 +6,8 @@ use std::io::{BufReader, Read};
 /// Sources (in order of priority):  
 ///  1. `/dev/urandom`  
 ///  2. `/dev/random`  
-///  3. The emergency time-based entropy source.
+///  3. rdseed (if available)
+///  4. The emergency time-based entropy source.
 pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 	match File::open("/dev/urandom") {
 		Ok(fd) => {
@@ -14,7 +15,7 @@ pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 			let mut reader = BufReader::new(fd);
 			match reader.read_exact(&mut entropy[..amt]) {
 				Ok(_) => entropy,
-				Err(_) => emergency_system_time_entropy(amt),
+				Err(_) => backup_entropy(amt),
 			}
 		}
 		Err(_) => {
@@ -25,13 +26,10 @@ pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 					let mut reader = BufReader::new(fd);
 					match reader.read_exact(&mut entropy[..amt]) {
 						Ok(_) => entropy,
-						Err(_) => emergency_system_time_entropy(amt),
+						Err(_) => backup_entropy(amt),
 					}
 				}
-				Err(_) => {
-					// Fuck it, just use system time and hope for the best.
-					emergency_system_time_entropy(amt)
-				}
+				Err(_) => backup_entropy(amt),
 			}
 		}
 	}

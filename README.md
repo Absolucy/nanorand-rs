@@ -1,7 +1,7 @@
 
 # nanorand
 
-`nanorand` is a Rust crate, meant for fast, high-level, zero-dependency random number generation.
+`nanorand` is a Rust crate, meant for fast  random number generation with **zero required dependencies**.
 
 ## Examples
 
@@ -42,6 +42,8 @@ ChaCha|[nanohash::ChaCha](src/rand/chacha.rs)|512 bits (`[u32; 16]`)|✅|90 MB/s
 * `wyrand` (default) - Enable the "wyrand" RNG.
 * `pcg64` (default) - Enable the "Pcg64" RNG.
 * `chacha` (**Nightly-only**) - Enable the "ChaCha" RNG.
+* `rdseed` - On x86/x86_64 platforms, the `rdseed` intrinsic will be used when OS entropy isn't available.
+* `zeroize` - Implement the [Zeroize](https://crates.io/crates/zeroize) trait for all RNGs.
 
 ## License
 

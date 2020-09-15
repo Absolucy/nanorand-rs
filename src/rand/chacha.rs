@@ -4,6 +4,8 @@ use crate::crypto::chacha;
 /// An instance of the ChaCha random number generator.  
 /// Seeded from the system entropy generator when available.  
 /// **This generator _is theoretically_ cryptographically secure.**
+#[cfg_attr(feature = "zeroize", derive(zeroize::Zeroize))]
+#[cfg_attr(feature = "zeroizer", zeroize(drop))]
 pub struct ChaCha {
 	state: [u32; 16],
 	rounds: u8,

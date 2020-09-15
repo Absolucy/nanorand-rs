@@ -22,6 +22,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 			));
 		})
 	});
+
 	entropy_group.finish();
 
 	let mut rng_group = c.benchmark_group("rngs");
@@ -84,6 +85,17 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 	let mut other_rngs = c.benchmark_group("other-rng-crates");
 	other_rngs.throughput(Throughput::Bytes(std::mem::size_of::<u64>() as u64 * 1024));
+
+	other_rngs.bench_function("wyhash wyrand", |b| {
+		let mut seed = 42_u64;
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(wyhash::wyrng(&mut seed));
+			}
+			black_box(n);
+		})
+	});
 
 	other_rngs.bench_function("oorandom pcg32", |b| {
 		let mut rng = oorandom::Rand32::new(42);
