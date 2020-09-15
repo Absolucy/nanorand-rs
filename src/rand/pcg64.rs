@@ -55,7 +55,7 @@ impl Pcg64 {
 		self.state = self.state.wrapping_add(self.seed);
 		self.step();
 		self.step();
-		(((self.state >> 64) as u64) ^ (self.state as u64)) >> (self.state >> 122)
+		((self.state >> 64) as u64) ^ (self.state as u64)
 	}
 
 	pub fn reseed128(&mut self, seed: u128) {
