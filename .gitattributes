@@ -1,0 +1,7 @@
+*       text=auto eol=lf
+
+# Guaranteed to be text
+*.rs    text=auto eol=lf
+*.txt   text=auto eol=lf
+*.md    text=auto eol=lf
+*.toml  text=auto eol=lf
