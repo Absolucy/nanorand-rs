@@ -1,4 +1,4 @@
-[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/aspenluxxxy/nanorand-rs.svg)](https://isitmaintained.com/project/aspenluxxxy/nanorand-rs "Average time to resolve an issue")
+ [![crates.io](https://img.shields.io/crates/v/nanorand.svg)](https://crates.io/crates/nanorand) [![docs.rs](https://docs.rs/nanorand/badge.svg)](https://docs.rs/nanorand) [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/aspenluxxxy/nanorand-rs.svg)](https://isitmaintained.com/project/aspenluxxxy/nanorand-rs "Average time to resolve an issue")
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/aspenluxxxy/nanorand-rs.svg)](https://isitmaintained.com/project/aspenluxxxy/nanorand-rs "Percentage of issues still open")
 ![Maintenance](https://img.shields.io/badge/maintenance-activly--developed-brightgreen.svg)
 
