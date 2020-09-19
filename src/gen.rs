@@ -31,7 +31,7 @@ impl<R: RNG> RandomGen<R> for char {
 /// Boilerplate code for creating a RandomGen implementation for number types.  
 /// Uses Lemire's debiased integer multiplication method.
 macro_rules! randomgen_number {
-    ($(($unsigned:ty, $signed:ty)),*) => {
+    ($(($unsigned:ty, $signed:ty, $bigger_unsigned:ty, $bigger_signed:ty)),*) => {
         $(
             impl<R: RNG> RandomGen<R> for $unsigned {
                 fn random(r: &mut R) -> Self {
@@ -42,20 +42,29 @@ macro_rules! randomgen_number {
                 }
             }
 
+/*
+uint32_t bounded_rand(rng_t& rng, uint32_t range) {
+    uint32_t t = (-range) % range;
+    do {
+        uint32_t x = rng();
+        uint64_t m = uint64_t(x) * uint64_t(range);
+        uint32_t l = uint32_t(m);
+    } while (l < t);
+    return m >> 32;
+}
+
+ */
             impl<R: RNG> RandomRange<R> for $unsigned {
                 fn random_range(r: &mut R, lower: $unsigned, upper: $unsigned) -> Self {
                     let t = ((-(upper as $signed)) % (upper as $signed)) as $unsigned;
-                    let mut l: $unsigned;
-                    let mut m: $unsigned;
                     let in_range = loop {
                         let x = Self::random(r);
-                        m = x.wrapping_mul(upper);
-                        l = m;
-                        if l >= t {
-                            break m;
+                        let m = (x as $bigger_unsigned).wrapping_mul(upper as $bigger_unsigned);
+                        if (m as $unsigned) >= t {
+                            break (m >> (::core::mem::size_of::<$unsigned>() * 8)) as $unsigned;
                         }
                     };
-                    in_range.min(upper).max(lower)
+                    in_range.max(lower)
                 }
             }
 
@@ -71,17 +80,14 @@ macro_rules! randomgen_number {
             impl<R: RNG> RandomRange<R> for $signed {
                 fn random_range(r: &mut R, lower: $signed, upper: $signed) -> Self {
                     let t = ((-(upper as $signed)) % (upper as $signed));
-                    let mut l: $signed;
-                    let mut m: $signed;
                     let in_range = loop {
                         let x = Self::random(r);
-                        m = x.wrapping_mul(upper);
-                        l = m;
-                        if l >= t {
-                            break m;
+                        let m = (x as $bigger_signed).wrapping_mul(upper as $bigger_signed);
+                        if (m as $signed) >= t {
+                            break (m >> (::core::mem::size_of::<$signed>() * 8)) as $signed;
                         }
                     };
-                    in_range.min(upper).max(lower)
+                    in_range.max(lower)
                 }
             }
         )*
@@ -89,10 +95,10 @@ macro_rules! randomgen_number {
 }
 
 randomgen_number!(
-	(u8, i8),
-	(u16, i16),
-	(u32, i32),
-	(u64, i64),
-	(u128, i128),
-	(usize, isize)
+	(u8, i8, u16, i16),
+	(u16, i16, u32, i32),
+	(u32, i32, u64, i16),
+	(u64, i64, u128, i128),
+	(u128, i128, u128, i128),
+	(usize, isize, u128, i128)
 );
