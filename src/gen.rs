@@ -1,10 +1,12 @@
 use crate::RNG;
 
+/// A trait used for generating a random object with an RNG,
 pub trait RandomGen<R: RNG> {
 	/// Return a random instance of the implementing type, from the specified RNG instance.
 	fn random(r: &mut R) -> Self;
 }
 
+/// A trait used for generating a random number within a range, with an RNG,
 pub trait RandomRange<R: RNG>: RandomGen<R> {
 	/// Return a ranged number of the implementing type, from the specified RNG instance.
 	fn random_range(r: &mut R, lower: Self, upper: Self) -> Self;
@@ -26,7 +28,8 @@ impl<R: RNG> RandomGen<R> for char {
 	}
 }
 
-/// Boilerplate code for creating a RandomGen implementation for number types.
+/// Boilerplate code for creating a RandomGen implementation for number types.  
+/// Uses Lemire's debiased integer multiplication method.
 macro_rules! randomgen_number {
     ($($number:ty),*) => {
         $(

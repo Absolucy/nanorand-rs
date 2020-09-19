@@ -120,6 +120,9 @@ pub fn rdseed_entropy(_amt: usize) -> Option<Result<Vec<u8>, Vec<u8>>> {
 	None
 }
 
+/// A backup entropy source, trying rdseed first,
+/// and if it fails or does not complete, combining it with or
+/// using system time-based entropy generation.
 #[cfg(feature = "std")]
 pub fn backup_entropy(amt: usize) -> Vec<u8> {
 	let mut entropy = vec![42_u8; amt];

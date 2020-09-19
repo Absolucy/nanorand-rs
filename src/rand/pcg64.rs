@@ -57,10 +57,6 @@ impl Pcg64 {
 		self.step();
 		((self.state >> 64) as u64) ^ (self.state as u64)
 	}
-
-	pub fn reseed128(&mut self, seed: u128) {
-		self.seed = seed;
-	}
 }
 
 #[cfg(feature = "std")]

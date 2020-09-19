@@ -31,6 +31,7 @@ fn chacha_pack(x: &[u8], a: usize) -> u32 {
 	res
 }
 
+/// Do one ChaCha round on the input data.
 pub fn chacha_block(rounds: u8, input: [u32; 16]) -> [u32; 16] {
 	let mut x = input;
 	if rounds % 2 != 0 {
@@ -54,6 +55,7 @@ pub fn chacha_block(rounds: u8, input: [u32; 16]) -> [u32; 16] {
 	x
 }
 
+/// Initialize the ChaCha internal state, with a 32-byte kit.
 pub fn chacha_init(key: [u8; 32], nonce: [u8; 16]) -> [u32; 16] {
 	let mut state = [0u32; 16];
 	state[0] = chacha_pack(CHACHA_TAU, 0);
