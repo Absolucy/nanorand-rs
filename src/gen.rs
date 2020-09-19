@@ -42,18 +42,6 @@ macro_rules! randomgen_number {
                 }
             }
 
-/*
-uint32_t bounded_rand(rng_t& rng, uint32_t range) {
-    uint32_t t = (-range) % range;
-    do {
-        uint32_t x = rng();
-        uint64_t m = uint64_t(x) * uint64_t(range);
-        uint32_t l = uint32_t(m);
-    } while (l < t);
-    return m >> 32;
-}
-
- */
             impl<R: RNG> RandomRange<R> for $unsigned {
                 fn random_range(r: &mut R, lower: $unsigned, upper: $unsigned) -> Self {
                     let t = ((-(upper as $signed)) % (upper as $signed)) as $unsigned;

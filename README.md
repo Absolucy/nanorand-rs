@@ -9,13 +9,22 @@ Current version: **0.4.0**
 A library meant for fast, random number generation with quick compile time, and minimal dependencies.
 
 ## Examples
-### Generating a u64
+### Generating a number
 ```rs
 use nanorand::{RNG, WyRand};
 
 fn main() {
     let mut rng = WyRand::new();
-    println!("Random 64-bit number: {}", rng.generate::<u64>());
+    println!("Random number: {}", rng.generate::<u64>());
+}
+```
+### Generating a number in a range
+```rs
+use nanorand::{RNG, WyRand};
+
+fn main() {
+    let mut rng = WyRand::new();
+    println!("Random number between 1 and 100: {}", rng.generate_range::<u64>(1, 100));
 }
 ```
 ### Shuffling a Vec
