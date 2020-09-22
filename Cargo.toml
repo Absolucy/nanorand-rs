@@ -5,7 +5,7 @@ repository = "https://github.com/aspenluxxxy/nanorand-rs"
 keywords = ["rand", "random", "no-std", "entropy"]
 categories = ["algorithms", "no-std"]
 readme = "README.md"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["aspen <luxx4x@protonmail.com>"]
 edition = "2018"
 license = "Zlib"
@@ -20,7 +20,7 @@ rdseed = ["std"]
 
 [dependencies]
 zeroize = { version = "1.1", optional = true, features = ["zeroize_derive"] }
-getrandom = { version = "0.2", optional = true, features = ["rdrand"] }
+getrandom = { version = "0.2", optional = true, features = ["rdrand", "js"] }
 
 [dev-dependencies]
 criterion = "0.3"
