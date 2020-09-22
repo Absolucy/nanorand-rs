@@ -19,7 +19,8 @@ chacha = []
 rdseed = ["std"]
 
 [dependencies]
-zeroize = { version = "^1.1", optional = true, features = ["zeroize_derive"] }
+zeroize = { version = "1.1", optional = true, features = ["zeroize_derive"] }
+getrandom = { version = "0.2", optional = true, features = ["rdrand"] }
 
 [dev-dependencies]
 criterion = "0.3"

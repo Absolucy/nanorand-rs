@@ -1,4 +1,4 @@
-{{badges}}
+ [![crates.io](https://img.shields.io/crates/v/nanorand.svg)](https://crates.io/crates/nanorand) [![docs.rs](https://docs.rs/nanorand/badge.svg)](https://docs.rs/nanorand) {{badges}}
 
 # {{crate}}
 

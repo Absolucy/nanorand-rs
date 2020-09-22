@@ -42,7 +42,7 @@ fn main() {
 
 * `rand` - The standard rand crate is a complex beast. It contains unsafe code in the core implementations, and while it has much more options than we do, that's kind of the point. We're straight to the point, while rand is everything and the kitchen sink.
 * `fastrand`, `oorandom`, `random-fast-rng`, or `randomize` - These are all minimal, zero-dep implementations of the PCG family of RNGs (Pcg32 and Pcg64). While these are decent, they are _much_ slower than wyrand (which beats the speed of these Pcg32 implementations while providing 64 random bits), and do not provide CSPRNGs.
-* `getrandom` - The getrandom crate just provides OS entropy sources. It is not meant for random number generation. In fact, it is useful for seeding nanorand's RNGs on platforms where we can't do that ourselves.
+* `getrandom` - The getrandom crate just provides OS entropy sources. It is not meant for random number generation. In fact, we provide it as an optional entropy source.
 
 ### RNG Implementations
 
@@ -65,6 +65,8 @@ ChaCha|[nanohash::ChaCha](rand/chacha/struct.ChaCha.html)|512 bits (`[u32; 16]`)
 * `chacha` (**Nightly-only**) - Enable the [ChaCha](rand/chacha/struct.ChaCha.html) RNG.
 * `rdseed` - On x86/x86_64 platforms, the `rdseed` intrinsic will be used when OS entropy isn't available.
 * `zeroize` - Implement the [Zeroize](https://crates.io/crates/zeroize) trait for all RNGs.
+* `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source.
+Works on most systems, optional due to the fact that it brings in more dependencies.
 
 ## License
 

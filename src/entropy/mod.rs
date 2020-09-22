@@ -2,14 +2,25 @@
 /// `/dev/random`, or the system time.
 #[cfg(unix)]
 pub mod unix;
-#[cfg(unix)]
+#[cfg(all(unix, not(feature = "getrandom")))]
 pub use unix::entropy_from_system;
 
 /// An entropy generator for Windows, using WinAPI's `BCryptGenRandom` function.
 #[cfg(windows)]
 pub mod windows;
-#[cfg(windows)]
+#[cfg(all(windows, not(feature = "getrandom")))]
 pub use windows::entropy_from_system;
+
+/// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.  
+/// Uses backup entropy (rdseed and system time) if it fails.
+#[cfg(feature = "getrandom")]
+pub fn entropy_from_system(amt: usize) -> Vec<u8> {
+	let mut entropy: Vec<u8> = vec![42; amt];
+	match getrandom::getrandom(&mut entropy) {
+		Ok(_) => entropy,
+		Err(_) => backup_entropy(amt),
+	}
+}
 
 use std::time::{SystemTime, UNIX_EPOCH};
 
