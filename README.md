@@ -4,7 +4,7 @@
 
 # nanorand
 
-Current version: **0.4.0**
+Current version: **0.4.1**
 
 A library meant for fast, random number generation with quick compile time, and minimal dependencies.
 

@@ -22,6 +22,12 @@ pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 	}
 }
 
+/// Pull in backup entropy (rdseed and system time).
+#[cfg(not(any(feature = "getrandom", unix, windows)))]
+pub fn entropy_from_system(amt: usize) -> Vec<u8> {
+	backup_entropy(amt)
+}
+
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// An emergency system time-based entropy source.  
