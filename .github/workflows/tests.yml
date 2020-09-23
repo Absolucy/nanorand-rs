@@ -1,0 +1,25 @@
+name: "Run Tests"
+on: [push, pull_request]
+jobs:
+  tests:
+    name: "Test with Rust ${{ matrix.rust.version }} on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          override: true
+          profile: minimal
+          toolchain: "${{ matrix.rust.version }}"
+      - uses: actions-rs/cargo@v1
+        with:
+          args: "--features ${{matrix.rust.features}}"
+          command: test
+    strategy:
+      matrix:
+        rust:
+          - version: stable
+            features: getrandom
+          - version: nightly
+            features: chacha,getrandom
+        os: [windows-latest, ubuntu-latest, macos-latest]

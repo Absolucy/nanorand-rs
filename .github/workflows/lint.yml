@@ -1,0 +1,29 @@
+name: "Run Linter"
+on: [push, pull_request]
+jobs:
+  tests:
+    name: "Linting"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          override: true
+          profile: minimal
+          toolchain: "stable"
+          components: rustfmt, clippy
+      - name: Run rustfmt
+        uses: actions-rs/cargo@v1
+        with:
+          args: "--all -- --check"
+          command: fmt
+      - name: Run 'cargo check'
+        uses: actions-rs/cargo@v1
+        with:
+          args: "--features getrandom --all"
+          command: check
+      - name: Run clippy
+        uses: actions-rs/cargo@v1
+        with:
+          args: "--features getrandom --all"
+          command: clippy
