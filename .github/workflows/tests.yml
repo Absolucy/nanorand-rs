@@ -2,7 +2,7 @@ name: "Run Tests"
 on: [push, pull_request]
 jobs:
   tests:
-    name: "Test with Rust ${{ matrix.rust.version }} on ${{ matrix.os }}"
+    name: "Test with Rust ${{ matrix.rust.version }} on ${{ matrix.os }} with features ${{ matrix.rust.features }}"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +21,11 @@ jobs:
       matrix:
         rust:
           - version: stable
-            features: getrandom
+            features: std,wyrand,pcg64,getrandom
           - version: nightly
-            features: chacha,getrandom
+            features: std,wyrand,pcg64,chacha,getrandom
+          - version: stable
+            features: std,wyrand,pcg64
+          - version: nightly
+            features: std,wyrand,pcg64,chacha
         os: [windows-latest, ubuntu-latest, macos-latest]
