@@ -1,25 +1,26 @@
+#[cfg(feature = "chacha")]
+pub use chacha::ChaCha;
+#[cfg(feature = "pcg64")]
+pub use pcg64::Pcg64;
+#[cfg(feature = "wyrand")]
+pub use wyrand::WyRand;
+
+use crate::gen::{RandomGen, RandomRange};
+
 /// Implementation of the wyrand PRNG algorithm.
 /// More details can be seen at https://github.com/wangyi-fudan/wyhash
 #[cfg(feature = "wyrand")]
 pub mod wyrand;
-#[cfg(feature = "wyrand")]
-pub use wyrand::WyRand;
 
 /// Implementation of the Pcg64 PRNG algorithm.
 /// More details can be seen at https://www.pcg-random.org/index.html
 #[cfg(feature = "pcg64")]
 pub mod pcg64;
-#[cfg(feature = "pcg64")]
-pub use pcg64::Pcg64;
 
 /// Implementation of the ChaCha CSPRNG algorithm.
 /// More details can be seen at https://en.wikipedia.org/wiki/Salsa20
 #[cfg(feature = "chacha")]
 pub mod chacha;
-#[cfg(feature = "chacha")]
-pub use chacha::ChaCha;
-
-use crate::gen::{RandomGen, RandomRange};
 
 /// A trait that represents a random number generator.
 pub trait RNG: Clone {

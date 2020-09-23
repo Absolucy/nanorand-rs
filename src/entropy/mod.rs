@@ -1,15 +1,24 @@
+use std::time::{SystemTime, UNIX_EPOCH};
+
+#[cfg(all(unix, not(feature = "getrandom")))]
+pub use unix::entropy_from_system;
+#[cfg(all(windows, not(target_vendor = "uwp"), not(feature = "getrandom")))]
+pub use windows::entropy_from_system;
+#[cfg(all(windows, target_vendor = "uwp", not(feature = "getrandom")))]
+pub use windows_uwp::entropy_from_system;
+
 /// A 100% safe entropy generator, using (in order of priority) `/dev/urandom`,
 /// `/dev/random`, or the system time.
 #[cfg(unix)]
 pub mod unix;
-#[cfg(all(unix, not(feature = "getrandom")))]
-pub use unix::entropy_from_system;
 
 /// An entropy generator for Windows, using WinAPI's `BCryptGenRandom` function.
-#[cfg(windows)]
+#[cfg(all(windows, target_vendor = "uwp"))]
+pub mod windows_uwp;
+
+/// An entropy generator for Windows, using WinAPI's `RtlGenRandom` function.
+#[cfg(all(windows, not(target_vendor = "uwp")))]
 pub mod windows;
-#[cfg(all(windows, not(feature = "getrandom")))]
-pub use windows::entropy_from_system;
 
 /// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.  
 /// Uses backup entropy (rdseed and system time) if it fails.
@@ -27,8 +36,6 @@ pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 pub fn entropy_from_system(amt: usize) -> Vec<u8> {
 	backup_entropy(amt)
 }
-
-use std::time::{SystemTime, UNIX_EPOCH};
 
 /// An emergency system time-based entropy source.  
 /// Should be slightly better than just piping the system time into a seed,

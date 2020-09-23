@@ -65,6 +65,9 @@
 //! * `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source.
 //! Works on most systems, optional due to the fact that it brings in more dependencies.
 
+pub use gen::*;
+pub use rand::*;
+
 /// Implementation of cryptography, for CSPRNGs.
 pub mod crypto;
 /// Sources for obtaining entropy.
@@ -75,6 +78,3 @@ pub mod entropy;
 pub mod gen;
 /// RNG algorithms.
 pub mod rand;
-
-pub use gen::*;
-pub use rand::*;

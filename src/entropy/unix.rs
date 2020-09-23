@@ -1,6 +1,7 @@
-use super::backup_entropy;
 use std::fs::File;
 use std::io::{BufReader, Read};
+
+use super::backup_entropy;
 
 /// Obtain a series of random bytes.  
 /// Sources (in order of priority):  

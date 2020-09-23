@@ -1,5 +1,6 @@
-use super::RNG;
 use crate::crypto::chacha;
+
+use super::RNG;
 
 /// An instance of the ChaCha random number generator.  
 /// Seeded from the system entropy generator when available.  
