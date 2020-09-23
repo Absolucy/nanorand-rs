@@ -9,15 +9,15 @@ pub use windows_uwp::entropy_from_system;
 
 /// A 100% safe entropy generator, using (in order of priority) `/dev/urandom`,
 /// `/dev/random`, or the system time.
-#[cfg(unix)]
+#[cfg(all(unix, not(feature = "getrandom")))]
 pub mod unix;
 
 /// An entropy generator for Windows, using WinAPI's `BCryptGenRandom` function.
-#[cfg(all(windows, target_vendor = "uwp"))]
+#[cfg(all(windows, target_vendor = "uwp", not(feature = "getrandom")))]
 pub mod windows_uwp;
 
 /// An entropy generator for Windows, using WinAPI's `RtlGenRandom` function.
-#[cfg(all(windows, not(target_vendor = "uwp")))]
+#[cfg(all(windows, not(target_vendor = "uwp"), not(feature = "getrandom")))]
 pub mod windows;
 
 /// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.  
