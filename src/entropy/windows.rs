@@ -1,6 +1,7 @@
 use super::backup_entropy;
 
 extern "system" {
+	#[link_name = "SystemFunction036"]
 	fn RtlGenRandom(pBuffer: *mut u8, cbBuffer: usize) -> u32;
 }
 
