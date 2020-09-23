@@ -5,7 +5,7 @@ repository = "https://github.com/aspenluxxxy/nanorand-rs"
 keywords = ["rand", "random", "no-std", "entropy"]
 categories = ["algorithms", "no-std"]
 readme = "README.md"
-version = "0.4.3"
+version = "0.4.4"
 authors = ["aspen <luxx4x@protonmail.com>"]
 edition = "2018"
 license = "Zlib"
@@ -46,8 +46,3 @@ codegen-units = 1
 all-features = true
 default-target = "x86_64-unknown-linux-gnu"
 targets = ["x86_64-pc-windows-msvc"]
-
-[badges]
-maintenance = { status = "actively-developed" }
-is-it-maintained-open-issues = { repository = "aspenluxxxy/nanorand-rs" }
-is-it-maintained-issue-resolution = { repository = "aspenluxxxy/nanorand-rs" }

@@ -1,4 +1,4 @@
-name: "Run Linter"
+name: "Linting"
 on: [push, pull_request]
 jobs:
   lint:

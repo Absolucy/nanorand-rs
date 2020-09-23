@@ -1,10 +1,8 @@
- [![crates.io](https://img.shields.io/crates/v/nanorand.svg)](https://crates.io/crates/nanorand) [![docs.rs](https://docs.rs/nanorand/badge.svg)](https://docs.rs/nanorand) [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/aspenluxxxy/nanorand-rs.svg)](https://isitmaintained.com/project/aspenluxxxy/nanorand-rs "Average time to resolve an issue")
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/aspenluxxxy/nanorand-rs.svg)](https://isitmaintained.com/project/aspenluxxxy/nanorand-rs "Percentage of issues still open")
-![Maintenance](https://img.shields.io/badge/maintenance-activly--developed-brightgreen.svg)
+[![crates.io](https://img.shields.io/crates/v/nanorand.svg)](https://crates.io/crates/nanorand) [![docs.rs](https://docs.rs/nanorand/badge.svg)](https://docs.rs/nanorand)  [![License: Zlib](https://img.shields.io/badge/License-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib) [![Tests](https://github.com/aspenluxxxy/nanorand-rs/workflows/Tests/badge.svg?event=push&branch=master)](https://github.com/aspenluxxxy/nanorand-rs/actions?query=workflow%3A%22Run+Tests%22) [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/aspenluxxxy/nanorand-rs.svg)](https://isitmaintained.com/project/aspenluxxxy/nanorand-rs "Average time to resolve an issue") [![Percentage of issues still open](https://isitmaintained.com/badge/open/aspenluxxxy/nanorand-rs.svg)](https://isitmaintained.com/project/aspenluxxxy/nanorand-rs "Percentage of issues still open") ![Maintenance](https://img.shields.io/badge/maintenance-activly--developed-brightgreen.svg)
 
 # nanorand
 
-Current version: **0.4.1**
+Current version: **0.4.4**
 
 A library meant for fast, random number generation with quick compile time, and minimal dependencies.
 
