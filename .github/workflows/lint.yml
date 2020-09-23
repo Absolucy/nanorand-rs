@@ -1,12 +1,13 @@
 name: "Run Linter"
 on: [push, pull_request]
 jobs:
-  tests:
+  lint:
     name: "Linting"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - name: "Install stable Rust toolchain"
+        uses: actions-rs/toolchain@v1
         with:
           override: true
           profile: minimal
