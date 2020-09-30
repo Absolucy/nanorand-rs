@@ -1,4 +1,5 @@
 [hooks]
+commit-msg = "python3 enforce-conventional-commits.py \"%rh!\""
 pre-commit = "cargo test"
 
 [logging]
