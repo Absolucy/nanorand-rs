@@ -28,7 +28,19 @@ impl<R: RNG> RandomGen<R> for char {
 	}
 }
 
-/// Boilerplate code for creating a RandomGen implementation for number types.  
+impl<R: RNG> RandomGen<R> for bool {
+	fn random(r: &mut R) -> bool {
+		let generated = r.rand();
+		let mut bytes = [0u8; core::mem::size_of::<u8>()];
+		bytes
+			.iter_mut()
+			.zip(generated.as_ref())
+			.for_each(|(a, b)| *a = *b);
+		bytes[0] < 0b10000000
+	}
+}
+
+/// Boilerplate code for creating a RandomGen implementation for number types.
 /// Uses Lemire's debiased integer multiplication method.
 macro_rules! randomgen_number {
     ($(($unsigned:ty, $signed:ty, $bigger_unsigned:ty, $bigger_signed:ty)),*) => {
