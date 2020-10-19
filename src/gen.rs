@@ -30,13 +30,7 @@ impl<R: RNG> RandomGen<R> for char {
 
 impl<R: RNG> RandomGen<R> for bool {
 	fn random(r: &mut R) -> bool {
-		let generated = r.rand();
-		let mut bytes = [0u8; core::mem::size_of::<u8>()];
-		bytes
-			.iter_mut()
-			.zip(generated.as_ref())
-			.for_each(|(a, b)| *a = *b);
-		bytes[0] < 0b10000000
+		r.rand().as_ref()[0] < 0b10000000
 	}
 }
 
