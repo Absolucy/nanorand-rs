@@ -30,8 +30,7 @@ impl<R: RNG> RandomGen<R> for char {
 
 impl<R: RNG> RandomGen<R> for bool {
 	fn random(r: &mut R) -> bool {
-		let generated = r.rand();
-		generated[0] < 0b10000000
+		r.rand().as_ref()[0] < 0b10000000
 	}
 }
 
