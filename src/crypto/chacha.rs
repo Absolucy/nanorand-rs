@@ -1,11 +1,9 @@
 const CHACHA_TAU: &[u8] = b"expand 16-byte k";
 
-#[inline(always)]
 fn chacha_rotl(a: u32, b: u32) -> u32 {
 	(a << b) | (a >> (32 - b))
 }
 
-#[inline(always)]
 fn chacha_quarter_round(x: &mut [u32; 16], a: usize, b: usize, c: usize, d: usize) {
 	x[a] += x[b];
 	x[d] ^= x[a];
@@ -21,7 +19,6 @@ fn chacha_quarter_round(x: &mut [u32; 16], a: usize, b: usize, c: usize, d: usiz
 	x[b] = chacha_rotl(x[b], 7);
 }
 
-#[inline(always)]
 fn chacha_pack(x: &[u8], a: usize) -> u32 {
 	let mut res = 0_u32;
 	res |= ((x[a] as u32) << 0 * 8) as u32;

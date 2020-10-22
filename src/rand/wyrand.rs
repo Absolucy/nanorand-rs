@@ -5,8 +5,8 @@ use super::RNG;
 /// An instance of the wyrand random number generator.  
 /// Seeded from the system entropy generator when available.  
 /// **This generator is _NOT_ cryptographically secure.**
-#[cfg_attr(feature = "zeroizer", derive(zeroize::Zeroize))]
-#[cfg_attr(feature = "zeroizer", zeroize(drop))]
+#[cfg_attr(feature = "zeroize", derive(zeroize::Zeroize))]
+#[cfg_attr(feature = "zeroize", zeroize(drop))]
 pub struct WyRand {
 	seed: u64,
 }

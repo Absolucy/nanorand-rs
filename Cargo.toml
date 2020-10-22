@@ -5,14 +5,15 @@ repository = "https://github.com/aspenluxxxy/nanorand-rs"
 keywords = ["rand", "random", "no-std", "entropy"]
 categories = ["algorithms", "no-std"]
 readme = "README.md"
-version = "0.4.4"
+version = "0.5.0"
 authors = ["aspen <luxx4x@protonmail.com>"]
 edition = "2018"
 license = "Zlib"
 
 [features]
-default = ["std", "wyrand", "pcg64"]
+default = ["std", "tls", "wyrand", "pcg64"]
 std = []
+tls = ["std", "wyrand"]
 wyrand = []
 pcg64 = []
 chacha = []
