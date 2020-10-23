@@ -1,6 +1,4 @@
-use crate::crypto::chacha;
-
-use super::RNG;
+use crate::{crypto::chacha, RNG};
 
 /// An instance of the ChaCha random number generator.  
 /// Seeded from the system entropy generator when available.  
@@ -14,15 +12,14 @@ pub struct ChaCha {
 
 impl ChaCha {
 	/// Create a new [`ChaCha`] instance, seeding from the system's default source of entropy.
-	#[cfg(feature = "std")]
 	pub fn new(rounds: u8) -> Self {
-		let mut key: [u8; std::mem::size_of::<u8>() * 32] = Default::default();
+		let mut key: [u8; core::mem::size_of::<u8>() * 32] = Default::default();
 		key.copy_from_slice(&crate::entropy::entropy_from_system(
-			std::mem::size_of::<u8>() * 32,
+			core::mem::size_of::<u8>() * 32,
 		));
-		let mut nonce: [u8; std::mem::size_of::<u8>() * 16] = Default::default();
+		let mut nonce: [u8; core::mem::size_of::<u8>() * 16] = Default::default();
 		nonce.copy_from_slice(&crate::entropy::entropy_from_system(
-			std::mem::size_of::<u8>() * 16,
+			core::mem::size_of::<u8>() * 16,
 		));
 		let state = chacha::chacha_init(key, nonce);
 		Self { rounds, state }
@@ -35,16 +32,15 @@ impl ChaCha {
 	}
 }
 
-#[cfg(feature = "std")]
 impl Default for ChaCha {
 	fn default() -> Self {
-		let mut key: [u8; std::mem::size_of::<u8>() * 32] = Default::default();
+		let mut key: [u8; core::mem::size_of::<u8>() * 32] = Default::default();
 		key.copy_from_slice(&crate::entropy::entropy_from_system(
-			std::mem::size_of::<u8>() * 32,
+			core::mem::size_of::<u8>() * 32,
 		));
-		let mut nonce: [u8; std::mem::size_of::<u8>() * 16] = Default::default();
+		let mut nonce: [u8; core::mem::size_of::<u8>() * 16] = Default::default();
 		nonce.copy_from_slice(&crate::entropy::entropy_from_system(
-			std::mem::size_of::<u8>() * 16,
+			core::mem::size_of::<u8>() * 16,
 		));
 		let state = chacha::chacha_init(key, nonce);
 		Self { state, rounds: 20 }
@@ -65,7 +61,7 @@ impl RNG for ChaCha {
 			ret[n + 2] = x[2];
 			ret[n + 3] = x[3];
 		});
-		self.state[12] = self.state[12].wrapping_add(1);
+		self.state[12] += 1;
 		ret
 	}
 

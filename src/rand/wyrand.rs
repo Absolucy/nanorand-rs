@@ -1,8 +1,8 @@
 // Based off lemire's wyrand C++ code at https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 
-use super::RNG;
+use crate::RNG;
 
-/// An instance of the wyrand random number generator.  
+/// An instance of the WyRand random number generator.
 /// Seeded from the system entropy generator when available.  
 /// **This generator is _NOT_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(zeroize::Zeroize))]
@@ -13,12 +13,11 @@ pub struct WyRand {
 
 impl WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
-	#[cfg(feature = "std")]
 	pub fn new() -> Self {
-		let mut entropy: [u8; std::mem::size_of::<u64>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(
-			std::mem::size_of::<u64>(),
-		));
+		let mut entropy: [u8; core::mem::size_of::<u64>()] = Default::default();
+		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
+			u64,
+		>()));
 		Self {
 			seed: u64::from_ne_bytes(entropy),
 		}
@@ -30,14 +29,13 @@ impl WyRand {
 	}
 }
 
-#[cfg(feature = "std")]
 impl Default for WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {
-		let mut entropy: [u8; std::mem::size_of::<u64>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(
-			std::mem::size_of::<u64>(),
-		));
+		let mut entropy: [u8; core::mem::size_of::<u64>()] = Default::default();
+		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
+			u64,
+		>()));
 		Self {
 			seed: u64::from_ne_bytes(entropy),
 		}
@@ -48,7 +46,7 @@ impl RNG for WyRand {
 	type Output = [u8; 8];
 
 	fn rand(&mut self) -> Self::Output {
-		self.seed = self.seed.wrapping_add(0xa0761d6478bd642f);
+		self.seed += 0xa0761d6478bd642f;
 		let t: u128 = (self.seed as u128).wrapping_mul((self.seed ^ 0xe7037ed1a0b428db) as u128);
 		let ret = ((t >> 64) ^ t) as u64;
 		ret.to_ne_bytes()

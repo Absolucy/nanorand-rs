@@ -73,6 +73,9 @@
 //! * `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source.
 //! Works on most systems, optional due to the fact that it brings in more dependencies.
 
+#[macro_use]
+extern crate alloc;
+
 pub use gen::*;
 pub use rand::*;
 #[cfg(feature = "tls")]
@@ -81,7 +84,6 @@ pub use tls::tls_rng;
 /// Implementation of cryptography, for CSPRNGs.
 pub mod crypto;
 /// Sources for obtaining entropy.
-#[cfg(feature = "std")]
 pub mod entropy;
 /// Traits for generating types from an RNG.
 pub mod gen;

@@ -62,13 +62,13 @@ impl<R: RNG> RandomRange<R> for u64 {
 
 impl<R: RNG> RandomGen<R> for usize {
 	fn random(r: &mut R) -> Self {
-		(r.generate::<u64>() >> (std::mem::size_of::<usize>() * 8)) as usize
+		(r.generate::<u64>() >> (core::mem::size_of::<usize>() * 8)) as usize
 	}
 }
 
 impl<R: RNG> RandomRange<R> for usize {
 	fn random_range(r: &mut R, lower: usize, upper: usize) -> Self {
-		(r.generate_range::<u64>(lower as u64, upper as u64) >> (std::mem::size_of::<usize>() * 8))
+		(r.generate_range::<u64>(lower as u64, upper as u64) >> (core::mem::size_of::<usize>() * 8))
 			as usize
 	}
 }

@@ -1,6 +1,6 @@
 // Based off Robert Kern's C implementation at https://github.com/rkern/pcg64/blob/master/pcg64.c
 
-use super::RNG;
+use crate::RNG;
 
 const PCG_DEFAULT_MULTIPLIER_128: u128 = 47026247687942121848144207491837523525;
 
@@ -19,8 +19,8 @@ impl Pcg64 {
 	/// Create a new [`Pcg64`] instance, seeding from the system's default source of entropy.
 	#[cfg(feature = "std")]
 	pub fn new() -> Self {
-		let mut entropy: [u8; std::mem::size_of::<u128>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(std::mem::size_of::<
+		let mut entropy: [u8; core::mem::size_of::<u128>()] = Default::default();
+		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
 			u128,
 		>()));
 		Self {
@@ -63,8 +63,8 @@ impl Pcg64 {
 impl Default for Pcg64 {
 	/// Create a new [`Pcg64`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {
-		let mut entropy: [u8; std::mem::size_of::<u128>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(std::mem::size_of::<
+		let mut entropy: [u8; core::mem::size_of::<u128>()] = Default::default();
+		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
 			u128,
 		>()));
 		Self {
