@@ -8,7 +8,7 @@ A library meant for fast, random number generation with quick compile time, and 
 
 ## Examples
 ### Generating a number
-```rs
+```rust
 use nanorand::{RNG, WyRand};
 
 fn main() {
@@ -17,7 +17,7 @@ fn main() {
 }
 ```
 ### Generating a number in a range
-```rs
+```rust
 use nanorand::{RNG, WyRand};
 
 fn main() {
@@ -26,7 +26,7 @@ fn main() {
 }
 ```
 ### Shuffling a Vec
-```rs
+```rust
 use nanorand::{RNG, WyRand};
 
 fn main() {
