@@ -46,7 +46,7 @@ impl RNG for WyRand {
 	type Output = [u8; 8];
 
 	fn rand(&mut self) -> Self::Output {
-		self.seed += 0xa0761d6478bd642f;
+		self.seed = self.seed.wrapping_add(0xa0761d6478bd642f);
 		let t: u128 = (self.seed as u128).wrapping_mul((self.seed ^ 0xe7037ed1a0b428db) as u128);
 		let ret = ((t >> 64) ^ t) as u64;
 		ret.to_ne_bytes()

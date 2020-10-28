@@ -60,16 +60,42 @@ impl<R: RNG> RandomRange<R> for u64 {
 	}
 }
 
+#[cfg(target_pointer_width = "64")]
 impl<R: RNG> RandomGen<R> for usize {
 	fn random(r: &mut R) -> Self {
-		(r.generate::<u64>() >> (core::mem::size_of::<usize>() * 8)) as usize
+		r.generate::<u64>() as usize
+	}
+}
+#[cfg(target_pointer_width = "64")]
+impl<R: RNG> RandomRange<R> for usize {
+	fn random_range(r: &mut R, lower: usize, upper: usize) -> Self {
+		r.generate_range::<u64>(lower as u64, upper as u64) as usize
 	}
 }
 
+#[cfg(target_pointer_width = "32")]
+impl<R: RNG> RandomGen<R> for usize {
+	fn random(r: &mut R) -> Self {
+		r.generate::<u32>() as usize
+	}
+}
+#[cfg(target_pointer_width = "32")]
 impl<R: RNG> RandomRange<R> for usize {
 	fn random_range(r: &mut R, lower: usize, upper: usize) -> Self {
-		(r.generate_range::<u64>(lower as u64, upper as u64) >> (core::mem::size_of::<usize>() * 8))
-			as usize
+		r.generate_range::<u32>(lower as u32, upper as u32) as usize
+	}
+}
+
+#[cfg(target_pointer_width = "16")]
+impl<R: RNG> RandomGen<R> for usize {
+	fn random(r: &mut R) -> Self {
+		r.generate::<u16>() as usize
+	}
+}
+#[cfg(target_pointer_width = "16")]
+impl<R: RNG> RandomRange<R> for usize {
+	fn random_range(r: &mut R, lower: usize, upper: usize) -> Self {
+		r.generate_range::<u16>(lower as u16, upper as u16) as usize
 	}
 }
 
