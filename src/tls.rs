@@ -44,7 +44,6 @@ impl DerefMut for TlsWyRand {
 /// std::thread::spawn(move || {
 ///     println!("Random number: {}", rng.generate::<u64>());
 /// });
-/// }
 /// ```
 pub fn tls_rng() -> TlsWyRand {
 	WYRAND.with(|tls| TlsWyRand(tls.get()))

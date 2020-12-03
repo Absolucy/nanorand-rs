@@ -29,13 +29,14 @@ randomize = "^3.0"
 oorandom = "^11.1"
 rand_core = "^0.5"
 rand_pcg = "^0.2"
+rand_chacha = "^0.2"
 random-fast-rng = "^0.1"
 fastrand = "^1.4"
 wyhash = "^0.4"
 hex = "^0.4"
 
 [[bench]]
-name = "randbench"
+name = "speed"
 harness = false
 
 [profile.bench]
