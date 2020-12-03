@@ -20,15 +20,14 @@ jobs:
           args: --all-features --target ${{ matrix.target }}
     strategy:
       matrix:
-        target: [
-          x86_64-unknown-linux-gnu
-          aarch64-unknown-linux-gnu
-          arm-unknown-linux-gnueabihf
-          armv5te-unknown-linux-gnueabi
-          armv7-unknown-linux-gnueabihf
-          mips64-unknown-linux-gnuabi64
-          mips64el-unknown-linux-gnuabi64
-          powerpc-unknown-linux-gnu
-          powerpc64le-unknown-linux-gnu
-          riscv64gc-unknown-linux-gnu
-        ]
+        target:
+          - x86_64-unknown-linux-gnu
+          - aarch64-unknown-linux-gnu
+          - arm-unknown-linux-gnueabihf
+          - armv5te-unknown-linux-gnueabi
+          - armv7-unknown-linux-gnueabihf
+          - mips64-unknown-linux-gnuabi64
+          - mips64el-unknown-linux-gnuabi64
+          - powerpc-unknown-linux-gnu
+          - powerpc64le-unknown-linux-gnu
+          - riscv64gc-unknown-linux-gnu
