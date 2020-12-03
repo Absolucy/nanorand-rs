@@ -2,17 +2,26 @@
 
 # nanorand
 
-Current version: **0.4.4**
+Current version: **0.5.0**
 
 A library meant for fast, random number generation with quick compile time, and minimal dependencies.
 
 ## Examples
-### Generating a number
+### Generating a number with an initialized RNG
 ```rust
 use nanorand::{RNG, WyRand};
 
 fn main() {
     let mut rng = WyRand::new();
+    println!("Random number: {}", rng.generate::<u64>());
+}
+```
+### Generating a number with a thread-local RNG
+```rust
+use nanorand::RNG;
+
+fn main() {
+		let mut rng = nanorand::tls_rng();
     println!("Random number: {}", rng.generate::<u64>());
 }
 ```
@@ -52,15 +61,16 @@ ChaCha|[nanohash::ChaCha](rand/chacha/struct.ChaCha.html)|512 bits (`[u32; 16]`)
 
 ### Entropy Sources
 
-* Unix-like (Linux, Android, macOS, iOS, FreeBSD, OpenBSD) - first `/dev/urandom`, else `/dev/random`, else system time. (`#[forbid(unsafe_code)]`)
-* Windows - `BCryptGenRandom` with system-preferred RNG. (`#[deny(unsafe_code)]`)
+* Unix-like (Linux, Android, macOS, iOS, FreeBSD, OpenBSD) - first `/dev/urandom`, else `/dev/random`, else system time.
+* Windows - `BCryptGenRandom` with system-preferred RNG.
 
 ### Feature Flags
 
 * `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources.
+* `tls` (default) - Enables a thread-local WyRand RNG (see below). Requires `tls` to be enabled.
 * `wyrand` (default) - Enable the [wyrand](rand/wyrand/struct.WyRand.html) RNG.
 * `pcg64` (default) - Enable the [Pcg64](rand/pcg64/struct.Pcg64.html)  RNG.
-* `chacha` (**Nightly-only**) - Enable the [ChaCha](rand/chacha/struct.ChaCha.html) RNG.
+* `chacha` - Enable the [ChaCha](rand/chacha/struct.ChaCha.html) RNG. Requires Rust 1.47 or later.
 * `rdseed` - On x86/x86_64 platforms, the `rdseed` intrinsic will be used when OS entropy isn't available.
 * `zeroize` - Implement the [Zeroize](https://crates.io/crates/zeroize) trait for all RNGs.
 * `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source.

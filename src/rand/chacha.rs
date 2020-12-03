@@ -1,9 +1,12 @@
 use crate::{crypto::chacha, RNG};
+use core::fmt::{self, Display, Formatter};
+#[cfg(feature = "zeroize")]
+use zeroize::Zeroize;
 
 /// An instance of the ChaCha random number generator.  
 /// Seeded from the system entropy generator when available.  
 /// **This generator _is theoretically_ cryptographically secure.**
-#[cfg_attr(feature = "zeroize", derive(zeroize::Zeroize))]
+#[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
 pub struct ChaCha {
 	state: [u32; 16],
@@ -17,16 +20,16 @@ impl ChaCha {
 		key.copy_from_slice(&crate::entropy::entropy_from_system(
 			core::mem::size_of::<u8>() * 32,
 		));
-		let mut nonce: [u8; core::mem::size_of::<u8>() * 16] = Default::default();
+		let mut nonce: [u8; core::mem::size_of::<u8>() * 8] = Default::default();
 		nonce.copy_from_slice(&crate::entropy::entropy_from_system(
-			core::mem::size_of::<u8>() * 16,
+			core::mem::size_of::<u8>() * 8,
 		));
 		let state = chacha::chacha_init(key, nonce);
 		Self { rounds, state }
 	}
 
 	/// Create a new [`ChaCha`] instance, using the provided key and nonce.
-	pub fn new_key(rounds: u8, key: [u8; 32], nonce: [u8; 16]) -> Self {
+	pub fn new_key(rounds: u8, key: [u8; 32], nonce: [u8; 8]) -> Self {
 		let state = chacha::chacha_init(key, nonce);
 		Self { rounds, state }
 	}
@@ -38,9 +41,9 @@ impl Default for ChaCha {
 		key.copy_from_slice(&crate::entropy::entropy_from_system(
 			core::mem::size_of::<u8>() * 32,
 		));
-		let mut nonce: [u8; core::mem::size_of::<u8>() * 16] = Default::default();
+		let mut nonce: [u8; core::mem::size_of::<u8>() * 8] = Default::default();
 		nonce.copy_from_slice(&crate::entropy::entropy_from_system(
-			core::mem::size_of::<u8>() * 16,
+			core::mem::size_of::<u8>() * 8,
 		));
 		let state = chacha::chacha_init(key, nonce);
 		Self { state, rounds: 20 }
@@ -61,7 +64,13 @@ impl RNG for ChaCha {
 			ret[n + 2] = x[2];
 			ret[n + 3] = x[3];
 		});
-		self.state[12] += 1;
+		// Now, we're going to just increment our counter so we get an entirely new output next time.
+		// If the counter overflows, we just reseed entirely instead.
+		if !chacha::chacha_increment_counter(&mut self.state) {
+			let mut new_seed: [u8; 40] = [42u8; 40];
+			new_seed.copy_from_slice(&crate::entropy::entropy_from_system(40));
+			self.reseed(&new_seed);
+		}
 		ret
 	}
 
@@ -70,12 +79,12 @@ impl RNG for ChaCha {
 	}
 
 	fn reseed(&mut self, new_seed: &[u8]) {
-		let mut seed = [42u8; 48];
+		let mut seed = [42u8; 40];
 		seed.iter_mut().zip(new_seed).for_each(|(a, b)| *a = *b);
 		let mut key = [0u8; 32];
-		let mut nonce = [0u8; 16];
+		let mut nonce = [0u8; 8];
 		key.copy_from_slice(&seed[..32]);
-		nonce.copy_from_slice(&seed[32..48]);
+		nonce.copy_from_slice(&seed[32..40]);
 		self.state = chacha::chacha_init(key, nonce);
 	}
 }
@@ -89,9 +98,8 @@ impl Clone for ChaCha {
 	}
 }
 
-#[cfg(feature = "std")]
-impl std::fmt::Display for ChaCha {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl Display for ChaCha {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "ChaCha ({:p}, {} rounds)", self, self.rounds)
 	}
 }

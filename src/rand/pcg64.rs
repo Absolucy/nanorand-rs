@@ -1,13 +1,16 @@
 // Based off Robert Kern's C implementation at https://github.com/rkern/pcg64/blob/master/pcg64.c
 
 use crate::RNG;
+use core::fmt::{self, Display, Formatter};
+#[cfg(feature = "zeroize")]
+use zeroize::Zeroize;
 
 const PCG_DEFAULT_MULTIPLIER_128: u128 = 47026247687942121848144207491837523525;
 
 /// An instance of the Pcg64 random number generator.  
 /// Seeded from the system entropy generator when available.  
 /// **This generator is _NOT_ cryptographically secure.**
-#[cfg_attr(feature = "zeroize", derive(zeroize::Zeroize))]
+#[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
 pub struct Pcg64 {
 	seed: u128,
@@ -105,9 +108,8 @@ impl Clone for Pcg64 {
 	}
 }
 
-#[cfg(feature = "std")]
-impl std::fmt::Display for Pcg64 {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl Display for Pcg64 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "Pcg64 ({:p})", self)
 	}
 }

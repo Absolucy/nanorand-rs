@@ -1,31 +1,34 @@
-name: "Tests"
+name: "Run Tests"
 on: [push, pull_request]
 jobs:
   tests:
-    name: "Test with Rust ${{ matrix.rust.version }} on ${{ matrix.os }} with features ${{ matrix.rust.features }}"
-    runs-on: ${{ matrix.os }}
+    name: Test on ${{ matrix.target }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: "Install ${{ matrix.rust.version }} Rust toolchain"
+      - name: Install stable Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           override: true
           profile: minimal
-          toolchain: "${{ matrix.rust.version }}"
-      - name: Run 'cargo test'
+          toolchain: stable
+      - name: Run 'cross test'
         uses: actions-rs/cargo@v1
         with:
-          args: "--features ${{matrix.rust.features}}"
+          use-cross: true
           command: test
+          args: --all-features --target ${{ matrix.target }}
     strategy:
       matrix:
-        rust:
-          - version: stable
-            features: std,wyrand,pcg64,getrandom
-          - version: nightly
-            features: std,wyrand,pcg64,chacha,getrandom
-          - version: stable
-            features: std,wyrand,pcg64
-          - version: nightly
-            features: std,wyrand,pcg64,chacha
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        target: [
+          x86_64-unknown-linux-gnu
+          aarch64-unknown-linux-gnu
+          arm-unknown-linux-gnueabihf
+          armv5te-unknown-linux-gnueabi
+          armv7-unknown-linux-gnueabihf
+          mips64-unknown-linux-gnuabi64
+          mips64el-unknown-linux-gnuabi64
+          powerpc-unknown-linux-gnu
+          powerpc64le-unknown-linux-gnu
+          riscv64gc-unknown-linux-gnu
+        ]

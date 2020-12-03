@@ -1,11 +1,14 @@
 // Based off lemire's wyrand C++ code at https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 
 use crate::RNG;
+use core::fmt::{self, Display, Formatter};
+#[cfg(feature = "zeroize")]
+use zeroize::Zeroize;
 
 /// An instance of the WyRand random number generator.
 /// Seeded from the system entropy generator when available.  
 /// **This generator is _NOT_ cryptographically secure.**
-#[cfg_attr(feature = "zeroize", derive(zeroize::Zeroize))]
+#[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
 pub struct WyRand {
 	seed: u64,
@@ -75,9 +78,8 @@ impl Clone for WyRand {
 	}
 }
 
-#[cfg(feature = "std")]
-impl std::fmt::Display for WyRand {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl Display for WyRand {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "WyRand ({:p})", self)
 	}
 }

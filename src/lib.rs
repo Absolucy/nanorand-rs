@@ -18,7 +18,7 @@
 //! use nanorand::RNG;
 //!
 //! fn main() {
-//!		let mut rng = nanorand::tls_rng();
+//!     let mut rng = nanorand::tls_rng();
 //!     println!("Random number: {}", rng.generate::<u64>());
 //! }
 //! ```
