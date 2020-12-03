@@ -152,8 +152,8 @@ pub fn rdseed_entropy(_amt: usize) -> Option<Result<Vec<u8>, Vec<u8>>> {
 pub fn backup_entropy(amt: usize) -> Vec<u8> {
 	let mut entropy = vec![42_u8; amt];
 
-	match rdseed_entropy(amt) {
-		Some(rdseed) => match rdseed {
+	if let Some(rdseed) = rdseed_entropy(amt) {
+		match rdseed {
 			Ok(o) => return o,
 			Err(x) => {
 				let len = x.len();
@@ -161,8 +161,7 @@ pub fn backup_entropy(amt: usize) -> Vec<u8> {
 					.enumerate()
 					.for_each(|(i, val)| entropy[i % len] ^= *val);
 			}
-		},
-		None => {}
+		}
 	};
 
 	let time_entropy = emergency_system_time_entropy(amt);
