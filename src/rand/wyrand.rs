@@ -17,13 +17,7 @@ pub struct WyRand {
 impl WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
 	pub fn new() -> Self {
-		let mut entropy: [u8; core::mem::size_of::<u64>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
-			u64,
-		>()));
-		Self {
-			seed: u64::from_ne_bytes(entropy),
-		}
+		Self::default()
 	}
 
 	/// Create a new [`WyRand`] instance, using a provided seed.
@@ -36,9 +30,7 @@ impl Default for WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {
 		let mut entropy: [u8; core::mem::size_of::<u64>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
-			u64,
-		>()));
+		crate::entropy::entropy_from_system(&mut entropy);
 		Self {
 			seed: u64::from_ne_bytes(entropy),
 		}

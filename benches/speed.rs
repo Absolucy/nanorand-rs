@@ -8,18 +8,16 @@ fn criterion_benchmark(c: &mut Criterion) {
 	entropy_group.throughput(Throughput::Bytes(std::mem::size_of::<u64>() as u64 * 4096));
 
 	entropy_group.bench_function("time-based entropy", |b| {
+		let mut out = [0u8; std::mem::size_of::<u64>() * 4096];
 		b.iter(|| {
-			black_box(nanorand::entropy::emergency_system_time_entropy(
-				std::mem::size_of::<u64>() * 4096,
-			));
+			nanorand::entropy::emergency_system_time_entropy(&mut out);
 		})
 	});
 
 	entropy_group.bench_function("system entropy", |b| {
+		let mut out = [0u8; std::mem::size_of::<u64>() * 4096];
 		b.iter(|| {
-			black_box(nanorand::entropy::entropy_from_system(
-				std::mem::size_of::<u64>() * 4096,
-			));
+			nanorand::entropy::entropy_from_system(&mut out);
 		})
 	});
 

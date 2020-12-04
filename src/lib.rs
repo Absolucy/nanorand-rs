@@ -76,9 +76,6 @@
 //! * `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source.
 //! Works on most systems, optional due to the fact that it brings in more dependencies.
 
-#[macro_use]
-extern crate alloc;
-
 pub use gen::*;
 pub use rand::*;
 #[cfg(feature = "tls")]

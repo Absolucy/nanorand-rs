@@ -6,12 +6,6 @@ extern "system" {
 }
 
 /// Obtain a random 64-bit number using WinAPI's `RtlGenRandom` function.
-pub fn entropy_from_system(amt: usize) -> Vec<u8> {
-	let mut entropy: Vec<u8> = vec![42; amt];
-	let status: u32 = unsafe { RtlGenRandom(entropy.as_mut_ptr(), amt) };
-	if status == 0 {
-		entropy
-	} else {
-		backup_entropy(amt)
-	}
+pub fn entropy_from_system(out: &mut [u8]) -> bool {
+	unsafe { RtlGenRandom(out.as_mut_ptr(), out.len()) == 0 }
 }

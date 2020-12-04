@@ -16,14 +16,10 @@ pub struct ChaCha {
 impl ChaCha {
 	/// Create a new [`ChaCha`] instance, seeding from the system's default source of entropy.
 	pub fn new(rounds: u8) -> Self {
-		let mut key: [u8; core::mem::size_of::<u8>() * 32] = Default::default();
-		key.copy_from_slice(&crate::entropy::entropy_from_system(
-			core::mem::size_of::<u8>() * 32,
-		));
-		let mut nonce: [u8; core::mem::size_of::<u8>() * 8] = Default::default();
-		nonce.copy_from_slice(&crate::entropy::entropy_from_system(
-			core::mem::size_of::<u8>() * 8,
-		));
+		let mut key: [u8; 32] = Default::default();
+		crate::entropy::entropy_from_system(&mut key);
+		let mut nonce: [u8; 8] = Default::default();
+		crate::entropy::entropy_from_system(&mut nonce);
 		let state = chacha::chacha_init(key, nonce);
 		Self { rounds, state }
 	}
@@ -37,14 +33,10 @@ impl ChaCha {
 
 impl Default for ChaCha {
 	fn default() -> Self {
-		let mut key: [u8; core::mem::size_of::<u8>() * 32] = Default::default();
-		key.copy_from_slice(&crate::entropy::entropy_from_system(
-			core::mem::size_of::<u8>() * 32,
-		));
-		let mut nonce: [u8; core::mem::size_of::<u8>() * 8] = Default::default();
-		nonce.copy_from_slice(&crate::entropy::entropy_from_system(
-			core::mem::size_of::<u8>() * 8,
-		));
+		let mut key: [u8; 32] = Default::default();
+		crate::entropy::entropy_from_system(&mut key);
+		let mut nonce: [u8; 8] = Default::default();
+		crate::entropy::entropy_from_system(&mut nonce);
 		let state = chacha::chacha_init(key, nonce);
 		Self { state, rounds: 20 }
 	}
@@ -68,7 +60,7 @@ impl RNG for ChaCha {
 		// If the counter overflows, we just reseed entirely instead.
 		if !chacha::chacha_increment_counter(&mut self.state) {
 			let mut new_seed: [u8; 40] = [42u8; 40];
-			new_seed.copy_from_slice(&crate::entropy::entropy_from_system(40));
+			crate::entropy::entropy_from_system(&mut new_seed);
 			self.reseed(&new_seed);
 		}
 		ret

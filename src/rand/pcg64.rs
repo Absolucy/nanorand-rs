@@ -23,9 +23,7 @@ impl Pcg64 {
 	#[cfg(feature = "std")]
 	pub fn new() -> Self {
 		let mut entropy: [u8; core::mem::size_of::<u128>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
-			u128,
-		>()));
+		crate::entropy::entropy_from_system(&mut entropy);
 		Self {
 			seed: u128::from_ne_bytes(entropy),
 			inc: 0,
@@ -67,9 +65,7 @@ impl Default for Pcg64 {
 	/// Create a new [`Pcg64`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {
 		let mut entropy: [u8; core::mem::size_of::<u128>()] = Default::default();
-		entropy.copy_from_slice(&crate::entropy::entropy_from_system(core::mem::size_of::<
-			u128,
-		>()));
+		crate::entropy::entropy_from_system(&mut entropy);
 		Self {
 			seed: u128::from_ne_bytes(entropy),
 			inc: 0,

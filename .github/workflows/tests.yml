@@ -1,7 +1,7 @@
 name: "Run Tests"
 on: [push, pull_request]
 jobs:
-  tests:
+  linux-tests:
     name: Test on ${{ matrix.target }}
     runs-on: ubuntu-latest
     steps:
@@ -31,3 +31,35 @@ jobs:
           - powerpc-unknown-linux-gnu
           - powerpc64le-unknown-linux-gnu
           - riscv64gc-unknown-linux-gnu
+  windows-tests:
+      name: Test on Windows
+      runs-on: windows-latest 
+      steps:
+        - uses: actions/checkout@v2
+        - name: Install stable Rust toolchain
+          uses: actions-rs/toolchain@v1
+          with:
+            override: true
+            profile: minimal
+            toolchain: stable
+        - name: Run 'cargo test'
+          uses: actions-rs/cargo@v1
+          with:
+            command: test
+            args: --all-features
+  macos-tests:
+      name: Test on macOS
+      runs-on: macos-latest 
+      steps:
+        - uses: actions/checkout@v2
+        - name: Install stable Rust toolchain
+          uses: actions-rs/toolchain@v1
+          with:
+            override: true
+            profile: minimal
+            toolchain: stable
+        - name: Run 'cargo test'
+          uses: actions-rs/cargo@v1
+          with:
+            command: test
+            args: --all-features
