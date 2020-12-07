@@ -101,44 +101,44 @@ impl<R: RNG> RandomRange<R> for usize {
 
 impl<R: RNG> RandomGen<R> for u32 {
 	fn random(r: &mut R) -> Self {
-		(r.generate::<u64>() >> 32) as u32
+		r.generate::<u64>() as u32
 	}
 }
 
 impl<R: RNG> RandomRange<R> for u32 {
 	fn random_range(r: &mut R, lower: u32, upper: u32) -> Self {
-		(r.generate_range::<u64>(lower as u64, upper as u64) >> 32) as u32
+		r.generate_range::<u64>(lower as u64, upper as u64) as u32
 	}
 }
 
 impl<R: RNG> RandomGen<R> for u16 {
 	fn random(r: &mut R) -> Self {
-		(r.generate::<u64>() >> 16) as u16
+		r.generate::<u64>() as u16
 	}
 }
 
 impl<R: RNG> RandomRange<R> for u16 {
 	fn random_range(r: &mut R, lower: u16, upper: u16) -> Self {
-		(r.generate_range::<u64>(lower as u64, upper as u64) >> 16) as u16
+		r.generate_range::<u64>(lower as u64, upper as u64) as u16
 	}
 }
 
 impl<R: RNG> RandomGen<R> for u8 {
 	fn random(r: &mut R) -> Self {
-		(r.generate::<u64>() >> 8) as u8
+		r.generate::<u64>() as u8
 	}
 }
 
 impl<R: RNG> RandomRange<R> for u8 {
 	fn random_range(r: &mut R, lower: u8, upper: u8) -> Self {
-		(r.generate_range::<u64>(lower as u64, upper as u64) >> 8) as u8
+		r.generate_range::<u64>(lower as u64, upper as u64) as u8
 	}
 }
 
 impl<R: RNG> RandomRange<R> for char {
 	fn random_range(r: &mut R, lower: char, upper: char) -> Self {
 		loop {
-			let ret = (r.generate_range::<u64>(lower as u64, upper as u64) >> 32) as u32;
+			let ret = r.generate_range::<u64>(lower as u64, upper as u64) as u32;
 			if let Some(c) = core::char::from_u32(ret) {
 				break c;
 			}
