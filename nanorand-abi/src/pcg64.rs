@@ -1,66 +1,89 @@
-use nanorand::RNG;
+use nanorand::{Pcg64, RNG};
 
-#[repr(transparent)]
-pub struct Pcg64(nanorand::Pcg64);
+/// Create a new Pcg64 RNG, using system-provided entropy.
+#[no_mangle]
+pub extern "C" fn new_pcg64() -> Pcg64 {
+	Pcg64::new()
+}
 
-impl Pcg64 {
-	#[no_mangle]
-	pub extern "C" fn new_pcg64() -> Self {
-		Pcg64(nanorand::Pcg64::new())
-	}
+/// Create a new Pcg64 RNG, using a given seed.
+#[no_mangle]
+pub extern "C" fn new_pcg64_seed(seed: [u8; 16]) -> Pcg64 {
+	Pcg64::new_seed(u128::from_ne_bytes(seed))
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_pcg64_seed(seed: u128) -> Self {
-		Pcg64(nanorand::Pcg64::new_seed(seed))
-	}
+/// Get the raw 64-bit output from the provided RNG.
+/// You need to free this yourself!
+#[no_mangle]
+pub extern "C" fn pcg64_next(rng: &mut Pcg64) -> *mut u8 {
+	let mut out = rng.rand();
+	let ptr = out.as_mut_ptr();
+	std::mem::forget(out);
+	ptr
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_next(rng: &mut Self) -> [u8; 8] {
-		rng.0.rand()
-	}
+/// Generate a random 8-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_u8(rng: &mut Pcg64) -> u8 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_next_u8(rng: &mut Self) -> u8 {
-		rng.0.generate()
-	}
+/// Generate a random 16-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_u16(rng: &mut Pcg64) -> u16 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_next_u16(rng: &mut Self) -> u16 {
-		rng.0.generate()
-	}
+/// Generate a random 32-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_u32(rng: &mut Pcg64) -> u32 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_next_u32(rng: &mut Self) -> u32 {
-		rng.0.generate()
-	}
+/// Generate a random 64-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_u64(rng: &mut Pcg64) -> u64 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_next_u64(rng: &mut Self) -> u64 {
-		rng.0.generate()
-	}
+/// Generate a random pointer-sized unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_usize(rng: &mut Pcg64) -> usize {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_next_bool(rng: &mut Self) -> bool {
-		rng.0.generate()
-	}
+/// Generate a random boolean value from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_bool(rng: &mut Pcg64) -> bool {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_range_u8(rng: &mut Self, lower: u8, upper: u8) -> u8 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 8-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_u8(rng: &mut Pcg64, lower: u8, upper: u8) -> u8 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_range_u16(rng: &mut Self, lower: u16, upper: u16) -> u16 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 16-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_u16(rng: &mut Pcg64, lower: u16, upper: u16) -> u16 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_range_u32(rng: &mut Self, lower: u32, upper: u32) -> u32 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 32-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_u32(rng: &mut Pcg64, lower: u32, upper: u32) -> u32 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn pcg64_range_u64(rng: &mut Self, lower: u64, upper: u64) -> u64 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 64-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_u64(rng: &mut Pcg64, lower: u64, upper: u64) -> u64 {
+	rng.generate_range(lower, upper)
+}
+
+/// Generate a random pointer-sized unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_usize(rng: &mut Pcg64, lower: usize, upper: usize) -> usize {
+	rng.generate_range(lower, upper)
 }

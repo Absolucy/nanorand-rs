@@ -1,64 +1,89 @@
-use nanorand::RNG;
+use nanorand::{WyRand, RNG};
 
-#[repr(transparent)]
-pub struct WyRand(nanorand::WyRand);
+/// Create a new Pcg64 RNG, using system-provided entropy.
+#[no_mangle]
+pub extern "C" fn new_wyrand() -> WyRand {
+	WyRand::new()
+}
 
-impl WyRand {
-	pub extern "C" fn new_wyrand() -> Self {
-		WyRand(nanorand::WyRand::new())
-	}
+/// Create a new Pcg64 RNG, using a given seed.
+#[no_mangle]
+pub extern "C" fn new_wyrand_with_seed(seed: u64) -> WyRand {
+	WyRand::new_seed(seed)
+}
 
-	pub extern "C" fn new_wyrand_with_seed(seed: u64) -> Self {
-		WyRand(nanorand::WyRand::new_seed(seed))
-	}
+/// Get the raw 64-bit output from the provided RNG.
+/// You need to free this yourself!
+#[no_mangle]
+pub extern "C" fn wyrand_next(rng: &mut WyRand) -> *mut u8 {
+	let mut out = rng.rand();
+	let ptr = out.as_mut_ptr();
+	std::mem::forget(out);
+	ptr
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_next(rng: &mut Self) -> [u8; 8] {
-		rng.0.rand()
-	}
+/// Generate a random 8-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_next_u8(rng: &mut WyRand) -> u8 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_next_u8(rng: &mut Self) -> u8 {
-		rng.0.generate()
-	}
+/// Generate a random 16-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_next_u16(rng: &mut WyRand) -> u16 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_next_u16(rng: &mut Self) -> u16 {
-		rng.0.generate()
-	}
+/// Generate a random 32-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_next_u32(rng: &mut WyRand) -> u32 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_next_u32(rng: &mut Self) -> u32 {
-		rng.0.generate()
-	}
+/// Generate a random 64-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_next_u64(rng: &mut WyRand) -> u64 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_next_u64(rng: &mut Self) -> u64 {
-		rng.0.generate()
-	}
+/// Generate a random pointer-sized unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_next_usize(rng: &mut WyRand) -> usize {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_next_bool(rng: &mut Self) -> bool {
-		rng.0.generate()
-	}
+/// Generate a random boolean value from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_next_bool(rng: &mut WyRand) -> bool {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_range_u8(rng: &mut Self, lower: u8, upper: u8) -> u8 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 8-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_range_u8(rng: &mut WyRand, lower: u8, upper: u8) -> u8 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_range_u16(rng: &mut Self, lower: u16, upper: u16) -> u16 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 16-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_range_u16(rng: &mut WyRand, lower: u16, upper: u16) -> u16 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_range_u32(rng: &mut Self, lower: u32, upper: u32) -> u32 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 32-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_range_u32(rng: &mut WyRand, lower: u32, upper: u32) -> u32 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn wyrand_range_u64(rng: &mut Self, lower: u64, upper: u64) -> u64 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 64-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_range_u64(rng: &mut WyRand, lower: u64, upper: u64) -> u64 {
+	rng.generate_range(lower, upper)
+}
+
+/// Generate a random pointer-sized unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn wyrand_range_usize(rng: &mut WyRand, lower: usize, upper: usize) -> usize {
+	rng.generate_range(lower, upper)
 }

@@ -1,9 +1,5 @@
 [workspace]
-members = [
-	"nanorand",
-	"nanorand-abi",
-	"nanorand-py"
-]
+members = ["nanorand", "nanorand-abi", "nanorand-py"]
 default-members = ["nanorand"]
 
 [profile.release]

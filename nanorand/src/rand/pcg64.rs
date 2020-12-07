@@ -7,11 +7,12 @@ use zeroize::Zeroize;
 
 const PCG_DEFAULT_MULTIPLIER_128: u128 = 47026247687942121848144207491837523525;
 
-/// An instance of the Pcg64 random number generator.  
-/// Seeded from the system entropy generator when available.  
+/// An instance of the Pcg64 random number generator.
+/// Seeded from the system entropy generator when available.
 /// **This generator is _NOT_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
+#[repr(C)]
 pub struct Pcg64 {
 	seed: u128,
 	state: u128,

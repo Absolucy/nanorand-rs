@@ -2,8 +2,9 @@
 name = "nanorand-abi"
 description = "A stable C-compatible ABI for nanorand"
 repository = "https://github.com/aspenluxxxy/nanorand-rs"
+keywords = ["rng", "wyrand", "pcg", "chacha", "random", "pcg64"]
 version = "0.5.0"
-authors = ["aspen <luxx4x@protonmail.com>"]
+authors = ["aspen <aspenuwu@protonmail.com>"]
 edition = "2018"
 license = "Zlib"
 publish = false

@@ -3,11 +3,12 @@ use core::fmt::{self, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
 
-/// An instance of the ChaCha random number generator.  
-/// Seeded from the system entropy generator when available.  
+/// An instance of the ChaCha random number generator.
+/// Seeded from the system entropy generator when available.
 /// **This generator _is theoretically_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
+#[repr(C)]
 pub struct ChaCha {
 	state: [u32; 16],
 	rounds: u8,

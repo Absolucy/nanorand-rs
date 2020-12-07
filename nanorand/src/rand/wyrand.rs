@@ -6,10 +6,12 @@ use core::fmt::{self, Display, Formatter};
 use zeroize::Zeroize;
 
 /// An instance of the WyRand random number generator.
-/// Seeded from the system entropy generator when available.  
+/// Seeded from the system entropy generator when available.
 /// **This generator is _NOT_ cryptographically secure.**
+/// #[repr(transparent)]
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
+#[repr(transparent)]
 pub struct WyRand {
 	seed: u64,
 }

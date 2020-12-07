@@ -6,7 +6,7 @@ keywords = ["rand", "random", "no-std", "entropy"]
 categories = ["algorithms", "no-std"]
 readme = "README.md"
 version = "0.5.0"
-authors = ["aspen <luxx4x@protonmail.com>"]
+authors = ["aspen <aspenuwu@protonmail.com>"]
 edition = "2018"
 license = "Zlib"
 

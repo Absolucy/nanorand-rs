@@ -1,96 +1,123 @@
-use nanorand::RNG;
+use nanorand::{ChaCha, RNG};
 
-#[repr(transparent)]
-pub struct ChaCha(nanorand::ChaCha);
+/// Create a ChaCha RNG, using the specified number of rounds
+#[no_mangle]
+pub extern "C" fn new_chacha(rounds: u8) -> ChaCha {
+	ChaCha::new(rounds)
+}
 
-impl ChaCha {
-	#[no_mangle]
-	pub extern "C" fn new_chacha(rounds: u8) -> Self {
-		ChaCha(nanorand::ChaCha::new(rounds))
-	}
+/// Create a ChaCha RNG, using the specified number of rounds,
+/// and the provided 256-bit key and 64-bit nonce
+#[no_mangle]
+pub extern "C" fn new_chacha_key(rounds: u8, key: [u8; 32], nonce: [u8; 8]) -> ChaCha {
+	ChaCha::new_key(rounds, key, nonce)
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_chacha_key(rounds: u8, key: [u8; 32], nonce: [u8; 8]) -> Self {
-		ChaCha(nanorand::ChaCha::new_key(rounds, key, nonce))
-	}
+/// Create a ChaCha RNG using 8 rounds
+#[no_mangle]
+pub extern "C" fn new_chacha8() -> ChaCha {
+	ChaCha::new(8)
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_chacha8() -> Self {
-		ChaCha(nanorand::ChaCha::new(8))
-	}
+/// Create a ChaCha RNG, using 8 rounds,
+/// and the provided 256-bit key and 64-bit nonce
+#[no_mangle]
+pub extern "C" fn new_chacha8_key(key: [u8; 32], nonce: [u8; 8]) -> ChaCha {
+	ChaCha::new_key(8, key, nonce)
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_chacha8_key(key: [u8; 32], nonce: [u8; 8]) -> Self {
-		ChaCha(nanorand::ChaCha::new_key(8, key, nonce))
-	}
+/// Create a ChaCha RNG, using 12 rounds
+#[no_mangle]
+pub extern "C" fn new_chacha12() -> ChaCha {
+	ChaCha::new(12)
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_chacha12() -> Self {
-		ChaCha(nanorand::ChaCha::new(12))
-	}
+/// Create a ChaCha RNG, using 12 rounds,
+/// and the provided 256-bit key and 64-bit nonce
+#[no_mangle]
+pub extern "C" fn new_chacha12_key(key: [u8; 32], nonce: [u8; 8]) -> ChaCha {
+	ChaCha::new_key(12, key, nonce)
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_chacha12_key(key: [u8; 32], nonce: [u8; 8]) -> Self {
-		ChaCha(nanorand::ChaCha::new_key(12, key, nonce))
-	}
+/// Create a ChaCha RNG, using 20 rounds
+#[no_mangle]
+pub extern "C" fn new_chacha20() -> ChaCha {
+	ChaCha::new(20)
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_chacha20() -> Self {
-		ChaCha(nanorand::ChaCha::new(20))
-	}
+/// Create a ChaCha RNG, using 20 rounds,
+/// and the provided 256-bit key and 64-bit nonce
+#[no_mangle]
+pub extern "C" fn new_chacha20_key(key: [u8; 32], nonce: [u8; 8]) -> ChaCha {
+	ChaCha::new_key(20, key, nonce)
+}
 
-	#[no_mangle]
-	pub extern "C" fn new_chacha20_key(key: [u8; 32], nonce: [u8; 8]) -> Self {
-		ChaCha(nanorand::ChaCha::new_key(20, key, nonce))
-	}
+/// Get the raw 512-bit output from the provided RNG.
+/// You need to free this yourself!
+#[no_mangle]
+pub extern "C" fn chacha_next(rng: &mut ChaCha) -> *mut u8 {
+	let mut out = rng.rand();
+	let ptr = out.as_mut_ptr();
+	std::mem::forget(out);
+	ptr
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_next(rng: &mut Self) -> [u8; 64] {
-		rng.0.rand()
-	}
+/// Generate a random 8-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_next_u8(rng: &mut ChaCha) -> u8 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_next_u8(rng: &mut Self) -> u8 {
-		rng.0.generate()
-	}
+/// Generate a random 16-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_next_u16(rng: &mut ChaCha) -> u16 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_next_u16(rng: &mut Self) -> u16 {
-		rng.0.generate()
-	}
+/// Generate a random 32-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_next_u32(rng: &mut ChaCha) -> u32 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_next_u32(rng: &mut Self) -> u32 {
-		rng.0.generate()
-	}
+/// Generate a random 64-bit unsigned integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_next_u64(rng: &mut ChaCha) -> u64 {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_next_u64(rng: &mut Self) -> u64 {
-		rng.0.generate()
-	}
+/// Generate a random boolean value from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_next_bool(rng: &mut ChaCha) -> bool {
+	rng.generate()
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_next_bool(rng: &mut Self) -> bool {
-		rng.0.generate()
-	}
+/// Generate a random 8-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_range_u8(rng: &mut ChaCha, lower: u8, upper: u8) -> u8 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_range_u8(rng: &mut Self, lower: u8, upper: u8) -> u8 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 16-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_range_u16(rng: &mut ChaCha, lower: u16, upper: u16) -> u16 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_range_u16(rng: &mut Self, lower: u16, upper: u16) -> u16 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 32-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_range_u32(rng: &mut ChaCha, lower: u32, upper: u32) -> u32 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_range_u32(rng: &mut Self, lower: u32, upper: u32) -> u32 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random 64-bit unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_range_u64(rng: &mut ChaCha, lower: u64, upper: u64) -> u64 {
+	rng.generate_range(lower, upper)
+}
 
-	#[no_mangle]
-	pub extern "C" fn chacha_range_u64(rng: &mut Self, lower: u64, upper: u64) -> u64 {
-		rng.0.generate_range(lower, upper)
-	}
+/// Generate a random pointer-sized unsigned integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn chacha_range_usize(rng: &mut ChaCha, lower: usize, upper: usize) -> usize {
+	rng.generate_range(lower, upper)
 }

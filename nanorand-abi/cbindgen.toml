@@ -17,19 +17,25 @@ header = """
 """
 pragma_once = true
 include_version = true
-
+cpp_compat = true
 namespace = "nanorand"
-
 braces = "SameLine"
 line_length = 100
 # Screw y'all for not adding hard tabs as an option.
 tab_width = 4
-documentation_style = "auto"
+documentation_style = "doxy"
 line_endings = "LF"
 style = "both"
+after_includes = """
+
+typedef char u128_placeholder[16];
+"""
 
 [export.mangle]
 rename_types = "PascalCase"
+
+[export.rename]
+"u128" = "u128_placeholder"
 
 [fn]
 rename_args = "None"
@@ -43,3 +49,7 @@ rename_fields = "None"
 allow_static_const = true
 allow_constexpr = false
 sort_by = "Name"
+
+[parse]
+parse_deps = true
+include = ["nanorand"]
