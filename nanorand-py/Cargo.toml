@@ -19,8 +19,9 @@ default-features = false
 features = ["std", "wyrand", "pcg64", "chacha", "getrandom"]
 
 [dependencies.pyo3]
-version = "0.12"
-features = ["extension-module"]
+git = "https://github.com/PyO3/pyo3"
+rev = "92b7a9736c9585883df5ec5bc01004caa7f65106"
+features = ["extension-module", "abi3"]
 
 [package.metadata.maturin]
 classifier = [
