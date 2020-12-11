@@ -20,8 +20,8 @@ features = ["std", "wyrand", "pcg64", "chacha", "getrandom"]
 
 [dependencies.pyo3]
 git = "https://github.com/PyO3/pyo3"
-rev = "92b7a9736c9585883df5ec5bc01004caa7f65106"
-features = ["extension-module", "abi3"]
+rev = "9aa70f7c89afdbafad47bce02e1cdbdb893406bb"
+features = ["extension-module"]
 
 [package.metadata.maturin]
 classifier = [
