@@ -10,7 +10,7 @@ fastrand = "^1.4"
 hex = "^0.4"
 nanorand = { path = "../nanorand" }
 oorandom = "^11.1"
-rand_chacha = "^0.2"
+rand_chacha = "^0.3"
 rand_core = "^0.5"
 rand_pcg = "^0.2"
 random-fast-rng = "^0.1"
