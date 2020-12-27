@@ -26,58 +26,49 @@ fn criterion_benchmark(c: &mut Criterion) {
 	let mut rng_group = c.benchmark_group("rngs");
 	rng_group.throughput(Throughput::Bytes(std::mem::size_of::<u64>() as u64 * 1024));
 
-	#[cfg(feature = "wyrand")]
-	{
-		rng_group.bench_function("wyrand", |b| {
-			let mut rng = nanorand::rand::WyRand::new();
-			b.iter(|| {
-				let mut n: u64 = u64::MIN;
-				for _ in 0..1024 {
-					n = n.wrapping_add(rng.generate());
-				}
-				black_box(n);
-			})
-		});
-	}
+	rng_group.bench_function("wyrand", |b| {
+		let mut rng = nanorand::rand::WyRand::new();
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.generate());
+			}
+			black_box(n);
+		})
+	});
 
-	#[cfg(feature = "pcg64")]
-	{
-		rng_group.bench_function("pcg64", |b| {
-			let mut rng = nanorand::rand::Pcg64::new();
-			b.iter(|| {
-				let mut n: u64 = u64::MIN;
-				for _ in 0..1024 {
-					n = n.wrapping_add(rng.generate());
-				}
-				black_box(n);
-			})
-		});
-	}
+	rng_group.bench_function("pcg64", |b| {
+		let mut rng = nanorand::rand::Pcg64::new();
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.generate());
+			}
+			black_box(n);
+		})
+	});
 
-	#[cfg(feature = "chacha")]
-	{
-		rng_group.bench_function("chacha8", |b| {
-			let mut rng = nanorand::rand::ChaCha::new(8);
-			b.iter(|| {
-				let mut n: u64 = u64::MIN;
-				for _ in 0..1024 {
-					n = n.wrapping_add(rng.generate());
-				}
-				black_box(n);
-			})
-		});
+	rng_group.bench_function("chacha8", |b| {
+		let mut rng = nanorand::rand::ChaCha::new(8);
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.generate());
+			}
+			black_box(n);
+		})
+	});
 
-		rng_group.bench_function("chacha20", |b| {
-			let mut rng = nanorand::rand::ChaCha::new(20);
-			b.iter(|| {
-				let mut n: u64 = u64::MIN;
-				for _ in 0..1024 {
-					n = n.wrapping_add(rng.generate());
-				}
-				black_box(n);
-			})
-		});
-	}
+	rng_group.bench_function("chacha20", |b| {
+		let mut rng = nanorand::rand::ChaCha::new(20);
+		b.iter(|| {
+			let mut n: u64 = u64::MIN;
+			for _ in 0..1024 {
+				n = n.wrapping_add(rng.generate());
+			}
+			black_box(n);
+		})
+	});
 
 	rng_group.finish();
 

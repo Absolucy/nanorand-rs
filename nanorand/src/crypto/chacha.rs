@@ -75,7 +75,7 @@ pub fn chacha_init(key: [u8; 32], nonce: [u8; 8]) -> [u32; 16] {
 	state
 }
 
-/// Increment the 64-bit counter of the internal ChaCha20 state by 1.  
+/// Increment the 64-bit counter of the internal ChaCha20 state by 1.
 /// Returns `false` if it overflows, `true` otherwise.
 pub fn chacha_increment_counter(state: &mut [u32; 16]) -> bool {
 	let counter = ((state[13] as u64) << 32) | (state[12] as u64);

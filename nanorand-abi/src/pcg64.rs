@@ -17,9 +17,7 @@ pub extern "C" fn new_pcg64_seed(seed: [u8; 16]) -> Pcg64 {
 #[no_mangle]
 pub extern "C" fn pcg64_next(rng: &mut Pcg64) -> *mut u8 {
 	let mut out = rng.rand();
-	let ptr = out.as_mut_ptr();
-	std::mem::forget(out);
-	ptr
+	out.as_mut_ptr()
 }
 
 /// Generate a random 8-bit unsigned integer from the provided RNG

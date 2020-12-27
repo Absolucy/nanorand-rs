@@ -1,14 +1,26 @@
-#[cfg(all(unix, not(feature = "getrandom")))]
-pub use unix::entropy_from_system;
+#[cfg(all(
+	any(target_os = "linux", target_os = "android"),
+	not(feature = "getrandom")
+))]
+pub use linux::entropy_from_system;
 #[cfg(all(windows, not(target_vendor = "uwp"), not(feature = "getrandom")))]
 pub use windows::entropy_from_system;
 #[cfg(all(windows, target_vendor = "uwp", not(feature = "getrandom")))]
 pub use windows_uwp::entropy_from_system;
 
-#[cfg(all(unix, not(feature = "getrandom")))]
-/// A 100% safe entropy generator, using (in order of priority) `/dev/urandom`,
-/// `/dev/random`, or the system time.
-pub mod unix;
+#[cfg(all(
+	any(target_os = "linux", target_os = "android"),
+	not(feature = "getrandom")
+))]
+/// An entropy generator for Linux, using libc's `getrandom` function.
+pub mod linux;
+
+#[cfg(all(
+	any(target_os = "macos", target_os = "ios"),
+	not(feature = "getrandom")
+))]
+/// An entropy generator for macOS/iOS, using libc's `getrandom` function.
+pub mod darwin;
 
 #[cfg(all(windows, target_vendor = "uwp", not(feature = "getrandom")))]
 /// An entropy generator for Windows, using WinAPI's `BCryptGenRandom` function.
@@ -19,7 +31,7 @@ pub mod windows_uwp;
 pub mod windows;
 
 #[cfg(feature = "getrandom")]
-/// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.  
+/// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.
 /// Uses backup entropy (rdseed and system time) if it fails.
 pub fn entropy_from_system(out: &mut [u8]) {
 	match getrandom::getrandom(out) {
@@ -29,13 +41,20 @@ pub fn entropy_from_system(out: &mut [u8]) {
 }
 
 /// Pull in backup entropy (rdseed and system time).
-#[cfg(not(any(feature = "getrandom", unix, windows)))]
+#[cfg(not(any(
+	feature = "getrandom",
+	target_os = "linux",
+	target_os = "android",
+	target_os = "macos",
+	target_os = "ios",
+	windows
+)))]
 pub fn entropy_from_system(out: &mut [u8]) -> Vec<u8> {
 	backup_entropy(out)
 }
 
 #[cfg(feature = "std")]
-/// An emergency system time-based entropy source.  
+/// An emergency system time-based entropy source.
 /// Should be slightly better than just piping the system time into a seed,
 /// but for the love of god, don't use this unless you have a REALLY good reason.
 pub fn emergency_system_time_entropy(out: &mut [u8]) {
@@ -93,11 +112,11 @@ fn stupid_rdseed_hack() -> Option<u64> {
 
 #[cfg(feature = "rdseed")]
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-/// An rdseed-based entropy source.  
-/// Only works on x86/x86_64 platforms where the `rdseed` instructions are available.  
-/// Returns [`None`] if `rdseed` is not available.  
+/// An rdseed-based entropy source.
+/// Only works on x86/x86_64 platforms where the `rdseed` instructions are available.
+/// Returns [`None`] if `rdseed` is not available.
 /// Returns [`Some`] if it successfully managed to pull some bytes.
-/// ***VERY unreliable.***  
+/// ***VERY unreliable.***
 pub fn rdseed_entropy(out: &mut [u8]) -> Option<usize> {
 	if !std::is_x86_feature_detected!("rdseed") {
 		return None;

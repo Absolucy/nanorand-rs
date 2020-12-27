@@ -35,6 +35,11 @@ pub trait RNG: Clone {
 	fn generate<R: RandomGen<Self>>(&mut self) -> R {
 		R::random(self)
 	}
+	/// Fill an array with the specified type.
+	fn fill<R: RandomGen<Self>, A: AsMut<[R]>>(&mut self, mut target: A) {
+		let target = target.as_mut();
+		target.iter_mut().for_each(|entry| *entry = self.generate());
+	}
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate_range<R: RandomRange<Self>>(&mut self, lower: R, upper: R) -> R {
 		R::random_range(self, lower, upper)

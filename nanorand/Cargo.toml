@@ -24,20 +24,7 @@ zeroize = { version = "1.2", optional = true, features = ["zeroize_derive"] }
 getrandom = { version = "0.2", optional = true, features = ["rdrand", "js"] }
 
 [dev-dependencies]
-criterion = "0.3"
-randomize = "^3.0"
-oorandom = "^11.1"
-rand_core = "^0.5"
-rand_pcg = "^0.2"
-rand_chacha = "^0.2"
-random-fast-rng = "^0.1"
-fastrand = "^1.4"
-wyhash = "^0.4"
-hex = "^0.4"
-
-[[bench]]
-name = "speed"
-harness = false
+hex = "0.4"
 
 [package.metadata.docs.rs]
 all-features = true

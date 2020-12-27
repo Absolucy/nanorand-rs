@@ -17,9 +17,7 @@ pub extern "C" fn new_wyrand_with_seed(seed: u64) -> WyRand {
 #[no_mangle]
 pub extern "C" fn wyrand_next(rng: &mut WyRand) -> *mut u8 {
 	let mut out = rng.rand();
-	let ptr = out.as_mut_ptr();
-	std::mem::forget(out);
-	ptr
+	out.as_mut_ptr()
 }
 
 /// Generate a random 8-bit unsigned integer from the provided RNG

@@ -57,9 +57,7 @@ pub extern "C" fn new_chacha20_key(key: [u8; 32], nonce: [u8; 8]) -> ChaCha {
 #[no_mangle]
 pub extern "C" fn chacha_next(rng: &mut ChaCha) -> *mut u8 {
 	let mut out = rng.rand();
-	let ptr = out.as_mut_ptr();
-	std::mem::forget(out);
-	ptr
+	out.as_mut_ptr()
 }
 
 /// Generate a random 8-bit unsigned integer from the provided RNG

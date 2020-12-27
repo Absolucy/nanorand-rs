@@ -23,7 +23,7 @@ impl Pcg64 {
 		}
 	}
 
-	pub fn next(&mut self) -> Vec<u8> {
+	pub fn next_bytes(&mut self) -> Vec<u8> {
 		self.inner.rand().to_vec()
 	}
 
