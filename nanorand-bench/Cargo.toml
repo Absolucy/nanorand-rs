@@ -15,7 +15,7 @@ rand_core = "^0.5"
 rand_pcg = "^0.2"
 random-fast-rng = "^0.1"
 randomize = "^3.0"
-wyhash = "^0.4"
+wyhash = "^0.5"
 
 [[bench]]
 name = "speed"
