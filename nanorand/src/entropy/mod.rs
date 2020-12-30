@@ -54,8 +54,8 @@ pub fn entropy_from_system(out: &mut [u8]) {
 	target_os = "ios",
 	windows
 )))]
-pub fn entropy_from_system(out: &mut [u8]) -> Vec<u8> {
-	backup_entropy(out)
+pub fn entropy_from_system(out: &mut [u8]) {
+	backup_entropy(out);
 }
 
 #[cfg(feature = "std")]
