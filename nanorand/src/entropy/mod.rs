@@ -1,4 +1,9 @@
 #[cfg(all(
+	any(target_os = "macos", target_os = "ios"),
+	not(feature = "getrandom")
+))]
+pub use darwin::entropy_from_system;
+#[cfg(all(
 	any(target_os = "linux", target_os = "android"),
 	not(feature = "getrandom")
 ))]
