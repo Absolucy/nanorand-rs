@@ -51,6 +51,10 @@ impl<R: RNG> RandomGen<R> for u64 {
 impl<R: RNG> RandomRange<R> for u64 {
 	fn random_range(r: &mut R, lower: u64, upper: u64) -> Self {
 		assert!(upper >= lower);
+		if lower == 0 && upper == u64::MAX {
+			// avoid overflow
+			return Self::random(r);
+		}
 		let n = (upper - lower) + 1;
 		let boundary = u64::MAX / n;
 		let random = Self::random(r);
