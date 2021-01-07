@@ -1,3 +1,5 @@
+use std::u64;
+
 use crate::RNG;
 
 /// A trait used for generating a random object with an RNG,
@@ -48,15 +50,11 @@ impl<R: RNG> RandomGen<R> for u64 {
 
 impl<R: RNG> RandomRange<R> for u64 {
 	fn random_range(r: &mut R, lower: u64, upper: u64) -> Self {
-		let t = ((-(upper as i64)) % (upper as i64)) as u64;
-		let in_range = loop {
-			let x = Self::random(r);
-			let m = (x as u128).wrapping_mul(upper as u128);
-			if (m as u64) >= t {
-				break (m >> 64) as u64;
-			}
-		};
-		in_range.max(lower)
+		assert!(upper >= lower);
+		let n = (upper - lower) + 1;
+		let boundary = u64::MAX / n;
+		let random = Self::random(r);
+		(random / boundary) + lower
 	}
 }
 

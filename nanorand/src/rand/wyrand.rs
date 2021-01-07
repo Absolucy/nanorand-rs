@@ -77,3 +77,28 @@ impl Display for WyRand {
 		write!(f, "WyRand ({:p})", self)
 	}
 }
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	// TDD for https://github.com/aspenluxxxy/nanorand-rs/issues/21
+	#[test]
+	fn generate_range_contains_upper_test() {
+		generate_range_contains_upper(0, 1);
+		generate_range_contains_upper(1000, 1010);
+		generate_range_contains_upper(u64::MAX - 1, u64::MAX);
+	}
+
+	fn generate_range_contains_upper(lower: u64, upper: u64) {
+		type T = u64;
+		let n = (((upper - lower) + 1) * 1000) as usize;
+		let mut rng = WyRand::new();
+		let mut buff: Vec<T> = Vec::with_capacity(n);
+		for _ in 0..n {
+			buff.push(rng.generate_range::<T>(lower, upper));
+		}
+		// we should get non-zero amount of `upper` and `lower` values by pure chance..
+		assert!(buff.contains(&lower));
+		assert!(buff.contains(&upper));
+	}
+}
