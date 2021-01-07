@@ -1,5 +1,3 @@
-use std::u64;
-
 use crate::RNG;
 
 /// A trait used for generating a random object with an RNG,
