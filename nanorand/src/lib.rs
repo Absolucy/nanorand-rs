@@ -88,6 +88,6 @@ pub mod entropy;
 pub mod gen;
 /// RNG algorithms.
 pub mod rand;
-#[cfg(feature = "std")]
+#[cfg(all(feature = "std", feature = "wyrand"))]
 /// Provides a thread-local [WyRand] RNG.
 pub mod tls;
