@@ -48,15 +48,24 @@ impl<R: RNG> RandomGen<R> for u64 {
 
 impl<R: RNG> RandomRange<R> for u64 {
 	fn random_range(r: &mut R, lower: u64, upper: u64) -> Self {
-		let t = ((-(upper as i64)) % (upper as i64)) as u64;
-		let in_range = loop {
-			let x = Self::random(r);
-			let m = (x as u128).wrapping_mul(upper as u128);
-			if (m as u64) >= t {
-				break (m >> 64) as u64;
+		assert!(upper > lower);
+		let range = upper.saturating_add(1);
+		let mut x = Self::random(r);
+		let mut m = (x as u128).wrapping_mul(range as u128);
+		if (m as u64) < range {
+			let mut t = u64::MAX.wrapping_sub(range);
+			if t >= range {
+				t -= range;
+				if t >= range {
+					t %= range;
+				}
 			}
-		};
-		in_range.max(lower)
+			while (m as u64) < t {
+				x = Self::random(r);
+				m = (x as u128).wrapping_mul(range as u128);
+			}
+		}
+		((m >> 64) as u64).max(lower)
 	}
 }
 
@@ -143,5 +152,17 @@ impl<R: RNG> RandomRange<R> for char {
 				break c;
 			}
 		}
+	}
+}
+
+impl<R: RNG> RandomGen<R> for f32 {
+	fn random(r: &mut R) -> Self {
+		r.generate::<u32>() as f32
+	}
+}
+
+impl<R: RNG> RandomGen<R> for f64 {
+	fn random(r: &mut R) -> Self {
+		r.generate::<u64>() as f64
 	}
 }
