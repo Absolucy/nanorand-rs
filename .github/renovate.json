@@ -1,7 +1,0 @@
-{
-	"extends": [
-		"config:base"
-	],
-	"semanticCommits": "enabled",
-	"rangeStrategy": "bump"
-}
