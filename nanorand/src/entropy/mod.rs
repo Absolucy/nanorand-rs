@@ -1,7 +1,4 @@
-#[cfg(all(
-	any(target_os = "macos", target_os = "ios"),
-	not(feature = "getrandom")
-))]
+#[cfg(all(target_vendor = "apple", not(feature = "getrandom")))]
 pub use darwin::entropy_from_system;
 #[cfg(all(
 	any(target_os = "linux", target_os = "android"),
@@ -20,10 +17,7 @@ pub use windows_uwp::entropy_from_system;
 /// An entropy generator for Linux, using libc's `getrandom` function.
 pub mod linux;
 
-#[cfg(all(
-	any(target_os = "macos", target_os = "ios"),
-	not(feature = "getrandom")
-))]
+#[cfg(all(target_vendor = "apple", not(feature = "getrandom")))]
 /// An entropy generator for macOS/iOS, using libc's `getrandom` function.
 pub mod darwin;
 
@@ -50,8 +44,7 @@ pub fn entropy_from_system(out: &mut [u8]) {
 	feature = "getrandom",
 	target_os = "linux",
 	target_os = "android",
-	target_os = "macos",
-	target_os = "ios",
+	target_vendor = "apple",
 	windows
 )))]
 pub fn entropy_from_system(out: &mut [u8]) {
@@ -173,6 +166,6 @@ pub fn backup_entropy(out: &mut [u8]) {
 
 #[cfg(not(feature = "std"))]
 /// This just panics.
-pub fn backup_entropy(out: &mut [u8]) {
+pub fn backup_entropy(_: &mut [u8]) {
 	panic!("Failed to source any entropy!")
 }
