@@ -21,7 +21,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: --no-default-features
+          args: --no-default-features --manifest-path=nanorand/Cargo.toml
       - name: Run 'cross test'
         uses: actions-rs/cargo@v1
         with:
@@ -61,7 +61,7 @@ jobs:
           uses: actions-rs/cargo@v1
           with:
             command: check
-            args: --no-default-features
+            args: --no-default-features --manifest-path=nanorand/Cargo.toml
         - name: Run 'cargo test'
           uses: actions-rs/cargo@v1
           with:
@@ -87,7 +87,7 @@ jobs:
           uses: actions-rs/cargo@v1
           with:
             command: check
-            args: --no-default-features
+            args: --no-default-features --manifest-path=nanorand/Cargo.toml
         - name: Run 'cargo test'
           uses: actions-rs/cargo@v1
           with:
