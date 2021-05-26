@@ -48,7 +48,7 @@ impl<R: Rng> RandomGen<R> for u64 {
 
 impl<R: Rng> RandomRange<R> for u64 {
 	fn random_range(r: &mut R, lower: u64, upper: u64) -> Self {
-		assert!(upper > lower);
+		assert!(upper >= lower);
 		let range = upper.saturating_add(1);
 		let mut x = Self::random(r);
 		let mut m = (x as u128).wrapping_mul(range as u128);

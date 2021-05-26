@@ -10,9 +10,9 @@ edition = "2018"
 cargo-fuzz = true
 
 [dependencies]
-libfuzzer-sys = "0.3"
-nanorand = { path = ".." }
-c2-chacha = "0.3"
+libfuzzer-sys = "0.4.1"
+nanorand = { path = "../nanorand" }
+c2-chacha = "0.3.1"
 
 # Prevent this from interfering with workspaces
 [workspace]
@@ -21,5 +21,11 @@ members = ["."]
 [[bin]]
 name = "chacha20"
 path = "fuzz_targets/chacha20.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "range"
+path = "fuzz_targets/range.rs"
 test = false
 doc = false
