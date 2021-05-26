@@ -6,6 +6,7 @@ pub use pcg64::Pcg64;
 pub use wyrand::WyRand;
 
 use crate::gen::{RandomGen, RandomRange};
+use core::ops::RangeBounds;
 
 /// Implementation of the wyrand PRNG algorithm.
 /// More details can be seen at <https://github.com/wangyi-fudan/wyhash>
@@ -41,15 +42,15 @@ pub trait Rng: Clone {
 		target.iter_mut().for_each(|entry| *entry = self.generate());
 	}
 	/// Generates a random of the specified type, seeding from the internal state.
-	fn generate_range<R: RandomRange<Self>>(&mut self, lower: R, upper: R) -> R {
-		R::random_range(self, lower, upper)
+	fn generate_range<R: RandomRange<Self>, B: RangeBounds<R>>(&mut self, range: B) -> R {
+		R::random_range(self, range)
 	}
 	/// Shuffle a slice, using the RNG.
 	fn shuffle<I, S: AsMut<[I]>>(&mut self, mut target: S) {
 		let target = target.as_mut();
 		let target_len = target.len();
 		for idx in 0..target_len {
-			let random_idx = self.generate_range::<usize>(0, target_len - 1);
+			let random_idx = self.generate_range(0..target_len);
 			target.swap(idx, random_idx);
 		}
 	}
