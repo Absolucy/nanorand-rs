@@ -2,12 +2,5 @@
 members = ["nanorand", "nanorand-abi", "nanorand-py", "nanorand-bench"]
 default-members = ["nanorand"]
 
-[profile.release]
-opt-level = 's'
-lto = true
-codegen-units = 1
-
 [profile.bench]
-lto = true
-opt-level = 3
-codegen-units = 1
+lto = "thin"
