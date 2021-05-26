@@ -48,18 +48,18 @@ impl Pcg64 {
 	}
 
 	pub fn range_u8(&mut self, lower: u8, upper: u8) -> u8 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 
 	pub fn range_u16(&mut self, lower: u16, upper: u16) -> u16 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 
 	pub fn range_u32(&mut self, lower: u32, upper: u32) -> u32 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 
 	pub fn range_u64(&mut self, lower: u64, upper: u64) -> u64 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 }

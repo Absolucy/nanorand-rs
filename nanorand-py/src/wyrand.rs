@@ -54,26 +54,26 @@ impl WyRand {
 
 	/// Generate a random 8-bit unsigned integer within a specified range from the provided RNG
 	pub fn range_u8(&mut self, lower: u8, upper: u8) -> u8 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 
 	/// Generate a random 16-bit unsigned integer within a specified range from the provided RNG
 	pub fn range_u16(&mut self, lower: u16, upper: u16) -> u16 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 
 	/// Generate a random 32-bit unsigned integer within a specified range from the provided RNG
 	pub fn range_u32(&mut self, lower: u32, upper: u32) -> u32 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 
 	/// Generate a random 64-bit unsigned integer within a specified range from the provided RNG
 	pub fn range_u64(&mut self, lower: u64, upper: u64) -> u64 {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 
 	/// Generate a random pointer-sized unsigned integer within a specified range from the provided RNG
 	pub fn range_usize(&mut self, lower: usize, upper: usize) -> usize {
-		self.inner.generate_range(lower, upper)
+		self.inner.generate_range(lower..=upper)
 	}
 }
