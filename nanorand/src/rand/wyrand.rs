@@ -1,6 +1,6 @@
 // Based off lemire's wyrand C++ code at https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 
-use crate::RNG;
+use crate::Rng;
 use core::fmt::{self, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
@@ -18,11 +18,13 @@ pub struct WyRand {
 
 impl WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
+	#[must_use]
 	pub fn new() -> Self {
 		Self::default()
 	}
 
 	/// Create a new [`WyRand`] instance, using a provided seed.
+	#[must_use]
 	pub fn new_seed(seed: u64) -> Self {
 		Self { seed }
 	}
@@ -32,14 +34,14 @@ impl Default for WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {
 		let mut entropy: [u8; core::mem::size_of::<u64>()] = Default::default();
-		crate::entropy::entropy_from_system(&mut entropy);
+		crate::entropy::system(&mut entropy);
 		Self {
 			seed: u64::from_ne_bytes(entropy),
 		}
 	}
 }
 
-impl RNG for WyRand {
+impl Rng for WyRand {
 	type Output = [u8; 8];
 
 	fn rand(&mut self) -> Self::Output {
@@ -50,7 +52,7 @@ impl RNG for WyRand {
 	}
 
 	fn rand_with_seed(seed: &[u8]) -> Self::Output {
-		let mut seed_bytes = [0u8; 8];
+		let mut seed_bytes = [0_u8; 8];
 		seed_bytes.iter_mut().zip(seed).for_each(|(a, b)| *a = *b);
 		let seed = u64::from_ne_bytes(seed_bytes);
 		let seed = seed.wrapping_add(0xa0761d6478bd642f);
@@ -60,7 +62,7 @@ impl RNG for WyRand {
 	}
 
 	fn reseed(&mut self, new_seed: &[u8]) {
-		let mut seed = [0u8; 8];
+		let mut seed = [0_u8; 8];
 		seed.iter_mut().zip(new_seed).for_each(|(a, b)| *a = *b);
 		self.seed = u64::from_ne_bytes(seed)
 	}

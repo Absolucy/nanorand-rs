@@ -1,4 +1,4 @@
-use nanorand::{WyRand, RNG};
+use nanorand::{Rng, WyRand};
 
 /// Create a new Pcg64 RNG, using system-provided entropy.
 #[no_mangle]

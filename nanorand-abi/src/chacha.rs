@@ -1,4 +1,4 @@
-use nanorand::{ChaCha, RNG};
+use nanorand::{ChaCha, Rng};
 
 /// Create a ChaCha RNG, using the specified number of rounds
 #[no_mangle]

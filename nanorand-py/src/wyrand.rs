@@ -1,4 +1,4 @@
-use nanorand::RNG;
+use nanorand::Rng;
 use pyo3::prelude::*;
 
 #[pyclass]

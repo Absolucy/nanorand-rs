@@ -29,7 +29,7 @@ impl DerefMut for TlsWyRand {
 	}
 }
 
-/// Fetch a thread-local [WyRand]
+/// Fetch a thread-local [`WyRand`]
 /// ```rust
 /// use nanorand::RNG;
 ///

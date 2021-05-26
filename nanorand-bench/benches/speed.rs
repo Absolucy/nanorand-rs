@@ -1,5 +1,5 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion, Throughput};
-use nanorand::rand::RNG;
+use nanorand::rand::Rng;
 use rand_core::RngCore;
 use random_fast_rng::Random;
 
@@ -7,17 +7,10 @@ fn criterion_benchmark(c: &mut Criterion) {
 	let mut entropy_group = c.benchmark_group("entropy");
 	entropy_group.throughput(Throughput::Bytes(std::mem::size_of::<u64>() as u64 * 4096));
 
-	entropy_group.bench_function("time-based entropy", |b| {
-		let mut out = [0u8; std::mem::size_of::<u64>() * 4096];
-		b.iter(|| {
-			nanorand::entropy::emergency_system_time_entropy(&mut out);
-		})
-	});
-
 	entropy_group.bench_function("system entropy", |b| {
 		let mut out = [0u8; std::mem::size_of::<u64>() * 4096];
 		b.iter(|| {
-			nanorand::entropy::entropy_from_system(&mut out);
+			nanorand::entropy::system(&mut out);
 		})
 	});
 

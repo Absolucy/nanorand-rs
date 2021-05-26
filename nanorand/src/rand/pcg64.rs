@@ -1,6 +1,6 @@
 // Based off Robert Kern's C implementation at https://github.com/rkern/pcg64/blob/master/pcg64.c
 
-use crate::RNG;
+use crate::Rng;
 use core::fmt::{self, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
@@ -22,9 +22,10 @@ pub struct Pcg64 {
 impl Pcg64 {
 	/// Create a new [`Pcg64`] instance, seeding from the system's default source of entropy.
 	#[cfg(feature = "std")]
+	#[must_use]
 	pub fn new() -> Self {
 		let mut entropy: [u8; core::mem::size_of::<u128>()] = Default::default();
-		crate::entropy::entropy_from_system(&mut entropy);
+		crate::entropy::system(&mut entropy);
 		Self {
 			seed: u128::from_ne_bytes(entropy),
 			inc: 0,
@@ -33,6 +34,7 @@ impl Pcg64 {
 	}
 
 	/// Create a new [`Pcg64`] instance, using a provided seed.
+	#[must_use]
 	pub fn new_seed(seed: u128) -> Self {
 		Self {
 			seed,
@@ -66,7 +68,7 @@ impl Default for Pcg64 {
 	/// Create a new [`Pcg64`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {
 		let mut entropy: [u8; core::mem::size_of::<u128>()] = Default::default();
-		crate::entropy::entropy_from_system(&mut entropy);
+		crate::entropy::system(&mut entropy);
 		Self {
 			seed: u128::from_ne_bytes(entropy),
 			inc: 0,
@@ -75,7 +77,7 @@ impl Default for Pcg64 {
 	}
 }
 
-impl RNG for Pcg64 {
+impl Rng for Pcg64 {
 	type Output = [u8; 8];
 
 	fn rand(&mut self) -> Self::Output {

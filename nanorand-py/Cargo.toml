@@ -1,7 +1,7 @@
 [package]
 name = "nanorand-py"
 description = "A Python module for nanorand"
-version = "0.5.2-alpha.0"
+version = "0.6.0"
 repository = "https://github.com/aspenluxxxy/nanorand-rs"
 keywords = ["rng", "wyrand", "pcg", "chacha", "random", "pcg64"]
 authors = ["aspen <aspenuwu@protonmail.com>"]
@@ -19,7 +19,7 @@ default-features = false
 features = ["std", "wyrand", "pcg64", "chacha", "getrandom"]
 
 [dependencies.pyo3]
-version = "0.13"
+version = "0.13.2"
 features = ["extension-module"]
 
 [package.metadata.maturin]

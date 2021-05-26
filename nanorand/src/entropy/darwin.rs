@@ -6,6 +6,6 @@ extern "C" {
 }
 
 /// Obtain a series of random bytes.
-pub fn entropy_from_system(out: &mut [u8]) -> bool {
+pub fn entropy(out: &mut [u8]) -> bool {
 	unsafe { SecRandomCopyBytes(core::ptr::null(), out.len(), out.as_mut_ptr()) == 0 }
 }

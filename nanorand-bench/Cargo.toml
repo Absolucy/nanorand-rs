@@ -1,8 +1,9 @@
 [package]
 name = "nanorand-bench"
-version = "0.1.0"
+version = "0.0.0"
 authors = ["aspen <aspenuwu@protonmail.com>"]
 edition = "2018"
+publish = false
 
 [dependencies]
 criterion = "0.3"

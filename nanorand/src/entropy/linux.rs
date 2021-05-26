@@ -3,6 +3,6 @@ extern "C" {
 }
 
 /// Obtain a series of random bytes.
-pub fn entropy_from_system(out: &mut [u8]) -> bool {
+pub fn entropy(out: &mut [u8]) -> bool {
 	unsafe { getrandom(out.as_mut_ptr(), out.len(), 0x0001) >= 1 }
 }

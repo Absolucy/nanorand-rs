@@ -14,7 +14,7 @@ extern "system" {
 }
 
 /// Obtain a random 64-bit number using WinAPI's `BCryptGenRandom` function.
-pub fn entropy_from_system(out: &mut [u8]) -> bool {
+pub fn entropy(out: &mut [u8]) -> bool {
 	unsafe {
 		BCryptGenRandom(
 			ptr::null_mut(),

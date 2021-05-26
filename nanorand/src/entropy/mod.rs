@@ -1,14 +1,14 @@
 #[cfg(all(target_vendor = "apple", not(feature = "getrandom")))]
-pub use darwin::entropy_from_system;
+pub use darwin::entropy as system;
 #[cfg(all(
 	any(target_os = "linux", target_os = "android"),
 	not(feature = "getrandom")
 ))]
-pub use linux::entropy_from_system;
+pub use linux::entropy as system;
 #[cfg(all(windows, not(target_vendor = "uwp"), not(feature = "getrandom")))]
-pub use windows::entropy_from_system;
+pub use windows::entropy as system;
 #[cfg(all(windows, target_vendor = "uwp", not(feature = "getrandom")))]
-pub use windows_uwp::entropy_from_system;
+pub use windows_uwp::entropy as system;
 
 #[cfg(all(
 	any(target_os = "linux", target_os = "android"),
@@ -32,10 +32,10 @@ pub mod windows;
 #[cfg(feature = "getrandom")]
 /// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.
 /// Uses backup entropy (rdseed and system time) if it fails.
-pub fn entropy_from_system(out: &mut [u8]) {
+pub fn system(out: &mut [u8]) {
 	match getrandom::getrandom(out) {
 		Ok(_) => (),
-		Err(_) => backup_entropy(out),
+		Err(_) => backup(out),
 	}
 }
 
@@ -47,48 +47,8 @@ pub fn entropy_from_system(out: &mut [u8]) {
 	target_vendor = "apple",
 	windows
 )))]
-pub fn entropy_from_system(out: &mut [u8]) {
+pub fn system(out: &mut [u8]) {
 	backup_entropy(out);
-}
-
-#[cfg(feature = "std")]
-/// An emergency system time-based entropy source.
-/// Should be slightly better than just piping the system time into a seed,
-/// but for the love of god, don't use this unless you have a REALLY good reason.
-pub fn emergency_system_time_entropy(out: &mut [u8]) {
-	use std::time::{SystemTime, UNIX_EPOCH};
-	let amt = out.len();
-
-	let time_amt = ((amt + core::mem::size_of::<u128>() - 1) / core::mem::size_of::<u128>()).max(0);
-	for n in 0..time_amt {
-		let time = SystemTime::now()
-			.duration_since(UNIX_EPOCH)
-			.unwrap()
-			.as_nanos();
-		let x = if n % 2 == 0 {
-			time.to_le_bytes()
-		} else {
-			time.to_be_bytes()
-		};
-		x.iter()
-			.enumerate()
-			.for_each(|(i, val)| out[(core::mem::size_of::<u128>() * n) + i] = *val);
-	}
-	for n in 0..time_amt {
-		let time = SystemTime::now()
-			.duration_since(UNIX_EPOCH)
-			.unwrap()
-			.as_nanos();
-		let x = if n % 2 == 0 {
-			time.to_be_bytes()
-		} else {
-			time.to_le_bytes()
-		};
-		x.iter().enumerate().for_each(|(i, val)| {
-			out[(core::mem::size_of::<u128>() * n) + i] =
-				*val ^ out[(core::mem::size_of::<u128>() * n) + i]
-		});
-	}
 }
 
 #[cfg(feature = "rdseed")]
@@ -115,7 +75,7 @@ fn stupid_rdseed_hack() -> Option<u64> {
 /// Returns [`None`] if `rdseed` is not available.
 /// Returns [`Some`] if it successfully managed to pull some bytes.
 /// ***VERY unreliable.***
-pub fn rdseed_entropy(out: &mut [u8]) -> Option<usize> {
+pub fn rdseed(out: &mut [u8]) -> Option<usize> {
 	if !std::is_x86_feature_detected!("rdseed") {
 		return None;
 	}
@@ -146,7 +106,7 @@ pub fn rdseed_entropy(out: &mut [u8]) -> Option<usize> {
 	not(feature = "rdseed"),
 	not(any(target_arch = "x86", target_arch = "x86_64"))
 ))]
-pub fn rdseed_entropy(_out: &mut [u8]) -> Option<usize> {
+pub fn rdseed(_out: &mut [u8]) -> Option<usize> {
 	None
 }
 
@@ -154,14 +114,18 @@ pub fn rdseed_entropy(_out: &mut [u8]) -> Option<usize> {
 /// A backup entropy source, trying rdseed first,
 /// and if it fails or does not complete, combining it with or
 /// using system time-based entropy generation.
-pub fn backup_entropy(out: &mut [u8]) {
-	if let Some(amt) = rdseed_entropy(out) {
+///
+/// # Panics
+///
+/// This function panics if sufficient entropy could not be obtained.
+pub fn backup(out: &mut [u8]) {
+	if let Some(amt) = rdseed(out) {
 		if amt >= out.len() {
 			return;
 		}
 	};
 
-	emergency_system_time_entropy(out);
+	panic!("Failed to source sufficient entropy!")
 }
 
 #[cfg(not(feature = "std"))]
