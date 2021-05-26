@@ -72,11 +72,11 @@ impl<R: Rng> RandomGen<R> for bool {
 	}
 }
 
-gen!(u8, u16, u32, u64, u128, usize);
+gen!(i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize);
 range!((u8, u16), (u16, u32), (u32, u64), (u64, u128));
 #[cfg(target_pointer_width = "16")]
-range!((usize, 32));
+range!((usize, u32));
 #[cfg(target_pointer_width = "32")]
-range!((usize, 64));
+range!((usize, u64));
 #[cfg(target_pointer_width = "64")]
 range!((usize, u128));
