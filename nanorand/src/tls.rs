@@ -32,14 +32,14 @@ impl DerefMut for TlsWyRand {
 
 /// Fetch a thread-local [`WyRand`]
 /// ```rust
-/// use nanorand::RNG;
+/// use nanorand::Rng;
 ///
 /// let mut rng = nanorand::tls_rng();
 /// println!("Random number: {}", rng.generate::<u64>());
 /// ```
 /// This cannot be passed to another thread, as something like this will fail to compile:
 /// ```compile_fail
-/// use nanorand::RNG;
+/// use nanorand::Rng;
 ///
 /// let mut rng = nanorand::tls_rng();
 /// std::thread::spawn(move || {

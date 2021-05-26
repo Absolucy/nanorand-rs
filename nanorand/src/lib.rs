@@ -13,28 +13,28 @@
 //! # Examples
 //! ## Generating a number with an initialized RNG
 //! ```rust
-//! use nanorand::{RNG, WyRand};
+//! use nanorand::{Rng, WyRand};
 //!
 //! let mut rng = WyRand::new();
 //! println!("Random number: {}", rng.generate::<u64>());
 //! ```
 //! ## Generating a number with a thread-local RNG
 //! ```rust
-//! use nanorand::RNG;
+//! use nanorand::Rng;
 //!
 //! let mut rng = nanorand::tls_rng();
 //! println!("Random number: {}", rng.generate::<u64>());
 //! ```
 //! ## Generating a number in a range
 //! ```rust
-//! use nanorand::{RNG, WyRand};
+//! use nanorand::{Rng, WyRand};
 //!
 //! let mut rng = WyRand::new();
 //! println!("Random number between 1 and 100: {}", rng.generate_range::<u64>(1, 100));
 //! ```
 //! ## Shuffling a Vec
 //! ```rust
-//! use nanorand::{RNG, WyRand};
+//! use nanorand::{Rng, WyRand};
 //!
 //! let mut rng = WyRand::new();
 //! let mut items = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
