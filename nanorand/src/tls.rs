@@ -1,15 +1,16 @@
 use crate::WyRand;
-use core::{
+use std::{
 	cell::UnsafeCell,
 	ops::{Deref, DerefMut},
+	rc::Rc,
 };
 
 thread_local! {
-	static WYRAND: UnsafeCell<WyRand> = UnsafeCell::new(WyRand::new());
+	static WYRAND: Rc<UnsafeCell<WyRand>> = Rc::new(UnsafeCell::new(WyRand::new()));
 }
 
 #[doc(hidden)]
-pub struct TlsWyRand(*mut WyRand);
+pub struct TlsWyRand(Rc<UnsafeCell<WyRand>>);
 
 impl Deref for TlsWyRand {
 	type Target = WyRand;
@@ -17,7 +18,7 @@ impl Deref for TlsWyRand {
 	/// Safety: [`TlsWyRand`] is neither [Send] nor [Sync], and thus,
 	/// there will always be a thread-local [`WyRand`] when there is a [`TlsWyRand`]
 	fn deref(&self) -> &Self::Target {
-		unsafe { &*self.0 }
+		unsafe { &*self.0.get() }
 	}
 }
 
@@ -25,7 +26,7 @@ impl DerefMut for TlsWyRand {
 	/// Safety: [`TlsWyRand`] is neither [Send] nor [Sync], and thus,
 	/// there will always be a thread-local [`WyRand`] when there is a [`TlsWyRand`]
 	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { &mut *self.0 }
+		unsafe { &mut *(*self.0).get() }
 	}
 }
 
@@ -46,5 +47,5 @@ impl DerefMut for TlsWyRand {
 /// });
 /// ```
 pub fn tls_rng() -> TlsWyRand {
-	WYRAND.with(|tls| TlsWyRand(tls.get()))
+	WYRAND.with(|tls| TlsWyRand(tls.clone()))
 }

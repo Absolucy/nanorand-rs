@@ -18,7 +18,7 @@ fn chacha_quarter_round(state: &mut [u32; 16], a: usize, b: usize, c: usize, d: 
 	state[b] = state[b].rotate_left(7);
 }
 
-fn chacha_pack(unpacked: &[u8], idx: usize) -> u32 {
+const fn chacha_pack(unpacked: &[u8], idx: usize) -> u32 {
 	(unpacked[idx] as u32)
 		| ((unpacked[idx + 1] as u32) << 8)
 		| ((unpacked[idx + 2] as u32) << 16)
@@ -50,7 +50,7 @@ pub fn chacha_block(rounds: u8, input: [u32; 16]) -> [u32; 16] {
 }
 
 /// Initialize the ChaCha internal state, with a 256-bit key and 64-bit nonce.
-pub fn chacha_init(key: [u8; 32], nonce: [u8; 8]) -> [u32; 16] {
+pub const fn chacha_init(key: [u8; 32], nonce: [u8; 8]) -> [u32; 16] {
 	let mut state = [0u32; 16];
 	state[0] = chacha_pack(CHACHA_TAU, 0);
 	state[1] = chacha_pack(CHACHA_TAU, 4);
@@ -108,7 +108,7 @@ mod tests {
 					.iter()
 					.for_each(|packed| keystream.extend_from_slice(&packed.to_le_bytes()));
 				chacha_increment_counter(&mut state);
-				}
+			}
 			keystream.resize(expected_keystream.len(), 0);
 
 			assert_eq!(keystream, expected_keystream);

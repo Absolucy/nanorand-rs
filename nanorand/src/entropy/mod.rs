@@ -68,8 +68,7 @@ fn stupid_rdseed_hack() -> Option<u64> {
 	None
 }
 
-#[cfg(feature = "rdseed")]
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[cfg(all(feature = "rdseed", any(target_arch = "x86", target_arch = "x86_64")))]
 /// An rdseed-based entropy source.
 /// Only works on x86/x86_64 platforms where the `rdseed` instructions are available.
 /// Returns [`None`] if `rdseed` is not available.

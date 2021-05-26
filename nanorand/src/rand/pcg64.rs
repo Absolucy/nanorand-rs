@@ -35,7 +35,7 @@ impl Pcg64 {
 
 	/// Create a new [`Pcg64`] instance, using a provided seed.
 	#[must_use]
-	pub fn new_seed(seed: u128) -> Self {
+	pub const fn new_seed(seed: u128) -> Self {
 		Self {
 			seed,
 			inc: 0,

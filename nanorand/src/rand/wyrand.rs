@@ -25,7 +25,7 @@ impl WyRand {
 
 	/// Create a new [`WyRand`] instance, using a provided seed.
 	#[must_use]
-	pub fn new_seed(seed: u64) -> Self {
+	pub const fn new_seed(seed: u64) -> Self {
 		Self { seed }
 	}
 }

@@ -28,7 +28,7 @@ impl ChaCha {
 
 	/// Create a new [`ChaCha`] instance, using the provided key and nonce.
 	#[must_use]
-	pub fn new_key(rounds: u8, key: [u8; 32], nonce: [u8; 8]) -> Self {
+	pub const fn new_key(rounds: u8, key: [u8; 32], nonce: [u8; 8]) -> Self {
 		let state = chacha::chacha_init(key, nonce);
 		Self { state, rounds }
 	}
