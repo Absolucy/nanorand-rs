@@ -30,7 +30,7 @@
 //! use nanorand::{Rng, WyRand};
 //!
 //! let mut rng = WyRand::new();
-//! println!("Random number between 1 and 100: {}", rng.generate_range::<u64>(1, 100));
+//! println!("Random number between 1 and 100: {}", rng.generate_range(1_u64..=100));
 //! ```
 //! ## Shuffling a Vec
 //! ```rust

@@ -54,12 +54,12 @@ impl Pcg64 {
 	#[inline(always)]
 	fn rand128(&mut self) -> u64 {
 		self.state = 0;
-		self.inc = self.seed.rotate_left(1) | 1;
+		self.inc = self.seed.wrapping_shl(1) | 1;
 		self.step();
 		self.state = self.state.wrapping_add(self.seed);
 		self.step();
 		self.step();
-		((self.state >> 64) as u64) ^ (self.state as u64)
+		self.state.wrapping_shr(64) as u64 ^ self.state as u64
 	}
 }
 
@@ -82,7 +82,7 @@ impl Rng for Pcg64 {
 
 	fn rand(&mut self) -> Self::Output {
 		let ret = self.rand128();
-		self.seed = self.state ^ (ret as u128).rotate_right(64);
+		self.seed = self.state ^ (ret as u128).wrapping_shr(64);
 		ret.to_ne_bytes()
 	}
 
