@@ -33,20 +33,34 @@ pub trait Rng: Clone {
 	/// Generates a random sequence of bytes, with a custom seed.
 	fn rand_with_seed(seed: &[u8]) -> Self::Output;
 	/// Generates a random of the specified type, seeding from the internal state.
-	fn generate<R: RandomGen<Self>>(&mut self) -> R {
+	fn generate<R>(&mut self) -> R
+	where
+		R: RandomGen<Self>,
+	{
 		R::random(self)
 	}
 	/// Fill an array with the specified type.
-	fn fill<R: RandomGen<Self>, A: AsMut<[R]>>(&mut self, mut target: A) {
+	fn fill<R, A>(&mut self, mut target: A)
+	where
+		R: RandomGen<Self>,
+		A: AsMut<[R]>,
+	{
 		let target = target.as_mut();
 		target.iter_mut().for_each(|entry| *entry = self.generate());
 	}
 	/// Generates a random of the specified type, seeding from the internal state.
-	fn generate_range<R: RandomRange<Self>, B: RangeBounds<R>>(&mut self, range: B) -> R {
+	fn generate_range<R, B>(&mut self, range: B) -> R
+	where
+		R: RandomRange<Self>,
+		B: RangeBounds<R>,
+	{
 		R::random_range(self, range)
 	}
 	/// Shuffle a slice, using the RNG.
-	fn shuffle<I, S: AsMut<[I]>>(&mut self, mut target: S) {
+	fn shuffle<I, S>(&mut self, mut target: S)
+	where
+		S: AsMut<[I]>,
+	{
 		let target = target.as_mut();
 		let target_len = target.len();
 		for idx in 0..target_len {
