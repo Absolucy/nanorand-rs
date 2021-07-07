@@ -23,7 +23,7 @@ macro_rules! gen {
 }
 
 macro_rules! range {
-	($(($type:ty, $bigger:ty)),+) => {
+	($(($type:ty, $bigger:ty, $signed:ty)),+) => {
 		$(
 			impl<R: Rng> RandomRange<R> for $type {
 				fn random_range<B: RangeBounds<Self>>(r: &mut R, bounds: B) -> Self {
@@ -50,6 +50,47 @@ macro_rules! range {
 					(m >> BITS) as $type + lower
 				}
 			}
+
+			impl<R: Rng> RandomRange<R> for $signed {
+				fn random_range<B: RangeBounds<Self>>(r: &mut R, bounds: B) -> Self {
+					const BITS: $bigger = core::mem::size_of::<$type>() as $bigger * 8;
+					const SIGNED_MAPPING: $type = <$type>::MAX / 2 + 1;
+					let lower = match bounds.start_bound() {
+						Bound::Included(lower) => {
+							(*lower as $type).wrapping_add(SIGNED_MAPPING)
+						},
+						Bound::Excluded(lower) => {
+							(lower.saturating_add(1) as $type)
+								.wrapping_add(SIGNED_MAPPING)
+						},
+						Bound::Unbounded => <$type>::MIN
+					};
+					let upper = match bounds.end_bound() {
+						Bound::Included(upper) => {
+							(*upper as $type)
+								.wrapping_add(SIGNED_MAPPING)
+								.saturating_sub(lower)
+								.saturating_add(1)
+						},
+						Bound::Excluded(upper) => {
+							(*upper as $type)
+								.wrapping_add(SIGNED_MAPPING)
+								.saturating_sub(lower)
+						},
+						Bound::Unbounded => <$type>::MAX,
+					};
+					let mut value = Self::random(r);
+					let mut m = (upper as $bigger).wrapping_mul(value as $bigger);
+					if (m as $type) < upper {
+						let t = (!upper + 1) % upper;
+						while (m as $type) < t {
+							value = Self::random(r);
+							m = (upper as $bigger).wrapping_mul(value as $bigger);
+						}
+					}
+					((m >> BITS) as $type + lower).wrapping_add(SIGNED_MAPPING) as $signed
+				}
+			}
 		)+
 	};
 }
@@ -73,10 +114,15 @@ impl<R: Rng> RandomGen<R> for bool {
 }
 
 gen!(i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize);
-range!((u8, u16), (u16, u32), (u32, u64), (u64, u128));
+range!(
+	(u8, u16, i8),
+	(u16, u32, i16),
+	(u32, u64, i32),
+	(u64, u128, i64)
+);
 #[cfg(target_pointer_width = "16")]
-range!((usize, u32));
+range!((usize, u32, isize));
 #[cfg(target_pointer_width = "32")]
-range!((usize, u64));
+range!((usize, u64, isize));
 #[cfg(target_pointer_width = "64")]
-range!((usize, u128));
+range!((usize, u128, isize));
