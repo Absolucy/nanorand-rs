@@ -112,7 +112,7 @@ mod tests {
 	#[test]
 	fn ensure_unsigned_in_range() {
 		let mut rng = WyRand::new();
-		for _ in 0..100 {
+		for _ in 0..1000 {
 			let number = rng.generate_range(10_u64..=20);
 			assert!(
 				(10..=20).contains(&number),
@@ -141,7 +141,7 @@ mod tests {
 	#[test]
 	fn ensure_signed_in_range() {
 		let mut rng = WyRand::new();
-		for _ in 0..100 {
+		for _ in 0..1000 {
 			let number = rng.generate_range(-200..=50);
 			assert!(
 				(-200..=50).contains(&number),
