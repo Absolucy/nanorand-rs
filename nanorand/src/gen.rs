@@ -53,42 +53,21 @@ macro_rules! range {
 
 			impl<R: Rng> RandomRange<R> for $signed {
 				fn random_range<B: RangeBounds<Self>>(r: &mut R, bounds: B) -> Self {
-					const BITS: $bigger = core::mem::size_of::<$type>() as $bigger * 8;
 					const SIGNED_MAPPING: $type = <$type>::MAX / 2 + 1;
 					let lower = match bounds.start_bound() {
-						Bound::Included(lower) => {
-							(*lower as $type).wrapping_add(SIGNED_MAPPING)
-						},
-						Bound::Excluded(lower) => {
-							(lower.saturating_add(1) as $type)
-								.wrapping_add(SIGNED_MAPPING)
-						},
-						Bound::Unbounded => <$type>::MIN
+						Bound::Included(lower) => *lower,
+						Bound::Excluded(lower) => lower.saturating_add(1),
+						Bound::Unbounded => <$signed>::MIN
 					};
 					let upper = match bounds.end_bound() {
-						Bound::Included(upper) => {
-							(*upper as $type)
-								.wrapping_add(SIGNED_MAPPING)
-								.saturating_sub(lower)
-								.saturating_add(1)
-						},
-						Bound::Excluded(upper) => {
-							(*upper as $type)
-								.wrapping_add(SIGNED_MAPPING)
-								.saturating_sub(lower)
-						},
-						Bound::Unbounded => <$type>::MAX,
+						Bound::Included(upper) => *upper,
+						Bound::Excluded(upper) => upper.saturating_sub(1),
+						Bound::Unbounded => <$signed>::MAX,
 					};
-					let mut value = Self::random(r);
-					let mut m = (upper as $bigger).wrapping_mul(value as $bigger);
-					if (m as $type) < upper {
-						let t = (!upper + 1) % upper;
-						while (m as $type) < t {
-							value = Self::random(r);
-							m = (upper as $bigger).wrapping_mul(value as $bigger);
-						}
-					}
-					((m >> BITS) as $type + lower).wrapping_add(SIGNED_MAPPING) as $signed
+					let lower = (lower as $type).wrapping_add(SIGNED_MAPPING);
+					let upper = (upper as $type).wrapping_add(SIGNED_MAPPING);
+					assert!(upper >= lower, "{} >= {}", upper, lower);
+					<$type>::random_range(r, lower..=upper).wrapping_add(SIGNED_MAPPING) as $signed
 				}
 			}
 		)+
@@ -126,3 +105,62 @@ range!((usize, u32, isize));
 range!((usize, u64, isize));
 #[cfg(target_pointer_width = "64")]
 range!((usize, u128, isize));
+
+#[cfg(test)]
+mod tests {
+	use crate::{Rng, WyRand};
+	#[test]
+	fn ensure_unsigned_in_range() {
+		let mut rng = WyRand::new();
+		for _ in 0..100 {
+			let number = rng.generate_range(10_u64..=20);
+			assert!(
+				(10..=20).contains(&number),
+				"{} was outside of 10..=20",
+				number
+			);
+
+			let number = rng.generate_range(10_u64..30);
+			assert!(
+				(10..30).contains(&number),
+				"{} was outside of 10..30",
+				number
+			);
+
+			let number = rng.generate_range(512_u64..);
+			assert!((512..).contains(&number), "{} was outside of 512..", number);
+
+			let number = rng.generate_range(..1024_u64);
+			assert!(
+				(..1024).contains(&number),
+				"{} was outside of ..1024",
+				number
+			);
+		}
+	}
+	#[test]
+	fn ensure_signed_in_range() {
+		let mut rng = WyRand::new();
+		for _ in 0..100 {
+			let number = rng.generate_range(-200..=50);
+			assert!(
+				(-200..=50).contains(&number),
+				"{} was outside of -200..=50",
+				number
+			);
+
+			let number = rng.generate_range(-200..100);
+			assert!(
+				(-200..100).contains(&number),
+				"{} was outside of -200..100",
+				number
+			);
+
+			let number = rng.generate_range(-50..);
+			assert!((-50..).contains(&number), "{} was outside of -50..", number);
+
+			let number = rng.generate_range(..512);
+			assert!((..512).contains(&number), "{} was outside of ..512", number);
+		}
+	}
+}

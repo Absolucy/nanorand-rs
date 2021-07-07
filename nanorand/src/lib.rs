@@ -31,6 +31,7 @@
 //!
 //! let mut rng = WyRand::new();
 //! println!("Random number between 1 and 100: {}", rng.generate_range(1_u64..=100));
+//! println!("Random number between -100 and 50: {}", rng.generate_range(-100_i64..=50));
 //! ```
 //! ## Shuffling a Vec
 //! ```rust
