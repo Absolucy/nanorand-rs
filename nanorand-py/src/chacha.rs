@@ -2,7 +2,7 @@ use nanorand::Rng;
 use pyo3::prelude::*;
 
 macro_rules! chacha_impl {
-	($type:ty, $nanorand_type:ty) => {
+	($type:ident, $nanorand_type:ty) => {
 		#[pyclass]
 		#[derive(Default)]
 		pub struct $type {

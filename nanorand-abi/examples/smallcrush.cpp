@@ -11,7 +11,7 @@ static nanorand::Pcg64 pcg_rng;
 
 unsigned int gen_chacha(void)
 {
-	return nanorand::chacha_next_u32(&chacha_rng);
+	return nanorand::chacha20_next_u32(&chacha_rng);
 }
 
 unsigned int gen_wyrand(void)
