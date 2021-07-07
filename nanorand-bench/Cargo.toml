@@ -1,7 +1,7 @@
 [package]
 name = "nanorand-bench"
 version = "0.0.0"
-authors = ["aspen <aspenuwu@protonmail.com>"]
+authors = ["Lucy <lucy@absolucy.moe>"]
 edition = "2018"
 publish = false
 
@@ -9,7 +9,7 @@ publish = false
 criterion = "0.3.4"
 fastrand = "^1.4"
 hex = "^0.4"
-nanorand = { path = "../nanorand" }
+nanorand = { path="../nanorand" }
 oorandom = "^11.1"
 rand_chacha = "^0.2"
 rand_core = "^0.5"

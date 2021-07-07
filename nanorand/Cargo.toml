@@ -1,12 +1,12 @@
 [package]
 name = "nanorand"
 description = "A tiny, fast, zero-dep library for random number generation."
-repository = "https://github.com/aspenluxxxy/nanorand-rs"
+repository = "https://github.com/Absolucy/nanorand-rs"
 keywords = ["rand", "random", "no-std", "entropy"]
 categories = ["algorithms", "no-std"]
 readme = "../README.md"
 version = "0.6.0"
-authors = ["aspen <aspenuwu@protonmail.com>"]
+authors = ["Lucy <lucy@absolucy.moe>"]
 edition = "2018"
 license = "Zlib"
 

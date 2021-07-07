@@ -1,10 +1,10 @@
 [package]
 name = "nanorand-abi"
 description = "A stable C-compatible ABI for nanorand"
-repository = "https://github.com/aspenluxxxy/nanorand-rs"
+repository = "https://github.com/Absolucy/nanorand-rs"
 keywords = ["rng", "wyrand", "pcg", "chacha", "random", "pcg64"]
 version = "0.6.0"
-authors = ["aspen <aspenuwu@protonmail.com>"]
+authors = ["Lucy <lucy@absolucy.moe>"]
 edition = "2018"
 license = "Zlib"
 publish = false
