@@ -1,5 +1,13 @@
 name: "Run SmallCrush"
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '**/*.rs'
+      - '.github/workflows/*.yml'
+  pull_request:
+    paths:
+      - '**/*.rs'
+      - '.github/workflows/*.yml'
 jobs:
     smallcrush:
         name: "Run SmallCrush"

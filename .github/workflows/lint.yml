@@ -1,5 +1,13 @@
 name: "Linting"
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '**/*.rs'
+      - '.github/workflows/*.yml'
+  pull_request:
+    paths:
+      - '**/*.rs'
+      - '.github/workflows/*.yml'
 jobs:
   lint:
     name: "Linting"
