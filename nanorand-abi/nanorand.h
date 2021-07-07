@@ -35,7 +35,6 @@ namespace nanorand {
  */
 struct ChaCha {
     uint32_t state[16];
-    uint8_t rounds;
 };
 
 /**
@@ -60,78 +59,191 @@ using WyRand = uint64_t;
 extern "C" {
 
 /**
- * Get the raw 512-bit output from the provided RNG.
+ * Get the raw 512-bit output from the provided ChaCha12 RNG.
  * You need to free this yourself!
  */
-uint8_t *chacha_next(ChaCha *rng);
+uint8_t *chacha12_next(ChaCha *rng);
 
 /**
- * Generate a random boolean value from the provided RNG
+ * Generate a random boolean value from the provided ChaCha12 RNG
  */
-bool chacha_next_bool(ChaCha *rng);
+bool chacha12_next_bool(ChaCha *rng);
 
 /**
- * Generate a random 16-bit unsigned integer from the provided RNG
+ * Generate a random 16-bit unsigned integer from the provided ChaCha12 RNG
  */
-uint16_t chacha_next_u16(ChaCha *rng);
+uint16_t chacha12_next_u16(ChaCha *rng);
 
 /**
- * Generate a random 32-bit unsigned integer from the provided RNG
+ * Generate a random 32-bit unsigned integer from the provided ChaCha12 RNG
  */
-uint32_t chacha_next_u32(ChaCha *rng);
+uint32_t chacha12_next_u32(ChaCha *rng);
 
 /**
- * Generate a random 64-bit unsigned integer from the provided RNG
+ * Generate a random 64-bit unsigned integer from the provided ChaCha12 RNG
  */
-uint64_t chacha_next_u64(ChaCha *rng);
+uint64_t chacha12_next_u64(ChaCha *rng);
 
 /**
- * Generate a random 8-bit unsigned integer from the provided RNG
+ * Generate a random 8-bit unsigned integer from the provided ChaCha12 RNG
  */
-uint8_t chacha_next_u8(ChaCha *rng);
+uint8_t chacha12_next_u8(ChaCha *rng);
 
 /**
- * Generate a random 16-bit unsigned integer within a specified range from the provided RNG
+ * Generate a random 16-bit unsigned integer within a specified range from the provided ChaCha12 RNG
  */
-uint16_t chacha_range_u16(ChaCha *rng, uint16_t lower, uint16_t upper);
+uint16_t chacha12_range_u16(ChaCha *rng, uint16_t lower, uint16_t upper);
 
 /**
- * Generate a random 32-bit unsigned integer within a specified range from the provided RNG
+ * Generate a random 32-bit unsigned integer within a specified range from the provided ChaCha12 RNG
  */
-uint32_t chacha_range_u32(ChaCha *rng, uint32_t lower, uint32_t upper);
+uint32_t chacha12_range_u32(ChaCha *rng, uint32_t lower, uint32_t upper);
 
 /**
- * Generate a random 64-bit unsigned integer within a specified range from the provided RNG
+ * Generate a random 64-bit unsigned integer within a specified range from the provided ChaCha12 RNG
  */
-uint64_t chacha_range_u64(ChaCha *rng, uint64_t lower, uint64_t upper);
+uint64_t chacha12_range_u64(ChaCha *rng, uint64_t lower, uint64_t upper);
 
 /**
- * Generate a random 8-bit unsigned integer within a specified range from the provided RNG
+ * Generate a random 8-bit unsigned integer within a specified range from the provided ChaCha12 RNG
  */
-uint8_t chacha_range_u8(ChaCha *rng, uint8_t lower, uint8_t upper);
+uint8_t chacha12_range_u8(ChaCha *rng, uint8_t lower, uint8_t upper);
 
 /**
- * Generate a random pointer-sized unsigned integer within a specified range from the provided RNG
+ * Generate a random pointer-sized unsigned integer within a specified range from the provided ChaCha12 RNG
  */
-uintptr_t chacha_range_usize(ChaCha *rng, uintptr_t lower, uintptr_t upper);
+uintptr_t chacha12_range_usize(ChaCha *rng,
+                               uintptr_t lower,
+                               uintptr_t upper);
 
 /**
- * Create a ChaCha RNG, using the specified number of rounds
+ * Get the raw 512-bit output from the provided ChaCha20 RNG.
+ * You need to free this yourself!
  */
-ChaCha new_chacha(uint8_t rounds);
+uint8_t *chacha20_next(ChaCha *rng);
 
 /**
- * Create a ChaCha RNG, using 12 rounds
+ * Generate a random boolean value from the provided ChaCha20 RNG
+ */
+bool chacha20_next_bool(ChaCha *rng);
+
+/**
+ * Generate a random 16-bit unsigned integer from the provided ChaCha20 RNG
+ */
+uint16_t chacha20_next_u16(ChaCha *rng);
+
+/**
+ * Generate a random 32-bit unsigned integer from the provided ChaCha20 RNG
+ */
+uint32_t chacha20_next_u32(ChaCha *rng);
+
+/**
+ * Generate a random 64-bit unsigned integer from the provided ChaCha20 RNG
+ */
+uint64_t chacha20_next_u64(ChaCha *rng);
+
+/**
+ * Generate a random 8-bit unsigned integer from the provided ChaCha20 RNG
+ */
+uint8_t chacha20_next_u8(ChaCha *rng);
+
+/**
+ * Generate a random 16-bit unsigned integer within a specified range from the provided ChaCha20 RNG
+ */
+uint16_t chacha20_range_u16(ChaCha *rng, uint16_t lower, uint16_t upper);
+
+/**
+ * Generate a random 32-bit unsigned integer within a specified range from the provided ChaCha20 RNG
+ */
+uint32_t chacha20_range_u32(ChaCha *rng, uint32_t lower, uint32_t upper);
+
+/**
+ * Generate a random 64-bit unsigned integer within a specified range from the provided ChaCha20 RNG
+ */
+uint64_t chacha20_range_u64(ChaCha *rng, uint64_t lower, uint64_t upper);
+
+/**
+ * Generate a random 8-bit unsigned integer within a specified range from the provided ChaCha20 RNG
+ */
+uint8_t chacha20_range_u8(ChaCha *rng, uint8_t lower, uint8_t upper);
+
+/**
+ * Generate a random pointer-sized unsigned integer within a specified range from the provided ChaCha20 RNG
+ */
+uintptr_t chacha20_range_usize(ChaCha *rng,
+                               uintptr_t lower,
+                               uintptr_t upper);
+
+/**
+ * Get the raw 512-bit output from the provided ChaCha8 RNG.
+ * You need to free this yourself!
+ */
+uint8_t *chacha8_next(ChaCha *rng);
+
+/**
+ * Generate a random boolean value from the provided ChaCha8 RNG
+ */
+bool chacha8_next_bool(ChaCha *rng);
+
+/**
+ * Generate a random 16-bit unsigned integer from the provided ChaCha8 RNG
+ */
+uint16_t chacha8_next_u16(ChaCha *rng);
+
+/**
+ * Generate a random 32-bit unsigned integer from the provided ChaCha8 RNG
+ */
+uint32_t chacha8_next_u32(ChaCha *rng);
+
+/**
+ * Generate a random 64-bit unsigned integer from the provided ChaCha8 RNG
+ */
+uint64_t chacha8_next_u64(ChaCha *rng);
+
+/**
+ * Generate a random 8-bit unsigned integer from the provided ChaCha8 RNG
+ */
+uint8_t chacha8_next_u8(ChaCha *rng);
+
+/**
+ * Generate a random 16-bit unsigned integer within a specified range from the provided ChaCha8 RNG
+ */
+uint16_t chacha8_range_u16(ChaCha *rng, uint16_t lower, uint16_t upper);
+
+/**
+ * Generate a random 32-bit unsigned integer within a specified range from the provided ChaCha8 RNG
+ */
+uint32_t chacha8_range_u32(ChaCha *rng, uint32_t lower, uint32_t upper);
+
+/**
+ * Generate a random 64-bit unsigned integer within a specified range from the provided ChaCha8 RNG
+ */
+uint64_t chacha8_range_u64(ChaCha *rng, uint64_t lower, uint64_t upper);
+
+/**
+ * Generate a random 8-bit unsigned integer within a specified range from the provided ChaCha8 RNG
+ */
+uint8_t chacha8_range_u8(ChaCha *rng, uint8_t lower, uint8_t upper);
+
+/**
+ * Generate a random pointer-sized unsigned integer within a specified range from the provided ChaCha8 RNG
+ */
+uintptr_t chacha8_range_usize(ChaCha *rng,
+                              uintptr_t lower,
+                              uintptr_t upper);
+
+/**
+ * Create a ChaCha RNG, using 12 rounds.
  */
 ChaCha new_chacha12();
 
 /**
- * Create a ChaCha RNG, using 20 rounds
+ * Create a ChaCha RNG, using 20 rounds.
  */
 ChaCha new_chacha20();
 
 /**
- * Create a ChaCha RNG using 8 rounds
+ * Create a ChaCha RNG, using 8 rounds.
  */
 ChaCha new_chacha8();
 
