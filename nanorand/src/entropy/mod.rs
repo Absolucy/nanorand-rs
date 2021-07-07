@@ -53,7 +53,6 @@ pub fn system(out: &mut [u8]) {
 
 #[cfg(feature = "rdseed")]
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-#[inline(always)]
 fn stupid_rdseed_hack() -> Option<u64> {
 	#[cfg(target_arch = "x86")]
 	use core::arch::x86::_rdseed64_step as rdseed;
