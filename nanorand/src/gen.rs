@@ -92,6 +92,18 @@ impl<R: Rng> RandomGen<R> for bool {
 	}
 }
 
+impl<R: Rng> RandomGen<R> for f32 {
+	fn random(r: &mut R) -> Self {
+		(u32::random(r) as f32) / (u32::MAX as f32)
+	}
+}
+
+impl<R: Rng> RandomGen<R> for f64 {
+	fn random(r: &mut R) -> Self {
+		(u64::random(r) as f64) / (u64::MAX as f64)
+	}
+}
+
 gen!(i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize);
 range!(
 	(u8, u16, i8),
@@ -164,6 +176,20 @@ mod tests {
 
 			let number = rng.generate_range(..-32);
 			assert!((..-32).contains(&number), "{} was outside of ..-32", number);
+		}
+	}
+
+	#[test]
+	fn ensure_floats_generate_properly() {
+		let mut rng = WyRand::new();
+		for _ in 0..1000 {
+			let number = rng.generate::<f32>();
+			assert!(1.0 >= number, "{} was bigger than 1.0", number);
+			assert!(number >= 0.0, "0 was bigger than {}", number);
+
+			let number = rng.generate::<f64>();
+			assert!(1.0 >= number, "{} was bigger than 1.0", number);
+			assert!(number >= 0.0, "0 was bigger than {}", number);
 		}
 	}
 }
