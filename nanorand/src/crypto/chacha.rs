@@ -26,12 +26,10 @@ const fn chacha_pack(unpacked: &[u8], idx: usize) -> u32 {
 }
 
 /// Do one ChaCha round on the input data.
-pub fn chacha_block(rounds: u8, input: [u32; 16]) -> [u32; 16] {
+pub fn chacha_block<const ROUNDS: u8>(input: [u32; 16]) -> [u32; 16] {
 	let mut x = input;
-	if rounds % 2 != 0 {
-		panic!("ChaCha rounds must be divisble by 2!")
-	}
-	for _ in (0..rounds).step_by(2) {
+	assert_eq!(ROUNDS % 2, 0, "ChaCha rounds must be divisble by 2!");
+	for _ in (0..ROUNDS).step_by(2) {
 		// Odd rounds
 		chacha_quarter_round(&mut x, 0, 4, 8, 12);
 		chacha_quarter_round(&mut x, 1, 5, 9, 13);
@@ -104,7 +102,7 @@ mod tests {
 			let mut keystream: Vec<u8> = Vec::with_capacity(expected_keystream.len());
 
 			while expected_keystream.len() > keystream.len() {
-				chacha_block(20, state)
+				chacha_block::<20>(state)
 					.iter()
 					.for_each(|packed| keystream.extend_from_slice(&packed.to_le_bytes()));
 				chacha_increment_counter(&mut state);

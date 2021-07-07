@@ -3,53 +3,61 @@ use core::fmt::{self, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
 
+/// The ChaCha CSPRNG, with 8 rounds.
+pub type ChaCha8 = ChaCha<8>;
+
+/// The ChaCha CSPRNG, with 12 rounds.
+pub type ChaCha12 = ChaCha<12>;
+
+/// The ChaCha CSPRNG, with 20 rounds.
+pub type ChaCha20 = ChaCha<20>;
+
 /// An instance of the ChaCha random number generator.
 /// Seeded from the system entropy generator when available.
 /// **This generator _is theoretically_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
 #[repr(C)]
-pub struct ChaCha {
+pub struct ChaCha<const ROUNDS: u8> {
 	state: [u32; 16],
-	rounds: u8,
 }
 
-impl ChaCha {
+impl<const ROUNDS: u8> ChaCha<ROUNDS> {
 	/// Create a new [`ChaCha`] instance, seeding from the system's default source of entropy.
 	#[must_use]
-	pub fn new(rounds: u8) -> Self {
+	pub fn new() -> Self {
 		let mut key: [u8; 32] = Default::default();
 		crate::entropy::system(&mut key);
 		let mut nonce: [u8; 8] = Default::default();
 		crate::entropy::system(&mut nonce);
 		let state = chacha::chacha_init(key, nonce);
-		Self { state, rounds }
+		Self { state }
 	}
 
 	/// Create a new [`ChaCha`] instance, using the provided key and nonce.
 	#[must_use]
-	pub const fn new_key(rounds: u8, key: [u8; 32], nonce: [u8; 8]) -> Self {
+	pub const fn new_key(key: [u8; 32], nonce: [u8; 8]) -> Self {
 		let state = chacha::chacha_init(key, nonce);
-		Self { state, rounds }
+		Self { state }
 	}
 }
 
-impl Default for ChaCha {
+impl<const ROUNDS: u8> Default for ChaCha<ROUNDS> {
 	fn default() -> Self {
 		let mut key: [u8; 32] = Default::default();
 		crate::entropy::system(&mut key);
 		let mut nonce: [u8; 8] = Default::default();
 		crate::entropy::system(&mut nonce);
 		let state = chacha::chacha_init(key, nonce);
-		Self { state, rounds: 20 }
+		Self { state }
 	}
 }
 
-impl Rng for ChaCha {
+impl<const ROUNDS: u8> Rng for ChaCha<ROUNDS> {
 	type Output = [u8; 64];
 
 	fn rand(&mut self) -> Self::Output {
-		let block = chacha::chacha_block(self.rounds, self.state);
+		let block = chacha::chacha_block::<ROUNDS>(self.state);
 		let mut ret = [0_u8; 64];
 		block.iter().enumerate().for_each(|(idx, num)| {
 			let x = num.to_ne_bytes();
@@ -84,17 +92,14 @@ impl Rng for ChaCha {
 	}
 }
 
-impl Clone for ChaCha {
+impl<const ROUNDS: u8> Clone for ChaCha<ROUNDS> {
 	fn clone(&self) -> Self {
-		Self {
-			state: self.state,
-			rounds: self.rounds,
-		}
+		Self { state: self.state }
 	}
 }
 
-impl Display for ChaCha {
+impl<const ROUNDS: u8> Display for ChaCha<ROUNDS> {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-		write!(f, "ChaCha ({:p}, {} rounds)", self, self.rounds)
+		write!(f, "ChaCha ({:p}, {} rounds)", self, ROUNDS)
 	}
 }

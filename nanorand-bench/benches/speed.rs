@@ -42,7 +42,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 	});
 
 	rng_group.bench_function("chacha8", |b| {
-		let mut rng = nanorand::rand::ChaCha::new(8);
+		let mut rng = nanorand::rand::ChaCha8::new();
 		b.iter(|| {
 			let mut n: u64 = u64::MIN;
 			for _ in 0..1024 {
@@ -53,7 +53,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 	});
 
 	rng_group.bench_function("chacha20", |b| {
-		let mut rng = nanorand::rand::ChaCha::new(20);
+		let mut rng = nanorand::rand::ChaCha20::new();
 		b.iter(|| {
 			let mut n: u64 = u64::MIN;
 			for _ in 0..1024 {

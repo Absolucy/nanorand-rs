@@ -1,5 +1,5 @@
 #[cfg(feature = "chacha")]
-pub use chacha::ChaCha;
+pub use chacha::{ChaCha, ChaCha12, ChaCha20, ChaCha8};
 #[cfg(feature = "pcg64")]
 pub use pcg64::Pcg64;
 #[cfg(feature = "wyrand")]
