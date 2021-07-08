@@ -50,6 +50,36 @@ pub extern "C" fn pcg64_next_usize(rng: &mut Pcg64) -> usize {
 	rng.generate()
 }
 
+/// Generate a random 8-bit signed integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_i8(rng: &mut Pcg64) -> i8 {
+	rng.generate()
+}
+
+/// Generate a random 16-bit signed integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_i16(rng: &mut Pcg64) -> i16 {
+	rng.generate()
+}
+
+/// Generate a random 32-bit signed integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_i32(rng: &mut Pcg64) -> i32 {
+	rng.generate()
+}
+
+/// Generate a random 64-bit signed integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_i64(rng: &mut Pcg64) -> i64 {
+	rng.generate()
+}
+
+/// Generate a random pointer-sized signed integer from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_next_isize(rng: &mut Pcg64) -> isize {
+	rng.generate()
+}
+
 /// Generate a random boolean value from the provided RNG
 #[no_mangle]
 pub extern "C" fn pcg64_next_bool(rng: &mut Pcg64) -> bool {
@@ -83,5 +113,35 @@ pub extern "C" fn pcg64_range_u64(rng: &mut Pcg64, lower: u64, upper: u64) -> u6
 /// Generate a random pointer-sized unsigned integer within a specified range from the provided RNG
 #[no_mangle]
 pub extern "C" fn pcg64_range_usize(rng: &mut Pcg64, lower: usize, upper: usize) -> usize {
+	rng.generate_range(lower..=upper)
+}
+
+/// Generate a random 8-bit signed integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_i8(rng: &mut Pcg64, lower: i8, upper: i8) -> i8 {
+	rng.generate_range(lower..=upper)
+}
+
+/// Generate a random 16-bit signed integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_i16(rng: &mut Pcg64, lower: i16, upper: i16) -> i16 {
+	rng.generate_range(lower..=upper)
+}
+
+/// Generate a random 32-bit signed integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_i32(rng: &mut Pcg64, lower: i32, upper: i32) -> i32 {
+	rng.generate_range(lower..=upper)
+}
+
+/// Generate a random 64-bit signed integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_i64(rng: &mut Pcg64, lower: i64, upper: i64) -> i64 {
+	rng.generate_range(lower..=upper)
+}
+
+/// Generate a random pointer-sized signed integer within a specified range from the provided RNG
+#[no_mangle]
+pub extern "C" fn pcg64_range_isize(rng: &mut Pcg64, lower: isize, upper: isize) -> isize {
 	rng.generate_range(lower..=upper)
 }
