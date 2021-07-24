@@ -1,7 +1,7 @@
 [package]
 name = "nanorand-py"
 description = "A Python module for nanorand"
-version = "0.6.0"
+version = "0.6.1"
 repository = "https://github.com/Absolucy/nanorand-rs"
 keywords = ["rng", "wyrand", "pcg", "chacha", "random", "pcg64"]
 authors = ["Lucy <lucy@absolucy.moe>"]
