@@ -1,32 +1,27 @@
-use crate::WyRand;
-use std::{
-	cell::UnsafeCell,
-	ops::{Deref, DerefMut},
-	rc::Rc,
-};
+use crate::{Rng, WyRand};
+use std::{cell::RefCell, rc::Rc};
 
 thread_local! {
-	static WYRAND: Rc<UnsafeCell<WyRand>> = Rc::new(UnsafeCell::new(WyRand::new()));
+	static WYRAND: Rc<RefCell<WyRand>> = Rc::new(RefCell::new(WyRand::new()));
 }
 
+#[derive(Clone)]
 #[doc(hidden)]
-pub struct TlsWyRand(Rc<UnsafeCell<WyRand>>);
+pub struct TlsWyRand(Rc<RefCell<WyRand>>);
 
-impl Deref for TlsWyRand {
-	type Target = WyRand;
+impl Rng for TlsWyRand {
+	type Output = [u8; 8];
 
-	/// Safety: [`TlsWyRand`] is neither [Send] nor [Sync], and thus,
-	/// there will always be a thread-local [`WyRand`] when there is a [`TlsWyRand`]
-	fn deref(&self) -> &Self::Target {
-		unsafe { &*self.0.get() }
+	fn rand(&mut self) -> Self::Output {
+		self.0.borrow_mut().rand()
 	}
-}
 
-impl DerefMut for TlsWyRand {
-	/// Safety: [`TlsWyRand`] is neither [Send] nor [Sync], and thus,
-	/// there will always be a thread-local [`WyRand`] when there is a [`TlsWyRand`]
-	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { &mut *(*self.0).get() }
+	fn rand_with_seed(seed: &[u8]) -> Self::Output {
+		WyRand::rand_with_seed(seed)
+	}
+
+	fn reseed(&mut self, new_seed: &[u8]) {
+		self.0.borrow_mut().reseed(new_seed)
 	}
 }
 
