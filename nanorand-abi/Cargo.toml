@@ -5,7 +5,7 @@ repository = "https://github.com/Absolucy/nanorand-rs"
 keywords = ["rng", "wyrand", "pcg", "chacha", "random", "pcg64"]
 version = "0.6.1"
 authors = ["Lucy <lucy@absolucy.moe>"]
-edition = "2018"
+edition = "2021"
 license = "Zlib"
 publish = false
 

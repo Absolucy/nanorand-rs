@@ -4,14 +4,14 @@ name = "nanorand-fuzz"
 version = "0.0.0"
 authors = ["Automatically generated"]
 publish = false
-edition = "2018"
+edition = "2021"
 
 [package.metadata]
 cargo-fuzz = true
 
 [dependencies]
 libfuzzer-sys = "0.4.1"
-nanorand = { path = "../nanorand" }
+nanorand = { path = ".." }
 c2-chacha = "0.3.1"
 
 # Prevent this from interfering with workspaces

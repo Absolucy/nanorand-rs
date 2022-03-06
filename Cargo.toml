@@ -7,7 +7,7 @@ categories = ["algorithms", "no-std"]
 readme = "../README.md"
 version = "0.6.1"
 authors = ["Lucy <lucy@absolucy.moe>"]
-edition = "2018"
+edition = "2021"
 license = "Zlib"
 
 [features]

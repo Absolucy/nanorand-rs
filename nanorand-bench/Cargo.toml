@@ -2,7 +2,7 @@
 name = "nanorand-bench"
 version = "0.0.0"
 authors = ["Lucy <lucy@absolucy.moe>"]
-edition = "2018"
+edition = "2021"
 publish = false
 
 [dependencies]
