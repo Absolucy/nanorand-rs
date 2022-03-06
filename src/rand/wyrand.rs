@@ -1,6 +1,6 @@
 // Based off lemire's wyrand C++ code at https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 
-use crate::Rng;
+use crate::rand::{Rng, SeedableRng};
 use core::fmt::{self, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
@@ -48,22 +48,6 @@ impl Rng<8> for WyRand {
 		let ret = (t.wrapping_shr(64) ^ t) as u64;
 		ret.to_ne_bytes()
 	}
-
-	fn rand_with_seed(seed: &[u8]) -> [u8; 8] {
-		let mut seed_bytes = [0_u8; 8];
-		seed_bytes.iter_mut().zip(seed).for_each(|(a, b)| *a = *b);
-		let seed = u64::from_ne_bytes(seed_bytes);
-		let seed = seed.wrapping_add(0xa0761d6478bd642f);
-		let t: u128 = (seed as u128).wrapping_mul((seed ^ 0xe7037ed1a0b428db) as u128);
-		let ret = (t.wrapping_shr(64) ^ t) as u64;
-		ret.to_ne_bytes()
-	}
-
-	fn reseed(&mut self, new_seed: &[u8]) {
-		let mut seed = [0_u8; 8];
-		seed.iter_mut().zip(new_seed).for_each(|(a, b)| *a = *b);
-		self.seed = u64::from_ne_bytes(seed)
-	}
 }
 
 impl Clone for WyRand {
@@ -75,5 +59,11 @@ impl Clone for WyRand {
 impl Display for WyRand {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "WyRand ({:p})", self)
+	}
+}
+
+impl SeedableRng<8, 8> for WyRand {
+	fn reseed(&mut self, seed: [u8; 8]) {
+		self.seed = u64::from_ne_bytes(seed);
 	}
 }

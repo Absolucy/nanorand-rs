@@ -1,4 +1,4 @@
-use crate::{Rng, WyRand};
+use crate::rand::{wyrand::WyRand, Rng, SeedableRng};
 use std::{cell::RefCell, rc::Rc};
 
 thread_local! {
@@ -13,13 +13,11 @@ impl Rng<8> for TlsWyRand {
 	fn rand(&mut self) -> [u8; 8] {
 		self.0.borrow_mut().rand()
 	}
+}
 
-	fn rand_with_seed(seed: &[u8]) -> [u8; 8] {
-		WyRand::rand_with_seed(seed)
-	}
-
-	fn reseed(&mut self, new_seed: &[u8]) {
-		self.0.borrow_mut().reseed(new_seed)
+impl SeedableRng<8, 8> for TlsWyRand {
+	fn reseed(&mut self, seed: [u8; 8]) {
+		self.0.borrow_mut().reseed(seed);
 	}
 }
 

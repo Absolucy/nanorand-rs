@@ -27,8 +27,6 @@ pub mod chacha;
 pub trait Rng<const OUTPUT: usize>: Clone {
 	/// Generates a random sequence of bytes, seeding from the internal state.
 	fn rand(&mut self) -> [u8; OUTPUT];
-	/// Generates a random sequence of bytes, with a custom seed.
-	fn rand_with_seed(seed: &[u8]) -> [u8; OUTPUT];
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate<R>(&mut self) -> R
 	where
@@ -65,6 +63,10 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 			target.swap(idx, random_idx);
 		}
 	}
-	/// Reseeds the RNG using a custom seed.
-	fn reseed(&mut self, new_seed: &[u8]);
+}
+
+/// A trait that represents an RNG that can be reseeded from arbitrary bytes.
+pub trait SeedableRng<const SEED_SIZE: usize, const OUTPUT: usize>: Rng<OUTPUT> {
+	/// Re-seed the RNG with the specified bytes.
+	fn reseed(&mut self, seed: [u8; SEED_SIZE]);
 }

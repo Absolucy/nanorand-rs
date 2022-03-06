@@ -1,6 +1,6 @@
 // Based off Robert Kern's C implementation at https://github.com/rkern/pcg64/blob/master/pcg64.c
 
-use crate::Rng;
+use crate::rand::{Rng, SeedableRng};
 use core::fmt::{self, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
@@ -81,14 +81,10 @@ impl Rng<8> for Pcg64 {
 		self.seed = self.state ^ (ret as u128).wrapping_shr(64);
 		ret.to_ne_bytes()
 	}
+}
 
-	fn rand_with_seed(_seed: &[u8]) -> [u8; 8] {
-		unimplemented!("Pcg64 requires a state!");
-	}
-
-	fn reseed(&mut self, new_seed: &[u8]) {
-		let mut seed = [0u8; 16];
-		seed.iter_mut().zip(new_seed).for_each(|(a, b)| *a = *b);
+impl SeedableRng<16, 8> for Pcg64 {
+	fn reseed(&mut self, seed: [u8; 16]) {
 		self.seed = u128::from_ne_bytes(seed);
 	}
 }

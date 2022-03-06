@@ -1,4 +1,7 @@
-use crate::{crypto::chacha, Rng};
+use crate::{
+	crypto::chacha,
+	rand::{Rng, SeedableRng},
+};
 use core::fmt::{self, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
@@ -70,23 +73,9 @@ impl<const ROUNDS: u8> Rng<64> for ChaCha<ROUNDS> {
 		if !chacha::chacha_increment_counter(&mut self.state) {
 			let mut new_seed: [u8; 40] = [42_u8; 40];
 			crate::entropy::system(&mut new_seed);
-			self.reseed(&new_seed);
+			self.reseed(new_seed);
 		}
 		ret
-	}
-
-	fn rand_with_seed(_seed: &[u8]) -> [u8; 64] {
-		panic!("ChaCha RNG requires a state!");
-	}
-
-	fn reseed(&mut self, new_seed: &[u8]) {
-		let mut seed = [42_u8; 40];
-		seed.iter_mut().zip(new_seed).for_each(|(a, b)| *a = *b);
-		let mut key = [0_u8; 32];
-		let mut nonce = [0_u8; 8];
-		key.copy_from_slice(&seed[..32]);
-		nonce.copy_from_slice(&seed[32..40]);
-		self.state = chacha::chacha_init(key, nonce);
 	}
 }
 
@@ -99,5 +88,15 @@ impl<const ROUNDS: u8> Clone for ChaCha<ROUNDS> {
 impl<const ROUNDS: u8> Display for ChaCha<ROUNDS> {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "ChaCha ({:p}, {} rounds)", self, ROUNDS)
+	}
+}
+
+impl<const ROUNDS: u8> SeedableRng<40, 64> for ChaCha<ROUNDS> {
+	fn reseed(&mut self, seed: [u8; 40]) {
+		let mut key = [0_u8; 32];
+		let mut nonce = [0_u8; 8];
+		key.copy_from_slice(&seed[..32]);
+		nonce.copy_from_slice(&seed[32..]);
+		self.state = chacha::chacha_init(key, nonce);
 	}
 }
