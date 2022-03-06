@@ -15,7 +15,7 @@
 
 #pragma once
 
-/* Generated with cbindgen:0.19.0 */
+/* Generated with cbindgen:0.20.0 */
 
 #include <cstdarg>
 #include <cstdint>
