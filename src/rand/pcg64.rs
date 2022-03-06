@@ -1,7 +1,7 @@
 // Based off Robert Kern's C implementation at https://github.com/rkern/pcg64/blob/master/pcg64.c
 
 use crate::rand::{Rng, SeedableRng};
-use core::fmt::{self, Display, Formatter};
+use core::fmt::{self, Debug, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
 
@@ -102,5 +102,15 @@ impl Clone for Pcg64 {
 impl Display for Pcg64 {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "Pcg64 ({:p})", self)
+	}
+}
+
+impl Debug for Pcg64 {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		f.debug_struct("Pcg64")
+			.field("seed", &format_args!("0x{:x}", self.seed))
+			.field("state", &format_args!("0x{:x}", self.state))
+			.field("inc", &format_args!("0x{:x}", self.inc))
+			.finish()
 	}
 }

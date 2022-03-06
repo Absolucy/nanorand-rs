@@ -1,7 +1,7 @@
 // Based off lemire's wyrand C++ code at https://github.com/lemire/testingRNG/blob/master/source/wyrand.h
 
 use crate::rand::{Rng, SeedableRng};
-use core::fmt::{self, Display, Formatter};
+use core::fmt::{self, Debug, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
 
@@ -59,6 +59,14 @@ impl Clone for WyRand {
 impl Display for WyRand {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "WyRand ({:p})", self)
+	}
+}
+
+impl Debug for WyRand {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		f.debug_struct("WyRand")
+			.field("seed", &format_args!("0x{:x}", self.seed))
+			.finish()
 	}
 }
 

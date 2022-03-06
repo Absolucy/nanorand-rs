@@ -2,7 +2,7 @@ use crate::{
 	crypto::chacha,
 	rand::{Rng, SeedableRng},
 };
-use core::fmt::{self, Display, Formatter};
+use core::fmt::{self, Debug, Display, Formatter};
 #[cfg(feature = "zeroize")]
 use zeroize::Zeroize;
 
@@ -98,5 +98,15 @@ impl<const ROUNDS: u8> SeedableRng<40, 64> for ChaCha<ROUNDS> {
 		key.copy_from_slice(&seed[..32]);
 		nonce.copy_from_slice(&seed[32..]);
 		self.state = chacha::chacha_init(key, nonce);
+	}
+}
+
+impl<const ROUNDS: u8> Debug for ChaCha<ROUNDS> {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		let counter = ((self.state[13] as u64) << 32) | (self.state[12] as u64);
+		f.debug_struct("ChaCha20")
+			.field("rounds", &ROUNDS)
+			.field("counter", &counter)
+			.finish()
 	}
 }
