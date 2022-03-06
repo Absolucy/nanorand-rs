@@ -33,6 +33,17 @@
 //! println!("Random number between 1 and 100: {}", rng.generate_range(1_u64..=100));
 //! println!("Random number between -100 and 50: {}", rng.generate_range(-100_i64..=50));
 //! ```
+//! ### Buffering random bytes
+//! ```rust
+//! use nanorand::{Rng, BufferedRng, WyRand};
+//!
+//! let mut thingy = [0u8; 5];
+//! let mut rng = BufferedRng::new(WyRand::new());
+//! rng.fill(&mut thingy);
+//! // As WyRand generates 8 bytes of output, and our target is only 5 bytes,
+//! // 3 bytes will remain in the buffer.
+//! assert_eq!(rng.buffered(), 3);
+//! ```
 //! ## Shuffling a Vec
 //! ```rust
 //! use nanorand::{Rng, WyRand};
@@ -72,8 +83,9 @@
 //!
 //! ## Feature Flags
 //!
-//! * `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources.
-//! * `tls` (default) - Enables a thread-local [`WyRand`](rand/wyrand/struct.WyRand.html) RNG (see below). Requires `tls` to be enabled.
+//! * `alloc` (default) - Enables Rust `alloc` lib features, such as a buffering Rng wrapper.
+//! * `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources. Requires `alloc` to be enabled.
+//! * `tls` (default) - Enables a thread-local [`WyRand`](rand/wyrand/struct.WyRand.html) RNG (see below). Requires `std` to be enabled.
 //! * `wyrand` (default) - Enable the [`WyRand`](rand/wyrand/struct.WyRand.html) RNG.
 //! * `pcg64` (default) - Enable the [`Pcg64`](rand/pcg64/struct.Pcg64.html)  RNG.
 //! * `chacha` - Enable the [`ChaCha`](rand/chacha/struct.ChaCha.html) RNG. Requires Rust 1.47 or later.
@@ -82,11 +94,19 @@
 //! * `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source.
 //! Works on most systems, optional due to the fact that it brings in more dependencies.
 
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
+#[cfg(feature = "alloc")]
+pub use buffer::BufferedRng;
 pub use gen::*;
 pub use rand::*;
 #[cfg(feature = "tls")]
 pub use tls::tls_rng;
 
+#[cfg(feature = "alloc")]
+/// Provides a buffered wrapper for RNGs, preventing bits from being wasted.
+pub mod buffer;
 /// Implementation of cryptography, for CSPRNGs.
 pub mod crypto;
 /// Sources for obtaining entropy.

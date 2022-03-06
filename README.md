@@ -2,7 +2,7 @@
 
 # nanorand
 
-Current version: **0.6.1**
+Current version: **0.7.0**
 
 A library meant for fast, random number generation with quick compile time, and minimal dependencies.
 
@@ -29,6 +29,17 @@ let mut rng = WyRand::new();
 println!("Random number between 1 and 100: {}", rng.generate_range(1_u64..=100));
 println!("Random number between -100 and 50: {}", rng.generate_range(-100_i64..=50));
 ```
+#### Buffering random bytes
+```rust
+use nanorand::{Rng, BufferedRng, WyRand};
+
+let mut thingy = [0u8; 5];
+let mut rng = BufferedRng::new(WyRand::new());
+rng.fill(&mut thingy);
+// As WyRand generates 8 bytes of output, and our target is only 5 bytes,
+// 3 bytes will remain in the buffer.
+assert_eq!(rng.buffered(), 3);
+```
 ### Shuffling a Vec
 ```rust
 use nanorand::{Rng, WyRand};
@@ -48,9 +59,9 @@ rng.shuffle(&mut items);
 
 **RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Speed**<sup>1</sup>|**Notes**|**Original Implementation**
 :-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
-wyrand|[`nanorand::WyRand`](rand/wyrand/struct.WyRand.html), [`nanorand::tls::TlsWyRand`](tls/fn.tls_rng.html)|64 bits (`u64`)|🚫|16.4 GB/s||[https://github.com/lemire/testingRNG/blob/master/source/wyrand.h](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h)
-Pcg64|[`nanorand::Pcg64`](rand/pcg64/struct.Pcg64.html)|64 bits (`u64`)|🚫|1.6 GB/s||[https://github.com/rkern/pcg64](https://github.com/rkern/pcg64)
-ChaCha|[`nanorand::ChaCha`](rand/chacha/struct.ChaCha.html)|512 bits (`[u32; 16]`)|✅|204 MB/s (ChaCha8), 79 MB/s (ChaCha20)|Only works in Rust 1.47 or above|[https://cr.yp.to/chacha.html](https://cr.yp.to/chacha.html)
+wyrand|[`nanorand::WyRand`](rand/wyrand/struct.WyRand.html), [`nanorand::tls::TlsWyRand`](tls/fn.tls_rng.html)|64 bits (`u64`)|≡ƒÜ½|16.4 GB/s||[https://github.com/lemire/testingRNG/blob/master/source/wyrand.h](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h)
+Pcg64|[`nanorand::Pcg64`](rand/pcg64/struct.Pcg64.html)|64 bits (`u64`)|≡ƒÜ½|1.6 GB/s||[https://github.com/rkern/pcg64](https://github.com/rkern/pcg64)
+ChaCha|[`nanorand::ChaCha`](rand/chacha/struct.ChaCha.html)|512 bits (`[u32; 16]`)|Γ£à|204 MB/s (ChaCha8), 79 MB/s (ChaCha20)|Only works in Rust 1.47 or above|[https://cr.yp.to/chacha.html](https://cr.yp.to/chacha.html)
 
 <sup>1. Speed benchmarked on an M1 Macbook Air</sup>
 
@@ -68,8 +79,9 @@ _Listed in order of priority_
 
 ### Feature Flags
 
-* `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources.
-* `tls` (default) - Enables a thread-local [`WyRand`](rand/wyrand/struct.WyRand.html) RNG (see below). Requires `tls` to be enabled.
+* `alloc` (default) - Enables Rust `alloc` lib features, such as a buffering Rng wrapper.
+* `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources. Requires `alloc` to be enabled.
+* `tls` (default) - Enables a thread-local [`WyRand`](rand/wyrand/struct.WyRand.html) RNG (see below). Requires `std` to be enabled.
 * `wyrand` (default) - Enable the [`WyRand`](rand/wyrand/struct.WyRand.html) RNG.
 * `pcg64` (default) - Enable the [`Pcg64`](rand/pcg64/struct.Pcg64.html)  RNG.
 * `chacha` - Enable the [`ChaCha`](rand/chacha/struct.ChaCha.html) RNG. Requires Rust 1.47 or later.

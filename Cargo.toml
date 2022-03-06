@@ -12,7 +12,8 @@ license = "Zlib"
 
 [features]
 default = ["std", "tls", "wyrand", "pcg64", "chacha"]
-std = []
+alloc = []
+std = ["alloc"]
 tls = ["std", "wyrand"]
 wyrand = []
 pcg64 = []
