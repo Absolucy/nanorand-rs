@@ -82,7 +82,7 @@ Works on most systems, optional due to the fact that it brings in more dependenc
 
 The zlib/libpng License
 
-Copyright (c) `2020` `aspen`
+Copyright (c) 2022 Lucy <lucy@absolucy.moe>
 
 This software is provided 'as-is', without any express or implied warranty. In
 no event will the authors be held liable for any damages arising from the use of
