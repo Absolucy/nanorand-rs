@@ -1,5 +1,5 @@
 [workspace]
-members = ["nanorand", "nanorand-abi", "nanorand-py", "nanorand-bench"]
+members = ["nanorand", "nanorand-abi", "nanorand-bench"]
 default-members = ["nanorand"]
 
 [profile.bench]
