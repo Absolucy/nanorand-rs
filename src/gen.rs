@@ -4,7 +4,7 @@ use core::ops::{Bound, RangeBounds};
 macro_rules! gen {
 	($($type:ty),+) => {
 		$(
-			impl<R: Rng> RandomGen<R> for $type {
+			impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomGen<OUTPUT, R> for $type {
 				fn random(r: &mut R) -> Self {
 					let mut bytes = [0u8; core::mem::size_of::<$type>()];
 					let mut idx = 0;
@@ -25,7 +25,7 @@ macro_rules! gen {
 macro_rules! range {
 	($(($type:ty, $bigger:ty, $signed:ty)),+) => {
 		$(
-			impl<R: Rng> RandomRange<R> for $type {
+			impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomRange<OUTPUT, R> for $type {
 				fn random_range<B: RangeBounds<Self>>(r: &mut R, bounds: B) -> Self {
 					const BITS: $bigger = core::mem::size_of::<$type>() as $bigger * 8;
 					let lower = match bounds.start_bound() {
@@ -51,7 +51,7 @@ macro_rules! range {
 				}
 			}
 
-			impl<R: Rng> RandomRange<R> for $signed {
+			impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomRange<OUTPUT, R> for $signed {
 				fn random_range<B: RangeBounds<Self>>(r: &mut R, bounds: B) -> Self {
 					const SIGNED_MAPPING: $type = <$type>::MAX / 2 + 1;
 					let lower = match bounds.start_bound() {
@@ -75,30 +75,30 @@ macro_rules! range {
 }
 
 /// A trait used for generating a random object with an RNG,
-pub trait RandomGen<R: Rng> {
+pub trait RandomGen<const OUTPUT: usize, R: Rng<OUTPUT>> {
 	/// Return a random instance of the implementing type, from the specified RNG instance.
 	fn random(r: &mut R) -> Self;
 }
 
 /// A trait used for generating a random number within a range, with an RNG,
-pub trait RandomRange<R: Rng>: RandomGen<R> {
+pub trait RandomRange<const OUTPUT: usize, R: Rng<OUTPUT>>: RandomGen<OUTPUT, R> {
 	/// Return a ranged number of the implementing type, from the specified RNG instance.
 	fn random_range<B: RangeBounds<Self>>(r: &mut R, range: B) -> Self;
 }
 
-impl<R: Rng> RandomGen<R> for bool {
+impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomGen<OUTPUT, R> for bool {
 	fn random(r: &mut R) -> Self {
 		r.rand().as_ref()[0] < 0b10000000
 	}
 }
 
-impl<R: Rng> RandomGen<R> for f32 {
+impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomGen<OUTPUT, R> for f32 {
 	fn random(r: &mut R) -> Self {
 		(u32::random(r) as f32) / (u32::MAX as f32)
 	}
 }
 
-impl<R: Rng> RandomGen<R> for f64 {
+impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomGen<OUTPUT, R> for f64 {
 	fn random(r: &mut R) -> Self {
 		(u64::random(r) as f64) / (u64::MAX as f64)
 	}

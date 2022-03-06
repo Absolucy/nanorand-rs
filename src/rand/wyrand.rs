@@ -41,17 +41,15 @@ impl Default for WyRand {
 	}
 }
 
-impl Rng for WyRand {
-	type Output = [u8; 8];
-
-	fn rand(&mut self) -> Self::Output {
+impl Rng<8> for WyRand {
+	fn rand(&mut self) -> [u8; 8] {
 		self.seed = self.seed.wrapping_add(0xa0761d6478bd642f);
 		let t: u128 = (self.seed as u128).wrapping_mul((self.seed ^ 0xe7037ed1a0b428db) as u128);
 		let ret = (t.wrapping_shr(64) ^ t) as u64;
 		ret.to_ne_bytes()
 	}
 
-	fn rand_with_seed(seed: &[u8]) -> Self::Output {
+	fn rand_with_seed(seed: &[u8]) -> [u8; 8] {
 		let mut seed_bytes = [0_u8; 8];
 		seed_bytes.iter_mut().zip(seed).for_each(|(a, b)| *a = *b);
 		let seed = u64::from_ne_bytes(seed_bytes);

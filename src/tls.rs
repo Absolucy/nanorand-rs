@@ -9,14 +9,12 @@ thread_local! {
 #[doc(hidden)]
 pub struct TlsWyRand(Rc<RefCell<WyRand>>);
 
-impl Rng for TlsWyRand {
-	type Output = [u8; 8];
-
-	fn rand(&mut self) -> Self::Output {
+impl Rng<8> for TlsWyRand {
+	fn rand(&mut self) -> [u8; 8] {
 		self.0.borrow_mut().rand()
 	}
 
-	fn rand_with_seed(seed: &[u8]) -> Self::Output {
+	fn rand_with_seed(seed: &[u8]) -> [u8; 8] {
 		WyRand::rand_with_seed(seed)
 	}
 

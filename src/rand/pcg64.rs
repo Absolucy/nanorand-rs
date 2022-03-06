@@ -75,16 +75,14 @@ impl Default for Pcg64 {
 	}
 }
 
-impl Rng for Pcg64 {
-	type Output = [u8; 8];
-
-	fn rand(&mut self) -> Self::Output {
+impl Rng<8> for Pcg64 {
+	fn rand(&mut self) -> [u8; 8] {
 		let ret = self.rand128();
 		self.seed = self.state ^ (ret as u128).wrapping_shr(64);
 		ret.to_ne_bytes()
 	}
 
-	fn rand_with_seed(_seed: &[u8]) -> Self::Output {
+	fn rand_with_seed(_seed: &[u8]) -> [u8; 8] {
 		unimplemented!("Pcg64 requires a state!");
 	}
 

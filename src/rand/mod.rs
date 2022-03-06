@@ -24,25 +24,22 @@ pub mod pcg64;
 pub mod chacha;
 
 /// A trait that represents a random number generator.
-pub trait Rng: Clone {
-	/// The byte output that this RNG emits.
-	type Output: AsRef<[u8]>;
-
+pub trait Rng<const OUTPUT: usize>: Clone {
 	/// Generates a random sequence of bytes, seeding from the internal state.
-	fn rand(&mut self) -> Self::Output;
+	fn rand(&mut self) -> [u8; OUTPUT];
 	/// Generates a random sequence of bytes, with a custom seed.
-	fn rand_with_seed(seed: &[u8]) -> Self::Output;
+	fn rand_with_seed(seed: &[u8]) -> [u8; OUTPUT];
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate<R>(&mut self) -> R
 	where
-		R: RandomGen<Self>,
+		R: RandomGen<OUTPUT, Self>,
 	{
 		R::random(self)
 	}
 	/// Fill an array with the specified type.
 	fn fill<R, A>(&mut self, mut target: A)
 	where
-		R: RandomGen<Self>,
+		R: RandomGen<OUTPUT, Self>,
 		A: AsMut<[R]>,
 	{
 		let target = target.as_mut();
@@ -51,7 +48,7 @@ pub trait Rng: Clone {
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate_range<R, B>(&mut self, range: B) -> R
 	where
-		R: RandomRange<Self>,
+		R: RandomRange<OUTPUT, Self>,
 		B: RangeBounds<R>,
 	{
 		R::random_range(self, range)

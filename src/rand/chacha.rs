@@ -53,10 +53,8 @@ impl<const ROUNDS: u8> Default for ChaCha<ROUNDS> {
 	}
 }
 
-impl<const ROUNDS: u8> Rng for ChaCha<ROUNDS> {
-	type Output = [u8; 64];
-
-	fn rand(&mut self) -> Self::Output {
+impl<const ROUNDS: u8> Rng<64> for ChaCha<ROUNDS> {
+	fn rand(&mut self) -> [u8; 64] {
 		let block = chacha::chacha_block::<ROUNDS>(self.state);
 		let mut ret = [0_u8; 64];
 		block.iter().enumerate().for_each(|(idx, num)| {
@@ -77,7 +75,7 @@ impl<const ROUNDS: u8> Rng for ChaCha<ROUNDS> {
 		ret
 	}
 
-	fn rand_with_seed(_seed: &[u8]) -> Self::Output {
+	fn rand_with_seed(_seed: &[u8]) -> [u8; 64] {
 		panic!("ChaCha RNG requires a state!");
 	}
 
