@@ -1,4 +1,0 @@
-exclude-paths = ["/docs/**", "/README.md", ".idea/**", "/README.tpl", "/renovate.json", "/.rusty_hook.toml", "/.rustfmt.toml", "/tests/**", "/benches/**", "/.github/**"]
-push-remote = "origin"
-sign-tag = true
-sign-commit = true

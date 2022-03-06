@@ -9,7 +9,7 @@ publish = false
 criterion = "0.3.4"
 fastrand = "^1.4"
 hex = "^0.4"
-nanorand = { path="../nanorand" }
+nanorand = { path = ".." }
 oorandom = "^11.1"
 rand_chacha = "^0.2"
 rand_core = "^0.5"

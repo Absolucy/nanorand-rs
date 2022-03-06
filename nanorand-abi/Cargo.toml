@@ -13,7 +13,7 @@ publish = false
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies.nanorand]
-path = "../nanorand"
+path = ".."
 default-features = false
 features = ["std", "wyrand", "pcg64", "chacha", "getrandom"]
 
