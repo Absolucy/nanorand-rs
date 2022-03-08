@@ -1,9 +1,6 @@
-use crate::rand::Rng;
+use crate::rand::{Rng, SeedableRng};
 use alloc::vec::Vec;
-use core::{
-	default::Default,
-	ops::{Deref, DerefMut},
-};
+use core::default::Default;
 
 /// A buffered wrapper for any [Rng] implementation.
 /// It will keep unused bytes from the last call to [`Rng::rand`], and use them
@@ -20,28 +17,45 @@ use core::{
 /// assert_eq!(rng.buffered(), 3);
 /// ```
 #[derive(Clone)]
-pub struct BufferedRng<const OUTPUT: usize, R: Rng<OUTPUT>> {
-	rng: R,
+pub struct BufferedRng<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> {
+	rng: InternalGenerator,
 	buffer: Vec<u8>,
 }
 
-impl<const OUTPUT: usize, R: Rng<OUTPUT>> BufferedRng<OUTPUT, R> {
-	/// Wraps a [`Rng`] generator in a [`BufferedRng`] instance.
-	pub fn new(rng: R) -> Self {
+impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> BufferedRng<OUTPUT, InternalGenerator> {
+	/// Wraps a [`Rng`] InternalGenerator in a [`BufferedRng`] instance.
+	pub fn new(rng: InternalGenerator) -> Self {
 		Self {
 			rng,
 			buffer: Vec::new(),
 		}
 	}
 
+	/// Returns the internal RNG, dropping the buffer.
+	pub fn into_inner(self) -> InternalGenerator {
+		self.rng
+	}
+
 	/// Returns how many unused bytes are currently buffered.
 	pub fn buffered(&self) -> usize {
 		self.buffer.len()
 	}
+}
 
-	/// Fills the output with random bytes, first using bytes from the internal buffer,
-	/// and then using the [`Rng`] generator, and discarding unused bytes into the buffer.
-	pub fn fill(&mut self, output: &mut [u8]) {
+impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> Rng<OUTPUT>
+	for BufferedRng<OUTPUT, InternalGenerator>
+{
+	fn rand(&mut self) -> [u8; OUTPUT] {
+		let mut out = [0_u8; OUTPUT];
+		self.fill_bytes(&mut out);
+		out
+	}
+
+	fn fill_bytes<Bytes>(&mut self, mut output: Bytes)
+	where
+		Bytes: AsMut<[u8]>,
+	{
+		let output = output.as_mut();
 		let mut remaining = output.len();
 		while remaining > 0 {
 			if self.buffer.is_empty() {
@@ -58,9 +72,11 @@ impl<const OUTPUT: usize, R: Rng<OUTPUT>> BufferedRng<OUTPUT, R> {
 }
 
 #[cfg(feature = "std")]
-impl<const OUTPUT: usize, R: Rng<OUTPUT>> std::io::Read for BufferedRng<OUTPUT, R> {
+impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> std::io::Read
+	for BufferedRng<OUTPUT, InternalGenerator>
+{
 	fn read(&mut self, output: &mut [u8]) -> std::io::Result<usize> {
-		self.fill(output);
+		self.fill_bytes(&mut *output);
 		Ok(output.len())
 	}
 
@@ -74,22 +90,21 @@ impl<const OUTPUT: usize, R: Rng<OUTPUT>> std::io::Read for BufferedRng<OUTPUT, 
 	}
 }
 
-impl<const OUTPUT: usize, R: Rng<OUTPUT>> Deref for BufferedRng<OUTPUT, R> {
-	type Target = R;
-
-	fn deref(&self) -> &Self::Target {
-		&self.rng
+impl<
+		const OUTPUT: usize,
+		const SEED_SIZE: usize,
+		InternalGenerator: SeedableRng<SEED_SIZE, OUTPUT>,
+	> SeedableRng<SEED_SIZE, OUTPUT> for BufferedRng<OUTPUT, InternalGenerator>
+{
+	fn reseed(&mut self, seed: [u8; SEED_SIZE]) {
+		self.rng.reseed(seed);
 	}
 }
 
-impl<const OUTPUT: usize, R: Rng<OUTPUT>> DerefMut for BufferedRng<OUTPUT, R> {
-	fn deref_mut(&mut self) -> &mut Self::Target {
-		&mut self.rng
-	}
-}
-
-impl<const OUTPUT: usize, R: Rng<OUTPUT> + Default> Default for BufferedRng<OUTPUT, R> {
+impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT> + Default> Default
+	for BufferedRng<OUTPUT, InternalGenerator>
+{
 	fn default() -> Self {
-		Self::new(R::default())
+		Self::new(InternalGenerator::default())
 	}
 }

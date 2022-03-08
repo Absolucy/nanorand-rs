@@ -28,33 +28,48 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 	/// Generates a random sequence of bytes, seeding from the internal state.
 	fn rand(&mut self) -> [u8; OUTPUT];
 	/// Generates a random of the specified type, seeding from the internal state.
-	fn generate<R>(&mut self) -> R
+	fn generate<Generated>(&mut self) -> Generated
 	where
-		R: RandomGen<OUTPUT, Self>,
+		Generated: RandomGen<OUTPUT, Self>,
 	{
-		R::random(self)
+		Generated::random(self)
+	}
+	/// Fill an array of bytes with randomness.
+	fn fill_bytes<Bytes>(&mut self, mut buffer: Bytes)
+	where
+		Bytes: AsMut<[u8]>,
+	{
+		let mut buffer = buffer.as_mut();
+		let mut length = buffer.len();
+		while length > 0 {
+			let chunk = self.rand();
+			let generated = chunk.len().min(length);
+			buffer[..generated].copy_from_slice(&chunk);
+			buffer = &mut buffer[generated..];
+			length -= generated;
+		}
 	}
 	/// Fill an array with the specified type.
-	fn fill<R, A>(&mut self, mut target: A)
+	fn fill<Contents, Array>(&mut self, mut target: Array)
 	where
-		R: RandomGen<OUTPUT, Self>,
-		A: AsMut<[R]>,
+		Contents: RandomGen<OUTPUT, Self>,
+		Array: AsMut<[Contents]>,
 	{
 		let target = target.as_mut();
 		target.iter_mut().for_each(|entry| *entry = self.generate());
 	}
 	/// Generates a random of the specified type, seeding from the internal state.
-	fn generate_range<R, B>(&mut self, range: B) -> R
+	fn generate_range<Number, Bounds>(&mut self, range: Bounds) -> Number
 	where
-		R: RandomRange<OUTPUT, Self>,
-		B: RangeBounds<R>,
+		Number: RandomRange<OUTPUT, Self>,
+		Bounds: RangeBounds<Number>,
 	{
-		R::random_range(self, range)
+		Number::random_range(self, range)
 	}
 	/// Shuffle a slice, using the RNG.
-	fn shuffle<I, S>(&mut self, mut target: S)
+	fn shuffle<Contents, Array>(&mut self, mut target: Array)
 	where
-		S: AsMut<[I]>,
+		Array: AsMut<[Contents]>,
 	{
 		let target = target.as_mut();
 		let target_len = target.len();
