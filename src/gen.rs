@@ -34,10 +34,12 @@ macro_rules! range {
 						Bound::Unbounded => <$type>::MIN,
 					};
 					let upper = match bounds.end_bound() {
-						Bound::Included(upper) => upper.saturating_sub(lower).saturating_add(1),
-						Bound::Excluded(upper) => upper.saturating_sub(lower),
+						Bound::Included(upper) => upper.saturating_add(1),
+						Bound::Excluded(upper) => *upper,
 						Bound::Unbounded => <$type>::MAX,
 					};
+					assert!(upper >= lower, "{} >= {} (lower bound was bigger than upper bound)", upper, lower);
+					let upper = upper.saturating_sub(lower);
 					let mut value = Self::random(r);
 					let mut m = (upper as $bigger).wrapping_mul(value as $bigger);
 					if (m as $type) < upper {
@@ -53,7 +55,6 @@ macro_rules! range {
 
 			impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomRange<OUTPUT, R> for $signed {
 				fn random_range<B: RangeBounds<Self>>(r: &mut R, bounds: B) -> Self {
-					const SIGNED_MAPPING: $type = <$type>::MAX / 2 + 1;
 					let lower = match bounds.start_bound() {
 						Bound::Included(lower) => *lower,
 						Bound::Excluded(lower) => lower.saturating_add(1),
@@ -64,14 +65,14 @@ macro_rules! range {
 						Bound::Excluded(upper) => upper.saturating_sub(1),
 						Bound::Unbounded => <$signed>::MAX,
 					};
-					let lower = (lower as $type).wrapping_add(SIGNED_MAPPING);
-					let upper = (upper as $type).wrapping_add(SIGNED_MAPPING);
-					assert!(upper >= lower, "{} >= {}", upper, lower);
-					<$type>::random_range(r, lower..=upper).wrapping_add(SIGNED_MAPPING) as $signed
+					assert!(upper >= lower, "{} >= {} (lower bound was bigger than upper bound)", upper, lower);
+					let lower = lower.wrapping_sub(<$signed>::MIN) as $type;
+					let upper = upper.wrapping_sub(<$signed>::MIN) as $type;
+					<$type>::random_range(r, lower..=upper).wrapping_add(<$signed>::MAX as $type) as $signed
 				}
 			}
 		)+
-	};
+	}
 }
 
 /// A trait used for generating a random object with an RNG,
@@ -83,6 +84,9 @@ pub trait RandomGen<const OUTPUT: usize, R: Rng<OUTPUT>> {
 /// A trait used for generating a random number within a range, with an RNG,
 pub trait RandomRange<const OUTPUT: usize, R: Rng<OUTPUT>>: RandomGen<OUTPUT, R> {
 	/// Return a ranged number of the implementing type, from the specified RNG instance.
+	///
+	/// # Panics
+	/// This function will panic if the lower bound of the range is greater than the upper bound.
 	fn random_range<B: RangeBounds<Self>>(r: &mut R, range: B) -> Self;
 }
 
@@ -154,20 +158,6 @@ mod tests {
 	fn ensure_signed_in_range() {
 		let mut rng = WyRand::new();
 		for _ in 0..1000 {
-			let number = rng.generate_range(-200..=50);
-			assert!(
-				(-200..=50).contains(&number),
-				"{} was outside of -200..=50",
-				number
-			);
-
-			let number = rng.generate_range(-200..100);
-			assert!(
-				(-200..100).contains(&number),
-				"{} was outside of -200..100",
-				number
-			);
-
 			let number = rng.generate_range(-50..);
 			assert!((-50..).contains(&number), "{} was outside of -50..", number);
 
@@ -191,5 +181,13 @@ mod tests {
 			assert!(1.0 >= number, "{} was bigger than 1.0", number);
 			assert!(number >= 0.0, "0 was bigger than {}", number);
 		}
+	}
+
+	#[test]
+	#[should_panic]
+	fn ensure_invalid_range_panics() {
+		let mut rng = WyRand::new();
+		#[allow(clippy::reversed_empty_ranges)]
+		rng.generate_range(10..=5);
 	}
 }
