@@ -1,3 +1,3 @@
 use crate::define_c_api;
 
-define_c_api!(pcg64, WyRand, 8);
+define_c_api!(wyrand, WyRand, 8);
