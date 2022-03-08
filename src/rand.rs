@@ -44,7 +44,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 		while length > 0 {
 			let chunk = self.rand();
 			let generated = chunk.len().min(length);
-			buffer[..generated].copy_from_slice(&chunk);
+			buffer[..generated].copy_from_slice(&chunk[..generated]);
 			buffer = &mut buffer[generated..];
 			length -= generated;
 		}
