@@ -1,6 +1,5 @@
 #include "nanorand.h"
 #include <TestU01.h>
-#include <iostream>
 
 static BufferedChaCha20 *chacha_rng;
 static BufferedWyRand *wyrand_rng;
