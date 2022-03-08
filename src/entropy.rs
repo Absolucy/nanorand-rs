@@ -86,11 +86,7 @@ pub fn rdseed(out: &mut [u8]) -> Option<usize> {
 			Some(s) => s,
 			None => return Some(bytes_pulled),
 		};
-		let x = if n % 2 == 0 {
-			seed.to_le_bytes()
-		} else {
-			seed.to_be_bytes()
-		};
+		let x = seed.to_ne_bytes();
 		bytes_pulled += x.len();
 		x.iter()
 			.enumerate()
