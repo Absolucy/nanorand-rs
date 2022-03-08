@@ -28,6 +28,6 @@ jobs:
                   args: "--release --package nanorand-abi"
                   command: build
             - name: Build nanorand SmallCrush example
-              run: clang++ -O3 -pipe -I$GITHUB_WORKSPACE/nanorand-abi nanorand-abi/examples/smallcrush.cpp target/release/libnanorand_abi.so -o nanorand-smallcrush -ltestu01 -ltestu01probdist -ltestu01mylib -lm
+              run: clang -O3 -pipe -I$GITHUB_WORKSPACE/nanorand-abi nanorand-abi/examples/smallcrush.c target/release/libnanorand_abi.so -o nanorand-smallcrush -ltestu01 -ltestu01probdist -ltestu01mylib -lm
             - name: Run nanorand SmallCrush
               run: ./nanorand-smallcrush
