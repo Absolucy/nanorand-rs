@@ -19,6 +19,3 @@ paste = "1.0.6"
 path = ".."
 default-features = false
 features = ["std", "wyrand", "pcg64", "chacha", "getrandom"]
-
-[build-dependencies]
-cbindgen = "0.20.0"
