@@ -72,7 +72,7 @@
 //! ## Entropy Sources
 //! _Listed in order of priority_
 //!
-//! * If the `getrandom` feature is enabled, then [`getrandom::getrandom`](https://docs.rs/getrandom/*/getrandom/fn.getrandom.html) will be called.
+//! * If the `getrandom` feature is enabled, then [`getrandom::getrandom`](https://docs.rs/getrandom/*/getrandom/fn.getrandom.html) will be called, and no other entropy sources will be used.
 //! * If the `rdseed` feature is enabled, and is running on an x86(-64) system with the [RDSEED](https://en.wikipedia.org/wiki/RDRAND) instruction, then
 //!   we will attempt to source as much entropy as possible via our [`rdseed_entropy`](entropy::rdseed_entropy) function
 //! * Linux and Android will attempt to use the [`getrandom`](https://man7.org/linux/man-pages/man2/getrandom.2.html) syscall.
@@ -91,8 +91,10 @@
 //! * `chacha` - Enable the [`ChaCha`](rand/chacha/struct.ChaCha.html) RNG. Requires Rust 1.47 or later.
 //! * `rdseed` - On x86 and x86-64 platforms, the `rdseed` intrinsic will be used when OS entropy isn't available.
 //! * `zeroize` - Implement the [Zeroize](https://crates.io/crates/zeroize) trait for all RNGs.
-//! * `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source.
-//! Works on most systems, optional due to the fact that it brings in more dependencies.
+//! * `getrandom` - Use the [`getrandom`](https://crates.io/crates/getrandom) crate as an entropy source. Works on most systems, optional due to the fact that it brings in more dependencies.
+//!
+//! ## MSRV
+//! The minimum supported Rust version for the latest version of nanorand is **Rust 1.56.0**, released October 21st, 2021.
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
