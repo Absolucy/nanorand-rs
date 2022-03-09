@@ -17,12 +17,12 @@ use core::default::Default;
 /// assert_eq!(rng.buffered(), 3);
 /// ```
 #[derive(Clone)]
-pub struct BufferedRng<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> {
+pub struct BufferedRng<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> {
 	rng: InternalGenerator,
 	buffer: Vec<u8>,
 }
 
-impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> BufferedRng<OUTPUT, InternalGenerator> {
+impl<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> BufferedRng<InternalGenerator, OUTPUT> {
 	/// Wraps a [`Rng`] InternalGenerator in a [`BufferedRng`] instance.
 	pub fn new(rng: InternalGenerator) -> Self {
 		Self {
@@ -42,8 +42,8 @@ impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> BufferedRng<OUTPUT, In
 	}
 }
 
-impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> Rng<OUTPUT>
-	for BufferedRng<OUTPUT, InternalGenerator>
+impl<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> Rng<OUTPUT>
+	for BufferedRng<InternalGenerator, OUTPUT>
 {
 	fn rand(&mut self) -> [u8; OUTPUT] {
 		let mut out = [0_u8; OUTPUT];
@@ -72,8 +72,8 @@ impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> Rng<OUTPUT>
 }
 
 #[cfg(feature = "std")]
-impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> std::io::Read
-	for BufferedRng<OUTPUT, InternalGenerator>
+impl<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> std::io::Read
+	for BufferedRng<InternalGenerator, OUTPUT>
 {
 	fn read(&mut self, output: &mut [u8]) -> std::io::Result<usize> {
 		self.fill_bytes(&mut *output);
@@ -91,18 +91,18 @@ impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT>> std::io::Read
 }
 
 impl<
+		InternalGenerator: SeedableRng<SEED_SIZE, OUTPUT>,
 		const OUTPUT: usize,
 		const SEED_SIZE: usize,
-		InternalGenerator: SeedableRng<SEED_SIZE, OUTPUT>,
-	> SeedableRng<SEED_SIZE, OUTPUT> for BufferedRng<OUTPUT, InternalGenerator>
+	> SeedableRng<SEED_SIZE, OUTPUT> for BufferedRng<InternalGenerator, OUTPUT>
 {
 	fn reseed(&mut self, seed: [u8; SEED_SIZE]) {
 		self.rng.reseed(seed);
 	}
 }
 
-impl<const OUTPUT: usize, InternalGenerator: Rng<OUTPUT> + Default> Default
-	for BufferedRng<OUTPUT, InternalGenerator>
+impl<InternalGenerator: Rng<OUTPUT> + Default, const OUTPUT: usize> Default
+	for BufferedRng<InternalGenerator, OUTPUT>
 {
 	fn default() -> Self {
 		Self::new(InternalGenerator::default())

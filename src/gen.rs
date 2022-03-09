@@ -4,7 +4,7 @@ use core::ops::{Bound, RangeBounds};
 macro_rules! gen {
 	($($type:ty),+) => {
 		$(
-			impl<const OUTPUT: usize, Generator: Rng<OUTPUT>> RandomGen<OUTPUT, Generator> for $type {
+			impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomGen<Generator, OUTPUT> for $type {
 				fn random(rng: &mut Generator) -> Self {
 					let mut bytes = [0u8; core::mem::size_of::<$type>()];
 					rng.fill_bytes(&mut bytes);
@@ -18,7 +18,7 @@ macro_rules! gen {
 macro_rules! range {
 	($(($type:ty, $bigger:ty, $signed:ty)),+) => {
 		$(
-			impl<const OUTPUT: usize, Generator: Rng<OUTPUT>> RandomRange<OUTPUT, Generator> for $type {
+			impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomRange<Generator, OUTPUT> for $type {
 				fn random_range<Bounds: RangeBounds<Self>>(rng: &mut Generator, bounds: Bounds) -> Self {
 					const BITS: $bigger = core::mem::size_of::<$type>() as $bigger * 8;
 					let lower = match bounds.start_bound() {
@@ -46,7 +46,7 @@ macro_rules! range {
 				}
 			}
 
-			impl<const OUTPUT: usize, Generator: Rng<OUTPUT>> RandomRange<OUTPUT, Generator> for $signed {
+			impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomRange<Generator, OUTPUT> for $signed {
 				fn random_range<Bounds: RangeBounds<Self>>(r: &mut Generator, bounds: Bounds) -> Self {
 					let lower = match bounds.start_bound() {
 						Bound::Included(lower) => *lower,
@@ -69,14 +69,14 @@ macro_rules! range {
 }
 
 /// A trait used for generating a random object with an RNG,
-pub trait RandomGen<const OUTPUT: usize, Generator: Rng<OUTPUT>> {
+pub trait RandomGen<Generator: Rng<OUTPUT>, const OUTPUT: usize> {
 	/// Return a random instance of the implementing type, from the specified RNG instance.
 	fn random(rng: &mut Generator) -> Self;
 }
 
 /// A trait used for generating a random number within a range, with an RNG,
-pub trait RandomRange<const OUTPUT: usize, Generator: Rng<OUTPUT>>:
-	RandomGen<OUTPUT, Generator>
+pub trait RandomRange<Generator: Rng<OUTPUT>, const OUTPUT: usize>:
+	RandomGen<Generator, OUTPUT>
 {
 	/// Return a ranged number of the implementing type, from the specified RNG instance.
 	///
@@ -85,19 +85,19 @@ pub trait RandomRange<const OUTPUT: usize, Generator: Rng<OUTPUT>>:
 	fn random_range<Bounds: RangeBounds<Self>>(nng: &mut Generator, range: Bounds) -> Self;
 }
 
-impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomGen<OUTPUT, R> for bool {
-	fn random(rng: &mut R) -> Self {
+impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomGen<Generator, OUTPUT> for bool {
+	fn random(rng: &mut Generator) -> Self {
 		u8::random(rng) < 0b10000000
 	}
 }
 
-impl<const OUTPUT: usize, R: Rng<OUTPUT>> RandomGen<OUTPUT, R> for f32 {
-	fn random(rng: &mut R) -> Self {
+impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomGen<Generator, OUTPUT> for f32 {
+	fn random(rng: &mut Generator) -> Self {
 		(u32::random(rng) as f32) / (u32::MAX as f32)
 	}
 }
 
-impl<const OUTPUT: usize, Generator: Rng<OUTPUT>> RandomGen<OUTPUT, Generator> for f64 {
+impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomGen<Generator, OUTPUT> for f64 {
 	fn random(rng: &mut Generator) -> Self {
 		(u64::random(rng) as f64) / (u64::MAX as f64)
 	}

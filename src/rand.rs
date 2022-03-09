@@ -30,7 +30,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate<Generated>(&mut self) -> Generated
 	where
-		Generated: RandomGen<OUTPUT, Self>,
+		Generated: RandomGen<Self, OUTPUT>,
 	{
 		Generated::random(self)
 	}
@@ -52,7 +52,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 	/// Fill an array with the specified type.
 	fn fill<Contents, Array>(&mut self, mut target: Array)
 	where
-		Contents: RandomGen<OUTPUT, Self>,
+		Contents: RandomGen<Self, OUTPUT>,
 		Array: AsMut<[Contents]>,
 	{
 		let target = target.as_mut();
@@ -61,7 +61,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate_range<Number, Bounds>(&mut self, range: Bounds) -> Number
 	where
-		Number: RandomRange<OUTPUT, Self>,
+		Number: RandomRange<Self, OUTPUT>,
 		Bounds: RangeBounds<Number>,
 	{
 		Number::random_range(self, range)

@@ -65,7 +65,7 @@ macro_rules! define_c_api {
 			/// Wrap a $type RNG in a buffer.
 			/// This consumes the RNG, and must be freed later with `free_$name_buffered(ptr)`!
 			#[no_mangle]
-			pub unsafe extern "C" fn [<$name _buffered>](rng: *mut $rng_type) -> *mut BufferedRng<$size, $rng_type> {
+			pub unsafe extern "C" fn [<$name _buffered>](rng: *mut $rng_type) -> *mut BufferedRng<$rng_type, $size> {
 				let rng = *Box::from_raw(rng);
 				let buffered = BufferedRng::new(rng);
 				Box::into_raw(Box::new(buffered))
@@ -73,14 +73,14 @@ macro_rules! define_c_api {
 
 			/// Free a buffer-wrapped $type RNG.
 			#[no_mangle]
-			pub unsafe extern "C" fn [<free_ $name _buffered>](ptr: *mut BufferedRng<$size, $rng_type>) {
+			pub unsafe extern "C" fn [<free_ $name _buffered>](ptr: *mut BufferedRng<$rng_type, $size>) {
 				std::mem::drop(Box::from_raw(ptr));
 			}
 
 			/// Fill the provided buffer with random bytes.
 			#[no_mangle]
 			pub unsafe extern "C" fn [<$name _buffered_fill>](
-				rng: *mut BufferedRng<$size, $rng_type>,
+				rng: *mut BufferedRng<$rng_type, $size>,
 				buffer: *mut u8,
 				buffer_length: usize
 			) {
