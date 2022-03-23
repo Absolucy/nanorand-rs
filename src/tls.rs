@@ -37,7 +37,6 @@ impl SeedableRng<8, 8> for TlsWyRand {
 ///     println!("Random number: {}", rng.generate::<u64>());
 /// });
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "tls")))]
 pub fn tls_rng() -> TlsWyRand {
 	WYRAND.with(|tls| TlsWyRand(tls.clone()))
 }

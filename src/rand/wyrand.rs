@@ -10,13 +10,13 @@ use zeroize::Zeroize;
 /// **This generator is _NOT_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
-#[cfg_attr(docsrs, doc(cfg(feature = "wyrand")))]
 pub struct WyRand {
 	seed: u64,
 }
 
 impl WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
+	#[cfg(any(feature = "entropy", feature = "getrandom"))]
 	#[must_use]
 	pub fn new() -> Self {
 		Self::default()
@@ -29,6 +29,7 @@ impl WyRand {
 	}
 }
 
+#[cfg(any(feature = "entropy", feature = "getrandom"))]
 impl Default for WyRand {
 	/// Create a new [`WyRand`] instance, seeding from the system's default source of entropy.
 	fn default() -> Self {

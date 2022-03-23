@@ -1,5 +1,4 @@
 #[cfg(feature = "getrandom_custom")]
-#[cfg_attr(docsrs, doc(cfg(feature = "getrandom_custom")))]
 pub use getrandom::register_custom_getrandom;
 
 #[cfg(all(target_vendor = "apple", not(feature = "getrandom")))]

@@ -20,13 +20,13 @@ pub type ChaCha20 = ChaCha<20>;
 /// **This generator _is theoretically_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
-#[cfg_attr(docsrs, doc(cfg(feature = "chacha")))]
 pub struct ChaCha<const ROUNDS: u8> {
 	state: [u32; 16],
 }
 
 impl<const ROUNDS: u8> ChaCha<ROUNDS> {
 	/// Create a new [`ChaCha`] instance, seeding from the system's default source of entropy.
+	#[cfg(any(feature = "entropy", feature = "getrandom"))]
 	#[must_use]
 	pub fn new() -> Self {
 		let mut key: [u8; 32] = Default::default();
@@ -45,6 +45,7 @@ impl<const ROUNDS: u8> ChaCha<ROUNDS> {
 	}
 }
 
+#[cfg(any(feature = "entropy", feature = "getrandom"))]
 impl<const ROUNDS: u8> Default for ChaCha<ROUNDS> {
 	fn default() -> Self {
 		let mut key: [u8; 32] = Default::default();

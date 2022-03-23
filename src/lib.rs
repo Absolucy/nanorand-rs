@@ -1,5 +1,5 @@
 #![cfg_attr(not(feature = "std"), no_std)]
-#![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![forbid(missing_docs)]
 #![warn(
 	clippy::perf,
@@ -85,6 +85,7 @@
 //! ## Feature Flags
 //!
 //! * `alloc` (default) - Enables Rust `alloc` lib features, such as a buffering Rng wrapper.
+//! * `entropy` (default) - Allows sourcing entropy from the system. Implied by `getrandom`, too.
 //! * `std` (default) - Enables Rust `std` lib features, such as seeding from OS entropy sources. Requires `alloc` to be enabled.
 //! * `tls` (default) - Enables a thread-local [`WyRand`](rand/wyrand/struct.WyRand.html) RNG (see below). Requires `std` to be enabled.
 //! * `wyrand` (default) - Enable the [`WyRand`](rand/wyrand/struct.WyRand.html) RNG.
@@ -108,18 +109,17 @@ pub use rand::*;
 pub use tls::tls_rng;
 
 #[cfg(feature = "alloc")]
-#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
 /// Provides a buffered wrapper for RNGs, preventing bits from being wasted.
 pub mod buffer;
 /// Implementation of cryptography, for CSPRNGs.
 pub mod crypto;
 /// Sources for obtaining entropy.
+#[cfg(any(feature = "entropy", feature = "getrandom"))]
 pub mod entropy;
 /// Traits for generating types from an RNG.
 pub mod gen;
 /// RNG algorithms.
 pub mod rand;
 #[cfg(feature = "tls")]
-#[cfg_attr(docsrs, doc(cfg(feature = "tls")))]
 /// Provides a thread-local [`WyRand`] RNG.
 pub mod tls;

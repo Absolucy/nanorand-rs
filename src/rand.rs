@@ -11,19 +11,16 @@ use core::ops::RangeBounds;
 /// Implementation of the wyrand PRNG algorithm.
 /// More details can be seen at <https://github.com/wangyi-fudan/wyhash>
 #[cfg(feature = "wyrand")]
-#[cfg_attr(docsrs, doc(cfg(feature = "wyrand")))]
 pub mod wyrand;
 
 /// Implementation of the Pcg64 PRNG algorithm.
 /// More details can be seen at <https://www.pcg-random.org/index.html>
 #[cfg(feature = "pcg64")]
-#[cfg_attr(docsrs, doc(cfg(feature = "pcg64")))]
 pub mod pcg64;
 
 /// Implementation of the ChaCha CSPRNG algorithm.
 /// More details can be seen at <https://en.wikipedia.org/wiki/Salsa20>
 #[cfg(feature = "chacha")]
-#[cfg_attr(docsrs, doc(cfg(feature = "chacha")))]
 pub mod chacha;
 
 /// A trait that represents a random number generator.
