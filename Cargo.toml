@@ -6,6 +6,7 @@ keywords = ["rand", "random", "no-std", "entropy"]
 categories = ["algorithms", "no-std"]
 readme = "README.md"
 version = "0.8.0"
+rust-version = "1.56"
 authors = ["Lucy <lucy@absolucy.moe>"]
 edition = "2021"
 license = "Zlib"
