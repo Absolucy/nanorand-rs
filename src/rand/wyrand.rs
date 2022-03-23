@@ -10,6 +10,7 @@ use zeroize::Zeroize;
 /// **This generator is _NOT_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
+#[cfg_attr(docsrs, doc(cfg(feature = "wyrand")))]
 pub struct WyRand {
 	seed: u64,
 }

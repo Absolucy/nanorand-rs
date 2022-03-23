@@ -1,4 +1,5 @@
 #![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 #![forbid(missing_docs)]
 #![warn(
 	clippy::perf,
@@ -107,6 +108,7 @@ pub use rand::*;
 pub use tls::tls_rng;
 
 #[cfg(feature = "alloc")]
+#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
 /// Provides a buffered wrapper for RNGs, preventing bits from being wasted.
 pub mod buffer;
 /// Implementation of cryptography, for CSPRNGs.
@@ -118,5 +120,6 @@ pub mod gen;
 /// RNG algorithms.
 pub mod rand;
 #[cfg(feature = "tls")]
+#[cfg_attr(docsrs, doc(cfg(feature = "tls")))]
 /// Provides a thread-local [`WyRand`] RNG.
 pub mod tls;

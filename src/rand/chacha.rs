@@ -20,6 +20,7 @@ pub type ChaCha20 = ChaCha<20>;
 /// **This generator _is theoretically_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
+#[cfg_attr(docsrs, doc(cfg(feature = "chacha")))]
 pub struct ChaCha<const ROUNDS: u8> {
 	state: [u32; 16],
 }

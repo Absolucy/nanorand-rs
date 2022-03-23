@@ -12,6 +12,7 @@ const PCG_DEFAULT_MULTIPLIER_128: u128 = 47026247687942121848144207491837523525;
 /// **This generator is _NOT_ cryptographically secure.**
 #[cfg_attr(feature = "zeroize", derive(Zeroize))]
 #[cfg_attr(feature = "zeroize", zeroize(drop))]
+#[cfg_attr(docsrs, doc(cfg(feature = "pcg64")))]
 pub struct Pcg64 {
 	seed: u128,
 	state: u128,

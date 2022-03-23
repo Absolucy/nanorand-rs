@@ -72,6 +72,7 @@ impl<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> Rng<OUTPUT>
 }
 
 #[cfg(feature = "std")]
+#[cfg_attr(docsrs, doc(cfg(feature = "std")))]
 impl<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> std::io::Read
 	for BufferedRng<InternalGenerator, OUTPUT>
 {
