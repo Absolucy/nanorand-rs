@@ -1,6 +1,6 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion, Throughput};
 use nanorand::rand::Rng;
-use rand_core::RngCore;
+use rand_core::{block::BlockRngCore, RngCore, SeedableRng};
 use random_fast_rng::Random;
 
 fn criterion_benchmark(c: &mut Criterion) {
@@ -16,169 +16,151 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 	entropy_group.finish();
 
-	let mut rng_group = c.benchmark_group("rngs");
-	rng_group.throughput(Throughput::Bytes(std::mem::size_of::<u64>() as u64 * 1024));
+	let mut wyrand_group = c.benchmark_group("WyRand");
+	wyrand_group.throughput(Throughput::Bytes(8));
 
-	rng_group.bench_function("wyrand", |b| {
+	wyrand_group.bench_function("nanorand", |b| {
 		let mut rng = nanorand::rand::WyRand::new();
 		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.generate());
-			}
-			black_box(n);
+			black_box(rng.rand());
 		})
 	});
 
-	rng_group.bench_function("pcg64", |b| {
-		let mut rng = nanorand::rand::Pcg64::new();
-		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.generate());
-			}
-			black_box(n);
-		})
-	});
-
-	rng_group.bench_function("chacha8", |b| {
-		let mut rng = nanorand::rand::ChaCha8::new();
-		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.generate());
-			}
-			black_box(n);
-		})
-	});
-
-	rng_group.bench_function("chacha20", |b| {
-		let mut rng = nanorand::rand::ChaCha20::new();
-		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.generate());
-			}
-			black_box(n);
-		})
-	});
-
-	rng_group.finish();
-
-	let mut other_rngs = c.benchmark_group("other-rng-crates");
-	other_rngs.throughput(Throughput::Bytes(std::mem::size_of::<u64>() as u64 * 1024));
-
-	other_rngs.bench_function("wyhash wyrand", |b| {
+	wyrand_group.bench_function("wyhash", |b| {
 		let mut seed = 42_u64;
 		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(wyhash::wyrng(&mut seed));
-			}
-			black_box(n);
+			black_box(wyhash::wyrng(&mut seed));
 		})
 	});
 
-	other_rngs.bench_function("oorandom pcg32", |b| {
+	wyrand_group.finish();
+
+	let mut chacha_group = c.benchmark_group("ChaCha");
+	// ChaCha has 512-bit output
+	chacha_group.throughput(Throughput::Bytes(64));
+
+	chacha_group.bench_function("nanorand<8>", |b| {
+		let mut rng = nanorand::rand::ChaCha8::new();
+		b.iter(|| {
+			black_box(rng.rand());
+		})
+	});
+
+	chacha_group.bench_function("nanorand<12>", |b| {
+		let mut rng = nanorand::rand::ChaCha12::new();
+		b.iter(|| {
+			black_box(rng.rand());
+		})
+	});
+
+	chacha_group.bench_function("nanorand<20>", |b| {
+		let mut rng = nanorand::rand::ChaCha20::new();
+		b.iter(|| {
+			black_box(rng.rand());
+		})
+	});
+
+	chacha_group.bench_function("rand_chacha<8>", |b| {
+		let mut rng = rand_chacha::ChaCha8Core::from_seed([42; 32]);
+		b.iter(|| {
+			let mut out = Default::default();
+			rng.generate(&mut out);
+			black_box(out);
+		})
+	});
+
+	chacha_group.bench_function("rand_chacha<12>", |b| {
+		let mut rng = rand_chacha::ChaCha12Core::from_seed([42; 32]);
+		b.iter(|| {
+			let mut out = Default::default();
+			rng.generate(&mut out);
+			black_box(out);
+		})
+	});
+
+	chacha_group.bench_function("rand_chacha<20>", |b| {
+		let mut rng = rand_chacha::ChaCha20Core::from_seed([42; 32]);
+		b.iter(|| {
+			let mut out = Default::default();
+			rng.generate(&mut out);
+			black_box(out);
+		})
+	});
+
+	chacha_group.finish();
+
+	let mut pcg32_group = c.benchmark_group("Pcg32");
+	pcg32_group.throughput(Throughput::Bytes(4));
+
+	pcg32_group.bench_function("oorandom", |b| {
 		let mut rng = oorandom::Rand32::new(42);
 		b.iter(|| {
-			let mut n: u32 = u32::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.rand_u32());
-			}
-			black_box(n);
+			black_box(rng.rand_u32());
 		})
 	});
 
-	other_rngs.bench_function("oorandom pcg64", |b| {
-		let mut rng = oorandom::Rand64::new(42);
-		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.rand_u64());
-			}
-			black_box(n);
-		})
-	});
-
-	other_rngs.bench_function("randomize pcg32", |b| {
+	pcg32_group.bench_function("randomize", |b| {
 		let mut rng = randomize::PCG32::seed(42, 0);
 		b.iter(|| {
-			let mut n: u32 = u32::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.next_u32());
-			}
-			black_box(n);
+			black_box(rng.next_u32());
 		})
 	});
 
-	other_rngs.bench_function("randomize pcg64", |b| {
-		let mut rng = randomize::PCG64::seed(42, 0);
-		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.next_u64());
-			}
-			black_box(n);
-		})
-	});
-
-	other_rngs.bench_function("rand pcg32", |b| {
+	pcg32_group.bench_function("rand_pcg", |b| {
 		let mut rng = rand_pcg::Pcg32::new(0xcafef00dd15ea5e5, 0xa02bdbf7bb3c0a7);
 		b.iter(|| {
-			let mut n: u32 = u32::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.next_u32());
-			}
-			black_box(n);
+			black_box(rng.next_u32());
 		})
 	});
 
-	other_rngs.bench_function("rand pcg64", |b| {
-		let mut rng = rand_pcg::Pcg64::new(0xcafef00dd15ea5e5, 0xa02bdbf7bb3c0a7ac28fa16a64abf96);
-		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.next_u64());
-			}
-			black_box(n);
-		})
-	});
-
-	other_rngs.bench_function("random-fast-rng pcg32", |b| {
+	pcg32_group.bench_function("random_fast_rng", |b| {
 		let mut rng = random_fast_rng::FastRng::new();
 		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.gen());
-			}
-			black_box(n);
+			black_box(rng.get_u32());
 		})
 	});
 
-	other_rngs.bench_function("fastrand pcg32", |b| {
+	pcg32_group.finish();
+
+	let mut pcg64_group = c.benchmark_group("Pcg64");
+	pcg64_group.throughput(Throughput::Bytes(8));
+
+	pcg64_group.bench_function("nanorand", |b| {
+		let mut rng = nanorand::rand::Pcg64::new();
+		b.iter(|| {
+			black_box(rng.rand());
+		})
+	});
+
+	pcg64_group.bench_function("oorandom", |b| {
+		let mut rng = oorandom::Rand64::new(42);
+		b.iter(|| {
+			black_box(rng.rand_u64());
+		})
+	});
+
+	pcg64_group.bench_function("randomize", |b| {
+		let mut rng = randomize::PCG64::default();
+		b.iter(|| {
+			black_box(rng.next_u64());
+		})
+	});
+
+	pcg64_group.bench_function("rand_pcg", |b| {
+		let mut rng = rand_pcg::Pcg64::new(0xcafef00dd15ea5e5, 0xa02bdbf7bb3c0a7ac28fa16a64abf96);
+		b.iter(|| {
+			black_box(rng.next_u64());
+		})
+	});
+
+	pcg64_group.bench_function("fastrand", |b| {
 		let rng = fastrand::Rng::with_seed(42);
 		b.iter(|| {
-			let mut n: u32 = u32::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.u32(u32::MIN..u32::MAX));
-			}
-			black_box(n);
+			black_box(rng.u64(..));
 		})
 	});
 
-	other_rngs.bench_function("fastrand pcg64", |b| {
-		let rng = fastrand::Rng::with_seed(42);
-		b.iter(|| {
-			let mut n: u64 = u64::MIN;
-			for _ in 0..1024 {
-				n = n.wrapping_add(rng.u64(u64::MIN..u64::MAX));
-			}
-			black_box(n);
-		})
-	});
-
-	other_rngs.finish();
+	pcg64_group.finish();
 }
 
 criterion_group!(benches, criterion_benchmark);

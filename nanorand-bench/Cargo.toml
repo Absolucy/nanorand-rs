@@ -6,17 +6,17 @@ edition = "2021"
 publish = false
 
 [dependencies]
-criterion = "0.3.5"
-fastrand = "1.7.0"
-hex = "0.4.3"
+criterion = "0.3"
+fastrand = "1"
+hex = "0.4"
 nanorand = { path = ".." }
-oorandom = "11.1.3"
-rand_chacha = "0.3.1"
-rand_core = "0.6.3"
-rand_pcg = "0.3.1"
-random-fast-rng = "0.1.1"
-randomize = "3.0.1"
-wyhash = "0.5.0"
+oorandom = "11"
+rand_chacha = "0.3"
+rand_core = "0.6"
+rand_pcg = "0.3"
+random-fast-rng = "0.1"
+randomize = "3"
+wyhash = "0.5"
 
 [[bench]]
 name = "speed"

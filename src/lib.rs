@@ -64,9 +64,9 @@
 //!
 //! **RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Speed**<sup>1</sup>|**Notes**|**Original Implementation**
 //! :-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
-//! wyrand|[`nanorand::WyRand`](rand/wyrand/struct.WyRand.html), [`nanorand::tls::TlsWyRand`](tls/fn.tls_rng.html)|64 bits (`u64`)|🚫|16.4 GB/s||[https://github.com/lemire/testingRNG/blob/master/source/wyrand.h](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h)
+//! wyrand|[`nanorand::WyRand`](rand/wyrand/struct.WyRand.html), [`nanorand::tls::TlsWyRand`](tls/fn.tls_rng.html)|64 bits (`u64`)|🚫|14 GB/s||[https://github.com/lemire/testingRNG/blob/master/source/wyrand.h](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h)
 //! Pcg64|[`nanorand::Pcg64`](rand/pcg64/struct.Pcg64.html)|64 bits (`u64`)|🚫|1.6 GB/s||[https://github.com/rkern/pcg64](https://github.com/rkern/pcg64)
-//! ChaCha|[`nanorand::ChaCha`](rand/chacha/struct.ChaCha.html)|512 bits (`[u32; 16]`)|✅|204 MB/s (ChaCha8), 79 MB/s (ChaCha20)|Only works in Rust 1.47 or above|[https://cr.yp.to/chacha.html](https://cr.yp.to/chacha.html)
+//! ChaCha|[`nanorand::ChaCha`](rand/chacha/struct.ChaCha.html)|512 bits (`[u32; 16]`)|✅|980 MB/s (ChaCha8), 749 MB/s (ChaCha12), 505 MB/s (ChaCha20)||[https://cr.yp.to/chacha.html](https://cr.yp.to/chacha.html)
 //!
 //! <sup>1. Speed benchmarked on an M1 Macbook Air</sup>
 //!
