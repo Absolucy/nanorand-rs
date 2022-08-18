@@ -161,6 +161,15 @@ mod tests {
 
 			let number = rng.generate_range(..-32);
 			assert!((..-32).contains(&number), "{} was outside of ..-32", number);
+
+			let number = rng.generate_range(1..3);
+			assert!((1..3).contains(&number), "{} was outside of 1..3", number);
+
+			let number = rng.generate_range(-3..3);
+			assert!((-3..3).contains(&number), "{} was outside of -3..3", number);
+
+			let number = rng.generate_range(-13..=-12);
+			assert!((-13..=-12).contains(&number), "{} was outside of -13..=-12", number);
 		}
 	}
 
