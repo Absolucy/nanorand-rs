@@ -49,7 +49,7 @@ macro_rules! range {
 			impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomRange<Generator, OUTPUT> for $signed {
 				fn random_range<Bounds: RangeBounds<Self>>(r: &mut Generator, bounds: Bounds) -> Self {
 					let lower = match bounds.start_bound() {
-						Bound::Included(lower) => *lower,
+						Bound::Included(lower) => lower.saturating_add(1),
 						Bound::Excluded(lower) => lower.saturating_add(1),
 						Bound::Unbounded => <$signed>::MIN
 					};
