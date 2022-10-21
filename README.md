@@ -115,3 +115,7 @@ the following restrictions:
     misrepresented as being the original software.
 
 3.  This notice may not be removed or altered from any source distribution.
+
+### Amendment
+
+I, @Absolucy, fully give permission for any of my code (including the entirety of this project, nanorand-rs), anywhere, no matter the license, to be used to train machine learning models intended to be used for general-purpose programming.
