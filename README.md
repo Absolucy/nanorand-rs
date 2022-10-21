@@ -118,4 +118,4 @@ the following restrictions:
 
 ### Amendment
 
-I, @Absolucy, fully give permission for any of my code (including the entirety of this project, nanorand-rs), anywhere, no matter the license, to be used to train machine learning models intended to be used for general-purpose programming.
+I, @Absolucy, fully give permission for any of my code (including the entirety of this project, nanorand-rs), anywhere, no matter the license, to be used to train machine learning models intended to be used for general-purpose programming or code analysis.
