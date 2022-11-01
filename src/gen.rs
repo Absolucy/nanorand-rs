@@ -49,7 +49,7 @@ macro_rules! range {
 			impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomRange<Generator, OUTPUT> for $signed {
 				fn random_range<Bounds: RangeBounds<Self>>(r: &mut Generator, bounds: Bounds) -> Self {
 					let lower = match bounds.start_bound() {
-						Bound::Included(lower) => *lower,
+						Bound::Included(lower) => lower.saturating_add(1),
 						Bound::Excluded(lower) => lower.saturating_add(1),
 						Bound::Unbounded => <$signed>::MIN
 					};
@@ -161,6 +161,19 @@ mod tests {
 
 			let number = rng.generate_range(..-32);
 			assert!((..-32).contains(&number), "{} was outside of ..-32", number);
+
+			let number = rng.generate_range(1..3);
+			assert!((1..3).contains(&number), "{} was outside of 1..3", number);
+
+			let number = rng.generate_range(-3..3);
+			assert!((-3..3).contains(&number), "{} was outside of -3..3", number);
+
+			let number = rng.generate_range(-13..=-12);
+			assert!(
+				(-13..=-12).contains(&number),
+				"{} was outside of -13..=-12",
+				number
+			);
 		}
 	}
 
