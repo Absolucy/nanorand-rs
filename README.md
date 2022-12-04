@@ -73,6 +73,7 @@ _Listed in order of priority_
   we will attempt to source as much entropy as possible via our [`rdseed_entropy`](entropy::rdseed_entropy) function
 * Linux and Android will attempt to use the [`getrandom`](https://man7.org/linux/man-pages/man2/getrandom.2.html) syscall.
 * macOS and iOS (Darwin-based systems) will use Security.framework's [`SecRandomCopyBytes`](https://developer.apple.com/documentation/security/1399291-secrandomcopybytes).
+* OpenBSD will attempt to use the [`arc4random_buf`](https://man.openbsd.org/arc4random.3) function.
 * Windows
   * If we're targeting UWP, then the [`BCryptGenRandom`](https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgenrandom) is used with system-preferred RNG (`BCRYPT_USE_SYSTEM_PREFERRED_RNG`).
   * Otherwise, we'll use [`RtlGenRandom`](https://docs.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-rtlgenrandom).
