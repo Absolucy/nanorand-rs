@@ -74,7 +74,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 		let target = target.as_mut();
 		let target_len = target.len();
 		for idx in (1..target_len).rev() {
-			let random_idx = self.generate_range(0..idx+1);
+			let random_idx = self.generate_range(0..idx + 1);
 			target.swap(idx, random_idx);
 		}
 	}
