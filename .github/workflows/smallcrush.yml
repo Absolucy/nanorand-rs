@@ -19,7 +19,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: Install TestU01 and Clang
-              run: sudo apt-get update && sudo apt-get install -y libtestu01-0-dev libtestu01-0-dev-common libtestu01-0 llvm-10 clang-10
+              run: sudo apt-get update && sudo apt-get install -y libtestu01-0-dev libtestu01-0-dev-common libtestu01-0 llvm-11 clang-11
             - name: "Install stable Rust toolchain"
               uses: actions-rs/toolchain@v1
               with:
