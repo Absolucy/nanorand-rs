@@ -24,7 +24,7 @@ pub struct BufferedRng<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> {
 
 impl<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> BufferedRng<InternalGenerator, OUTPUT> {
 	/// Wraps a [`Rng`] InternalGenerator in a [`BufferedRng`] instance.
-	pub fn new(rng: InternalGenerator) -> Self {
+	pub const fn new(rng: InternalGenerator) -> Self {
 		Self {
 			rng,
 			buffer: Vec::new(),
@@ -32,6 +32,7 @@ impl<InternalGenerator: Rng<OUTPUT>, const OUTPUT: usize> BufferedRng<InternalGe
 	}
 
 	/// Returns the internal RNG, dropping the buffer.
+	#[allow(clippy::missing_const_for_fn)]
 	pub fn into_inner(self) -> InternalGenerator {
 		self.rng
 	}
