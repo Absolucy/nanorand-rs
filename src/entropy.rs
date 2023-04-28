@@ -58,7 +58,7 @@ pub fn system(out: &mut [u8]) {
 	windows
 )))]
 pub fn system(out: &mut [u8]) {
-	backup_entropy(out);
+	backup(out);
 }
 
 #[cfg(feature = "rdseed")]
@@ -134,6 +134,6 @@ pub fn backup(out: &mut [u8]) {
 
 #[cfg(not(feature = "std"))]
 /// This just panics.
-pub fn backup_entropy(_: &mut [u8]) {
+pub fn backup(_: &mut [u8]) {
 	panic!("Failed to source any entropy!")
 }
