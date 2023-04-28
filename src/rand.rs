@@ -27,6 +27,7 @@ pub mod chacha;
 pub trait Rng<const OUTPUT: usize>: Clone {
 	/// Generates a random sequence of bytes, seeding from the internal state.
 	fn rand(&mut self) -> [u8; OUTPUT];
+
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate<Generated>(&mut self) -> Generated
 	where
@@ -34,6 +35,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 	{
 		Generated::random(self)
 	}
+
 	/// Fill an array of bytes with randomness.
 	fn fill_bytes<Bytes>(&mut self, mut buffer: Bytes)
 	where
@@ -49,6 +51,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 			length -= generated;
 		}
 	}
+
 	/// Fill an array with the specified type.
 	fn fill<Contents, Array>(&mut self, mut target: Array)
 	where
@@ -58,6 +61,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 		let target = target.as_mut();
 		target.iter_mut().for_each(|entry| *entry = self.generate());
 	}
+
 	/// Generates a random of the specified type, seeding from the internal state.
 	fn generate_range<Number, Bounds>(&mut self, range: Bounds) -> Number
 	where
@@ -66,6 +70,7 @@ pub trait Rng<const OUTPUT: usize>: Clone {
 	{
 		Number::random_range(self, range)
 	}
+
 	/// Shuffle a slice, using the RNG.
 	fn shuffle<Contents, Array>(&mut self, mut target: Array)
 	where
