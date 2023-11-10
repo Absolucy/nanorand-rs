@@ -8,8 +8,11 @@ pub use darwin::entropy as system;
 	not(feature = "getrandom")
 ))]
 pub use linux::entropy as system;
-#[cfg(all(target_os = "openbsd", not(feature = "getrandom")))]
-pub use openbsd::entropy as system;
+#[cfg(all(
+	any(target_os = "openbsd", target_os = "freebsd"),
+	not(feature = "getrandom")
+))]
+pub use bsd::entropy as system;
 #[cfg(all(windows, not(target_vendor = "uwp"), not(feature = "getrandom")))]
 pub use windows::entropy as system;
 #[cfg(all(windows, target_vendor = "uwp", not(feature = "getrandom")))]
@@ -34,9 +37,12 @@ pub mod windows_uwp;
 /// An entropy generator for Windows, using WinAPI's `RtlGenRandom` function.
 pub mod windows;
 
-#[cfg(all(target_os = "openbsd", not(feature = "getrandom")))]
-/// An entropy generator for OpenBSD, using libc's `arc4random_buf` function.
-pub mod openbsd;
+#[cfg(all(
+	any(target_os = "openbsd", target_os = "freebsd"),
+	not(feature = "getrandom")
+))]
+/// An entropy generator for OpenBSD and FreeBSD, using libc's `arc4random_buf` function.
+pub mod bsd;
 
 #[cfg(feature = "getrandom")]
 /// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.
@@ -54,6 +60,7 @@ pub fn system(out: &mut [u8]) {
 	target_os = "linux",
 	target_os = "android",
 	target_os = "openbsd",
+	target_os = "freebsd",
 	target_vendor = "apple",
 	windows
 )))]
