@@ -49,7 +49,7 @@ macro_rules! range {
 			impl<Generator: Rng<OUTPUT>, const OUTPUT: usize> RandomRange<Generator, OUTPUT> for $signed {
 				fn random_range<Bounds: RangeBounds<Self>>(r: &mut Generator, bounds: Bounds) -> Self {
 					let lower = match bounds.start_bound() {
-						Bound::Included(lower) => lower.saturating_add(1),
+						Bound::Included(lower) => *lower,
 						Bound::Excluded(lower) => lower.saturating_add(1),
 						Bound::Unbounded => <$signed>::MIN
 					};
@@ -61,7 +61,7 @@ macro_rules! range {
 					assert!(upper >= lower, "{} >= {} (lower bound was bigger than upper bound)", upper, lower);
 					let lower = lower.wrapping_sub(<$signed>::MIN) as $type;
 					let upper = upper.wrapping_sub(<$signed>::MIN) as $type;
-					<$type>::random_range(r, lower..=upper).wrapping_add(<$signed>::MAX as $type) as $signed
+					<$type>::random_range(r, lower..=upper).wrapping_add(<$signed>::MIN as $type) as $signed
 				}
 			}
 		)+
@@ -147,6 +147,9 @@ mod tests {
 				"{} was outside of ..1024",
 				number
 			);
+
+			let number = rng.generate_range(0u64..1);
+			assert!((0u64..1).contains(&number), "{} was outside of 0..1", number);
 		}
 	}
 	#[test]
@@ -174,6 +177,9 @@ mod tests {
 				"{} was outside of -13..=-12",
 				number
 			);
+
+			let number = rng.generate_range(0..1);
+			assert!((0..1).contains(&number), "{} was outside of 0..1", number);
 		}
 	}
 
