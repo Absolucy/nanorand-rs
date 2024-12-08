@@ -12,6 +12,7 @@ on:
       - '**/*.h'
       - '**/*.c'
       - '.github/workflows/*.yml'
+  workflow_dispatch:
 jobs:
     smallcrush:
         name: "Run SmallCrush"
