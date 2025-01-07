@@ -48,7 +48,7 @@ pub fn chacha_block<const ROUNDS: u8>(input: [u32; 16]) -> [u32; 16] {
 }
 
 /// Initialize the ChaCha internal state, with a 256-bit key and 64-bit nonce.
-pub const fn chacha_init(key: [u8; 32], nonce: [u8; 8]) -> [u32; 16] {
+pub const fn chacha_init(key: [u8; 32], counter: [u8; 8], nonce: [u8; 8]) -> [u32; 16] {
 	let mut state = [0u32; 16];
 	state[0] = chacha_pack(CHACHA_TAU, 0);
 	state[1] = chacha_pack(CHACHA_TAU, 4);
@@ -65,8 +65,8 @@ pub const fn chacha_init(key: [u8; 32], nonce: [u8; 8]) -> [u32; 16] {
 	state[11] = chacha_pack(&key, 28);
 
 	// 64-bit counter
-	state[12] = 0;
-	state[13] = 0;
+	state[12] = chacha_pack(&counter, 0);
+	state[13] = chacha_pack(&counter, 4);
 	// Nonce
 	state[14] = chacha_pack(&nonce, 0);
 	state[15] = chacha_pack(&nonce, 4);
@@ -95,10 +95,11 @@ mod tests {
 	macro_rules! ietf_test_vector {
 		($key_hex: tt, $nonce_hex: tt, $keystream_hex: tt) => {
 			let key: [u8; 32] = hex::decode($key_hex).unwrap().try_into().unwrap();
+			let counter = [0u8; 8];
 			let nonce: [u8; 8] = hex::decode($nonce_hex).unwrap().try_into().unwrap();
 			let expected_keystream: Vec<u8> = hex::decode($keystream_hex).unwrap();
 
-			let mut state = chacha_init(key, nonce);
+			let mut state = chacha_init(key, counter, nonce);
 			let mut keystream: Vec<u8> = Vec::with_capacity(expected_keystream.len());
 
 			while expected_keystream.len() > keystream.len() {
