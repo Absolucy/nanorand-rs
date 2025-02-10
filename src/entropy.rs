@@ -1,6 +1,3 @@
-#[cfg(feature = "getrandom_custom")]
-pub use getrandom::register_custom_getrandom;
-
 #[cfg(all(target_vendor = "apple", not(feature = "getrandom")))]
 pub use darwin::entropy as system;
 #[cfg(all(
@@ -42,7 +39,7 @@ pub mod openbsd;
 /// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.
 /// Uses backup entropy (rdseed and system time) if it fails.
 pub fn system(out: &mut [u8]) {
-	match getrandom::getrandom(out) {
+	match getrandom::fill(out) {
 		Ok(_) => (),
 		Err(_) => backup(out),
 	}
