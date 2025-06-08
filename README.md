@@ -2,7 +2,7 @@
 
 # nanorand
 
-Current version: **0.7.0**
+Current version: **0.8.0**
 
 A library meant for fast, random number generation with quick compile time, and minimal dependencies.
 
@@ -57,11 +57,11 @@ rng.shuffle(&mut items);
 
 ### RNG Implementations
 
-**RNG**|**nanorand type**|**Output Size**|**Cryptographically Secure**|**Speed**<sup>1</sup>|**Notes**|**Original Implementation**
-:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
-wyrand|[`nanorand::WyRand`](rand/wyrand/struct.WyRand.html), [`nanorand::tls::TlsWyRand`](tls/fn.tls_rng.html)|64 bits (`u64`)|🚫|14 GB/s||[https://github.com/lemire/testingRNG/blob/master/source/wyrand.h](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h)
-Pcg64|[`nanorand::Pcg64`](rand/pcg64/struct.Pcg64.html)|64 bits (`u64`)|🚫|1.6 GB/s||[https://github.com/rkern/pcg64](https://github.com/rkern/pcg64)
-ChaCha|[`nanorand::ChaCha`](rand/chacha/struct.ChaCha.html)|512 bits (`[u32; 16]`)|✅|980 MB/s (ChaCha8), 749 MB/s (ChaCha12), 505 MB/s (ChaCha20)||[https://cr.yp.to/chacha.html](https://cr.yp.to/chacha.html)
+| **RNG** |                                            **nanorand type**                                            |    **Output Size**     | **Cryptographically Secure** |                    **Speed**<sup>1</sup>                     | **Notes** |                                                     **Original Implementation**                                                      |
+| :-----: | :-----------------------------------------------------------------------------------------------------: | :--------------------: | :--------------------------: | :----------------------------------------------------------: | :-------: | :----------------------------------------------------------------------------------------------------------------------------------: |
+| wyrand  | [`nanorand::WyRand`](rand/wyrand/struct.WyRand.html), [`nanorand::tls::TlsWyRand`](tls/fn.tls_rng.html) |    64 bits (`u64`)     |              🚫               |                           14 GB/s                            |           | [https://github.com/lemire/testingRNG/blob/master/source/wyrand.h](https://github.com/lemire/testingRNG/blob/master/source/wyrand.h) |
+|  Pcg64  |                            [`nanorand::Pcg64`](rand/pcg64/struct.Pcg64.html)                            |    64 bits (`u64`)     |              🚫               |                           1.6 GB/s                           |           |                                   [https://github.com/rkern/pcg64](https://github.com/rkern/pcg64)                                   |
+| ChaCha  |                          [`nanorand::ChaCha`](rand/chacha/struct.ChaCha.html)                           | 512 bits (`[u32; 16]`) |              ✅               | 980 MB/s (ChaCha8), 749 MB/s (ChaCha12), 505 MB/s (ChaCha20) |           |                                     [https://cr.yp.to/chacha.html](https://cr.yp.to/chacha.html)                                     |
 
 <sup>1. Speed benchmarked on an M1 Macbook Air</sup>
 
@@ -98,7 +98,7 @@ The minimum supported Rust version for the latest version of nanorand is **Rust 
 
 The zlib/libpng License
 
-Copyright (c) 2022 Lucy <lucy@absolucy.moe>
+Copyright (c) 2025 Lucy <lucy@absolucy.moe>
 
 This software is provided 'as-is', without any express or implied warranty. In
 no event will the authors be held liable for any damages arising from the use of
@@ -117,7 +117,3 @@ the following restrictions:
     misrepresented as being the original software.
 
 3.  This notice may not be removed or altered from any source distribution.
-
-### Amendment
-
-I, @Absolucy, fully give permission for any of my code (including the entirety of this project, nanorand-rs), anywhere, no matter the license, to be used to train machine learning models intended to be used for general-purpose programming or code analysis.

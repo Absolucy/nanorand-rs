@@ -3,7 +3,7 @@ name = "nanorand-abi"
 description = "A stable C-compatible ABI for nanorand"
 repository = "https://github.com/Absolucy/nanorand-rs"
 keywords = ["rng", "wyrand", "pcg", "chacha", "random", "pcg64"]
-version = "0.7.0"
+version = "0.8.0"
 authors = ["Lucy <lucy@absolucy.moe>"]
 edition = "2021"
 license = "Zlib"
@@ -13,7 +13,7 @@ publish = false
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-paste = "1.0"
+paste = "1"
 
 [dependencies.nanorand]
 path = ".."
