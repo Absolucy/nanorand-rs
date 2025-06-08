@@ -31,16 +31,17 @@ impl<const ROUNDS: u8> ChaCha<ROUNDS> {
 	pub fn new() -> Self {
 		let mut key: [u8; 32] = Default::default();
 		crate::entropy::system(&mut key);
+		let counter = [0u8; 8];
 		let mut nonce: [u8; 8] = Default::default();
 		crate::entropy::system(&mut nonce);
-		let state = chacha::chacha_init(key, nonce);
+		let state = chacha::chacha_init(key, counter, nonce);
 		Self { state }
 	}
 
 	/// Create a new [`ChaCha`] instance, using the provided key and nonce.
 	#[must_use]
-	pub const fn new_key(key: [u8; 32], nonce: [u8; 8]) -> Self {
-		let state = chacha::chacha_init(key, nonce);
+	pub const fn new_key(key: [u8; 32], counter: [u8; 8], nonce: [u8; 8]) -> Self {
+		let state = chacha::chacha_init(key, counter, nonce);
 		Self { state }
 	}
 }
@@ -50,9 +51,10 @@ impl<const ROUNDS: u8> Default for ChaCha<ROUNDS> {
 	fn default() -> Self {
 		let mut key: [u8; 32] = Default::default();
 		crate::entropy::system(&mut key);
+		let counter = [0u8; 8];
 		let mut nonce: [u8; 8] = Default::default();
 		crate::entropy::system(&mut nonce);
-		let state = chacha::chacha_init(key, nonce);
+		let state = chacha::chacha_init(key, counter, nonce);
 		Self { state }
 	}
 }
@@ -97,8 +99,9 @@ impl<const ROUNDS: u8> SeedableRng<40, 64> for ChaCha<ROUNDS> {
 		let mut key = [0_u8; 32];
 		let mut nonce = [0_u8; 8];
 		key.copy_from_slice(&seed[..32]);
+		let counter = [0u8; 8];
 		nonce.copy_from_slice(&seed[32..]);
-		self.state = chacha::chacha_init(key, nonce);
+		self.state = chacha::chacha_init(key, counter, nonce);
 	}
 }
 
