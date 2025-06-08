@@ -149,7 +149,11 @@ mod tests {
 			);
 
 			let number = rng.generate_range(0u64..1);
-			assert!((0u64..1).contains(&number), "{} was outside of 0..1", number);
+			assert!(
+				(0u64..1).contains(&number),
+				"{} was outside of 0..1",
+				number
+			);
 		}
 	}
 	#[test]

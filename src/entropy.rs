@@ -1,3 +1,8 @@
+#[cfg(all(
+	any(target_os = "openbsd", target_os = "freebsd"),
+	not(feature = "getrandom")
+))]
+pub use bsd::entropy as system;
 #[cfg(all(target_vendor = "apple", not(feature = "getrandom")))]
 pub use darwin::entropy as system;
 #[cfg(all(
@@ -5,11 +10,6 @@ pub use darwin::entropy as system;
 	not(feature = "getrandom")
 ))]
 pub use linux::entropy as system;
-#[cfg(all(
-	any(target_os = "openbsd", target_os = "freebsd"),
-	not(feature = "getrandom")
-))]
-pub use bsd::entropy as system;
 #[cfg(all(windows, not(target_vendor = "uwp"), not(feature = "getrandom")))]
 pub use windows::entropy as system;
 #[cfg(all(windows, target_vendor = "uwp", not(feature = "getrandom")))]

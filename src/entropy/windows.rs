@@ -1,4 +1,4 @@
-use core::ffi::{c_void, c_ulong, c_char};
+use core::ffi::{c_char, c_ulong, c_void};
 
 extern "system" {
 	#[link_name = "SystemFunction036"]
