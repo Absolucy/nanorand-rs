@@ -1,18 +1,18 @@
 name: "Run SmallCrush"
 on:
-  push:
-    paths:
-      - '**/*.rs'
-      - '**/*.h'
-      - '**/*.c'
-      - '.github/workflows/*.yml'
-  pull_request:
-    paths:
-      - '**/*.rs'
-      - '**/*.h'
-      - '**/*.c'
-      - '.github/workflows/*.yml'
-  workflow_dispatch:
+    push:
+        paths:
+            - "**/*.rs"
+            - "**/*.h"
+            - "**/*.c"
+            - ".github/workflows/*.yml"
+    pull_request:
+        paths:
+            - "**/*.rs"
+            - "**/*.h"
+            - "**/*.c"
+            - ".github/workflows/*.yml"
+    workflow_dispatch:
 jobs:
     smallcrush:
         name: "Run SmallCrush"
@@ -20,7 +20,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: Install TestU01 and Clang
-              run: sudo apt-get update && sudo apt-get install -y libtestu01-0-dev libtestu01-0-dev-common libtestu01-0 llvm-11 clang-11
+              run: sudo apt-get update && sudo apt-get install -y libtestu01-0-dev libtestu01-0-dev-common libtestu01-0 llvm clang
             - name: "Install stable Rust toolchain"
               uses: actions-rs/toolchain@v1
               with:
