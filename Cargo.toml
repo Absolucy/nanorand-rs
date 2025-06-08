@@ -21,22 +21,21 @@ wyrand = []
 pcg64 = []
 chacha = []
 rdseed = ["std"]
-getrandom_custom = ["getrandom/custom"]
 
 [dependencies]
 zeroize = { version = "1.5", optional = true, features = ["zeroize_derive"] }
 
 # optional getrandom with 'js' feature for WASM
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { version = "0.2", optional = true, features = ["js"] }
+getrandom = { version = "0.3", optional = true, features = ["wasm_js"] }
 
 # optional getrandom with 'rdrand' feature for x86(-64)
 [target.'cfg(any(target_arch = "x86", target_arch = "x86_64"))'.dependencies]
-getrandom = { version = "0.2", optional = true, features = ["rdrand"] }
+getrandom = { version = "0.3", optional = true }
 
 # optional getrandom without any features for non-WASM, non-x86 targets.
 [target.'cfg(not(any(target_arch = "wasm32", target_arch = "x86", target_arch = "x86_64")))'.dependencies]
-getrandom = { version = "0.2", optional = true }
+getrandom = { version = "0.3", optional = true }
 
 [dev-dependencies]
 hex = "0.4.3"
